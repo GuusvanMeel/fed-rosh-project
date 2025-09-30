@@ -13,7 +13,7 @@ export default function Counter({label, value, OnChange}:{label:string, value:nu
          text-center text-black
          shadow
          focus:outline-none focus:ring-2 focus:ring-blue-500
-       ' type='number' value={value}  onChange={(e) => OnChange(Number(e.target.value))} />
+       ' type='number' min={1} value={value}  onChange={(e) => OnChange(Number(e.target.value))} />
        </div>
   );
 }
