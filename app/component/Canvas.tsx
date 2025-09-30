@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -17,7 +17,7 @@ export type CanvasData = {
 };
 
 export default function Canvas({ settings }: { settings: CanvasData }) {
-  const ResponsiveGridLayout = WidthProvider(Responsive);
+  const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   
   const layoutRef = useRef<Layout[]>([
     { i: "1", x: 0, y: 0, w: 2, h: 2 },
@@ -35,7 +35,14 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
 
   const handleLayoutChange = (newLayout: Layout[]) => {
     // 🧠 store latest layout positions
-    layoutRef.current = newLayout;
+      const fixedLayout = newLayout.map(item => {
+      const maxY = settings.rows - item.h; // last valid top row
+      if (item.y > maxY) {
+        return { ...item, y: maxY };
+      }
+      return item;
+    });
+    layoutRef.current = fixedLayout;
     // optional: save to localStorage, etc.
   };
 
@@ -74,6 +81,7 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
 
       <ResponsiveGridLayout
         className="layout"
+        style={{height: "100%"}}
         onLayoutChange={handleLayoutChange}
         layouts={{ lg: layoutRef.current }}
         breakpoints={{ lg: 0 }}
@@ -83,6 +91,14 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         compactType={null}
         margin={[0, 0]}            // ✅ align with overlay
         containerPadding={[0, 0]}  // ✅ no extra padding
+        maxRows={settings.rows}
+        allowOverlap
+        isBounded
+        
+        
+        
+       
+        
       >
         <div key="1" className="bg-red-500 rounded">Item 1</div>
         <div key="2" className="bg-green-500 rounded">Item 2</div>

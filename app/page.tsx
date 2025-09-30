@@ -1,7 +1,7 @@
 "use client";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { useEffect, useMemo, useState } from "react";
+import {  useMemo, useState } from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { Panel, PanelProps } from "./component/panel";
 import BackgroundModal, { BackgroundConfig as BgConfig, computeGradientString } from "./component/BackgroundModal";
@@ -37,7 +37,9 @@ const PAGE_KEYS = [
 ];
 
 export default function BuilderPage() {
-    const emptyPanels: PanelData[] = [];
+	
+	
+	const emptyPanels: PanelData[] = [];
     type Device = "desktop" | "mobile";
     const [device, setDevice] = useState<Device>("desktop");
     const defaultBg: BackgroundConfig = { mode: "solid", color: "#e5e7eb", gradientType: "linear", direction: "to-bottom", colorStart: "#a1c4fd", colorEnd: "#c2e9fb" };

@@ -6,10 +6,11 @@ import { useState } from 'react';
 import Counter from '../component/Counter';
 import MyColorPicker from '../component/MyColorPicker';
 import { InputSwitch } from "primereact/inputswitch";
+import { redirect } from 'next/dist/server/api-utils';
 
 
 export default function page() {
-
+   
     const [myCanvas, setMyCanvas] = useState<CanvasData>({
         Width: 360,
         Height: 780,
