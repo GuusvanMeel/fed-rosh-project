@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react'
-import { Responsive, WidthProvider } from "react-grid-layout";
+import React, { useState } from 'react'
+import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import { useRef, useEffect } from 'react';
+
 
 export type CanvasData = {
   Width: number;
@@ -16,11 +18,26 @@ export type CanvasData = {
 
 export default function Canvas({ settings }: { settings: CanvasData }) {
   const ResponsiveGridLayout = WidthProvider(Responsive);
-  const layout = [
+  
+  const layoutRef = useRef<Layout[]>([
     { i: "1", x: 0, y: 0, w: 2, h: 2 },
     { i: "2", x: 2, y: 0, w: 2, h: 4 },
     { i: "3", x: 4, y: 0, w: 2, h: 5 },
-  ];
+  ]);
+
+  const [renderKey, setRenderKey] = useState(0);
+  // this will trigger a re-render *only when settings change*
+
+  // 🔄 If settings (size/color/etc.) change, re-render canvas
+  useEffect(() => {
+    setRenderKey(prev => prev + 1);
+  }, [settings.Width, settings.Height, settings.color, settings.showgrid]);
+
+  const handleLayoutChange = (newLayout: Layout[]) => {
+    // 🧠 store latest layout positions
+    layoutRef.current = newLayout;
+    // optional: save to localStorage, etc.
+  };
 
   return (
     <div
@@ -57,7 +74,8 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
 
       <ResponsiveGridLayout
         className="layout"
-        layouts={{ lg: layout }}
+        onLayoutChange={handleLayoutChange}
+        layouts={{ lg: layoutRef.current }}
         breakpoints={{ lg: 0 }}
         cols={{ lg: settings.columns }}
         rowHeight={settings.Height / settings.rows}
