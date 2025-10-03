@@ -20,18 +20,11 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
   
   // Use useState instead of useRef for layout
   const [layout, setLayout] = useState<Layout[]>(settings.panels);
-  const [renderKey, setRenderKey] = useState(0);
 
-  // Update layout when settings.panels changes
+  // Only update layout when settings.panels changes (new page selected)
   useEffect(() => {
     setLayout(settings.panels);
-    setRenderKey(prev => prev + 1); // Force re-render
   }, [settings.panels]);
-
-  // Re-render when other settings change
-  useEffect(() => {
-    setRenderKey(prev => prev + 1);
-  }, [settings.Width, settings.Height, settings.color, settings.showgrid]);
 
   const handleLayoutChange = (newLayout: Layout[]) => {
     const fixedLayout = newLayout.map(item => {
@@ -46,7 +39,6 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
 
   return (
     <div
-      key={renderKey} // Force re-render when key changes
       className="bg-blue-900 rounded-2xl relative overflow-hidden"
       style={{
         backgroundColor: settings.color,
@@ -94,7 +86,7 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         allowOverlap
         isBounded
       >
-        {settings.panels.map((panel) => (
+        {layout.map((panel) => (
           <div key={panel.i} className="bg-red-500 rounded">
             <span>Item {panel.i}</span>
           </div>
