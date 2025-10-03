@@ -3,12 +3,14 @@ import { useState } from "react";
 import ImagePanel from "./panels/ImagePanel";
 import VideoPanel from "./panels/VideoPanel";
 import TextPanel from "./panels/TextPanel";
+import { Layout } from "react-grid-layout";
 
 export type PanelProps = {
   id: string;
   type: "text" | "video" | "image" | "carousel";
   content: string | string[];
   currentIndex?: number;
+  layout?: Layout;
 };
 
 

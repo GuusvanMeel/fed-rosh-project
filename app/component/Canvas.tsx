@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { useRef, useEffect } from 'react';
-
 
 export type CanvasData = {
   Width: number;
@@ -14,41 +12,42 @@ export type CanvasData = {
   columns: number;
   rows: number;
   showgrid: boolean
+  panels: Layout[]
 };
 
 export default function Canvas({ settings }: { settings: CanvasData }) {
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   
-  const layoutRef = useRef<Layout[]>([
-    { i: "1", x: 0, y: 0, w: 2, h: 2 },
-    { i: "2", x: 2, y: 0, w: 2, h: 4 },
-    { i: "3", x: 4, y: 0, w: 2, h: 5 },
-  ]);
-
+  // Use useState instead of useRef for layout
+  const [layout, setLayout] = useState<Layout[]>(settings.panels);
   const [renderKey, setRenderKey] = useState(0);
-  // this will trigger a re-render *only when settings change*
 
-  // 🔄 If settings (size/color/etc.) change, re-render canvas
+  // Update layout when settings.panels changes
+  useEffect(() => {
+    setLayout(settings.panels);
+    setRenderKey(prev => prev + 1); // Force re-render
+  }, [settings.panels]);
+
+  // Re-render when other settings change
   useEffect(() => {
     setRenderKey(prev => prev + 1);
   }, [settings.Width, settings.Height, settings.color, settings.showgrid]);
 
   const handleLayoutChange = (newLayout: Layout[]) => {
-    // 🧠 store latest layout positions
-      const fixedLayout = newLayout.map(item => {
-      const maxY = settings.rows - item.h; // last valid top row
+    const fixedLayout = newLayout.map(item => {
+      const maxY = settings.rows - item.h;
       if (item.y > maxY) {
         return { ...item, y: maxY };
       }
       return item;
     });
-    layoutRef.current = fixedLayout;
-    // optional: save to localStorage, etc.
+    setLayout(fixedLayout);
   };
 
   return (
     <div
-      className="bg-blue-900 rounded-2xl relative overflow-hidden" // ✅ relative keeps overlay scoped
+      key={renderKey} // Force re-render when key changes
+      className="bg-blue-900 rounded-2xl relative overflow-hidden"
       style={{
         backgroundColor: settings.color,
         height: settings.Height,
@@ -83,26 +82,23 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         className="layout"
         style={{height: "100%"}}
         onLayoutChange={handleLayoutChange}
-        layouts={{ lg: layoutRef.current }}
+        layouts={{ lg: layout }}
         breakpoints={{ lg: 0 }}
         cols={{ lg: settings.columns }}
         rowHeight={settings.Height / settings.rows}
         width={settings.Width}
         compactType={null}
-        margin={[0, 0]}            // ✅ align with overlay
-        containerPadding={[0, 0]}  // ✅ no extra padding
+        margin={[0, 0]}
+        containerPadding={[0, 0]}
         maxRows={settings.rows}
         allowOverlap
         isBounded
-        
-        
-        
-       
-        
       >
-        <div key="1" className="bg-red-500 rounded">Item 1</div>
-        <div key="2" className="bg-green-500 rounded">Item 2</div>
-        <div key="3" className="bg-yellow-500 rounded">Item 3</div>
+        {settings.panels.map((panel) => (
+          <div key={panel.i} className="bg-red-500 rounded">
+            <span>Item {panel.i}</span>
+          </div>
+        ))}
       </ResponsiveGridLayout>
     </div>
   );
