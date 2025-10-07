@@ -4,6 +4,10 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import { PanelData } from '../editcanvas/page';
+import TextPanel from './panels/TextPanel';
+import VideoPanel from './panels/VideoPanel';
+import ImagePanel from './panels/ImagePanel';
 
 export type CanvasData = {
   Width: number;
@@ -12,21 +16,53 @@ export type CanvasData = {
   columns: number;
   rows: number;
   showgrid: boolean
-  panels: Layout[]
+  panels: PanelData[]
 };
+
+function renderPanel(panel : PanelData){
+switch (panel.type) {
+      case "text":
+        if (typeof panel.content === "string") {
+          return (
+            <TextPanel Text={panel.content}></TextPanel>
+          );
+        }
+
+      case "video":
+        if (typeof panel.content === "string") {
+          return (
+            <VideoPanel source={panel.content}></VideoPanel>
+          );
+        }
+      
+        case "image":
+        if (typeof panel.content === "string") {
+          return (
+            <ImagePanel source={panel.content}></ImagePanel>
+          );
+        }
+              
+      default:
+        return (
+          <div key={panel.i} className="bg-red-500 rounded">
+            <span>Item {panel.i}</span>
+          </div>
+        );
+    }
+}
 
 export default function Canvas({ settings }: { settings: CanvasData }) {
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   
   // Use useState instead of useRef for layout
-  const [layout, setLayout] = useState<Layout[]>(settings.panels);
+  const [layout, setLayout] = useState<PanelData[]>(settings.panels);
 
   // Only update layout when settings.panels changes (new page selected)
   useEffect(() => {
     setLayout(settings.panels);
   }, [settings.panels]);
 
-  const handleLayoutChange = (newLayout: Layout[]) => {
+  const handleLayoutChange = (newLayout: PanelData[]) => {
     const fixedLayout = newLayout.map(item => {
       const maxY = settings.rows - item.h;
       if (item.y > maxY) {
@@ -87,8 +123,9 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         isBounded
       >
         {layout.map((panel) => (
+            
           <div key={panel.i} className="bg-red-500 rounded">
-            <span>Item {panel.i}</span>
+            {renderPanel(panel)}
           </div>
         ))}
       </ResponsiveGridLayout>

@@ -10,8 +10,8 @@ export default function PageSelectDropdown({ onSelectionChange }: { onSelectionC
   useEffect(() => {
     async function fetchPages() {
       try {
-        const res = await axios.get('/api/editcanvas') // your API
-        setPages(res.data.data) // extract the "data" array
+        const res = await axios.get('/api/editcanvas')
+        setPages(res.data.data)
       } catch (err) {
         console.error(err)
       }
@@ -33,18 +33,17 @@ export default function PageSelectDropdown({ onSelectionChange }: { onSelectionC
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor="page-select" className="text-white">Select a page:</label>
+    <div className="bg-white border rounded-lg p-4 flex items-center gap-3 w-96">
+      <span className="text-black w-48">Select a page:</span>
       <select
-        id="page-select"
         value={selectedPageId}
         onChange={handleSelectionChange}
-        className="p-2 rounded"
+        className="w-24 px-2 py-1 border rounded-md text-center text-black shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="">-- Choose a page --</option>
+        <option value="">-- Choose --</option>
         {pages.map((page) => (
           <option key={page.id} value={page.id}>
-            Page {page.id} ({page.width}x{page.height})
+            Page {page.id}
           </option>
         ))}
       </select>

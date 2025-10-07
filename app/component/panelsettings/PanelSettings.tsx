@@ -8,6 +8,7 @@ import MyColorPicker from '../MyColorPicker';
 import Canvas from '../Canvas';
 import { Layout } from 'react-grid-layout';
 import PageSelectDropdown from '../pageselectdropdown/PageSelectDropdown';
+import { PanelData } from '@/app/editcanvas/page';
 
 export type PanelSettingsProps = {
   id?: string
@@ -16,7 +17,7 @@ export type PanelSettingsProps = {
   color: string
   columns: number
   rows: number
-  panels?: Layout[]
+  panels?: PanelData[]
 }
 
 export default function PanelSettings( {width, height, color, columns, rows, panels}: PanelSettingsProps) {
@@ -28,10 +29,46 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
         columns: columns? columns : 20,
         rows: rows ? rows : 10,
         showgrid: true,
-        panels: panels ? panels : [
-            { i: "1", x: 0, y: 0, w: 2, h: 2 },
-            { i: "2", x: 2, y: 0, w: 2, h: 4 },
-            { i: "3", x: 4, y: 0, w: 2, h: 5 },
+        panels: Array.isArray(panels) ? panels : [
+            {
+                i: "1",
+                x: 0,
+                y: 0,
+                w: 2,
+                h: 2,
+                type: 'text',
+                content: 'Panel 1',
+                isDraggable: true,
+                backgroundColor: '#1e3a8a',
+                textColor: '#ffffff',
+                fontFamily: 'Serif'
+            },
+            {
+                i: "2",
+                x: 2,
+                y: 0,
+                w: 2,
+                h: 4,
+                type: 'image',
+                content: '/next.svg',
+                isDraggable: true,
+                backgroundColor: '#1e3a8a',
+                textColor: '#ffffff',
+                fontFamily: 'Serif'
+            },
+            {
+                i: "3",
+                x: 4,
+                y: 0,
+                w: 2,
+                h: 5,
+                type: 'video',
+                content: '/window.svg',
+                isDraggable: true,
+                backgroundColor: '#1e3a8a',
+                textColor: '#ffffff',
+                fontFamily: 'Serif'
+            }
         ]
     });
 
@@ -40,9 +77,6 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
     // Use useEffect to handle selectedpage changes
     useEffect(() => {
         if (selectedpage != null) {
-             if (selectedpage.panels != null) {
-            console.log(selectedpage.panels[0].x + " " +selectedpage.panels[0].y  + " " + selectedpage.panels[0].w + " "  + selectedpage.panels[0].h )
-             }
             setMyCanvas({
                 Width: selectedpage.width ?? 370,
                 Height: selectedpage.height ?? 780,
@@ -50,11 +84,25 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
                 columns: selectedpage.columns ?? 20,
                 rows: selectedpage.rows ?? 10,
                 showgrid: myCanvas.showgrid, // preserve current showgrid state
-                panels: selectedpage?.panels ?? [
-                    { i: "1", x: 0, y: 0, w: 2, h: 2 },
-                    { i: "2", x: 2, y: 0, w: 2, h: 4 },
-                    { i: "3", x: 4, y: 0, w: 2, h: 5 },
-                ]
+                panels: selectedpage?.panels
+                    ? Array.isArray(selectedpage.panels)
+                        ? selectedpage.panels
+                        : [selectedpage.panels]
+                    : [
+                        {
+                            i: "1",
+                            x: 4,
+                            y: 3,
+                            w: 2,
+                            h: 5,
+                            type: 'text',
+                            content: 'TEST TEST',
+                            isDraggable: true,
+                            backgroundColor: '#34eb5e',
+                            textColor: '#34eb5e',
+                            fontFamily: 'Serif'
+                        }
+                    ]
             });
         }
     }, [selectedpage]);
@@ -63,7 +111,6 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
         <>
             <div className="flex flex-col gap-2">
                 <PageSelectDropdown onSelectionChange={setSelectedPage}></PageSelectDropdown>
-                <span>Dropdown value id: {selectedpage?.id || 'No selection'}</span>
 
                 <Counter
                     value={myCanvas.Height}
