@@ -111,33 +111,6 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
         }
     }, [selectedpage]);
     
-    const addPanel = (type: PanelType) => {
-		const newPanel: PanelProps = {
-            id: id,
-            type: type,
-            content:
-              type === "text"
-                ? "New text panel"
-                : type === "image"
-                ? "/placeholder.jpg"
-                : type === "video"
-                ? "https://example.com/video.mp4"
-                : [], // for carousel, content is an array
-            layout: {
-              i: id, // must match or be unique
-              x: 0,
-              y: 0,
-              w: 3,
-              h: 3,
-            },
-            currentIndex: 0, // only used for carousel
-          };
-        
-          // Now add it to your panels array (state)
-          setPanels((prev) => [...prev, newPanel]);
-        };
-
-    }
     return (
         <>
         <button onClick={() => setIsPickerOpen(true)} className="bg-neutral-600 px-4 py-3 rounded-xl text-2xl leading-none">+</button>
@@ -181,20 +154,6 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
             </div>
 
             <Canvas settings={myCanvas} />
-            {isPickerOpen && (
-				<div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-					<div className="bg-white text-black rounded-lg p-6 w-96">
-						<div className="text-lg font-semibold mb-4">Add panel</div>
-                        <div className="grid grid-cols-3 gap-3">
-							<button className="bg-neutral-200 rounded py-3" onClick={() => addPanel("text")}>Text</button>
-							<button className="bg-neutral-200 rounded py-3" onClick={() => addPanel("video")}>Video</button>
-							<button className="bg-neutral-200 rounded py-3" onClick={() => addPanel("image")}>Image</button>
-							<button className="bg-neutral-200 rounded py-3" onClick={() => addPanel("carousel")}>Image Carousel</button>
-                        </div>
-						<button className="mt-4 w-full bg-neutral-800 text-white rounded py-2" onClick={() => setIsPickerOpen(false)}>Close</button>
-					</div>
-				</div>
-			)}
         </>
     )
 }
