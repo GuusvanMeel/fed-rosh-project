@@ -12,6 +12,7 @@ import ImagePanel from './panels/ImagePanel';
 export type CanvasData = {
   Width: number;
   Height: number;
+  Mobile: boolean;
   color: string;
   columns: number;
   rows: number;
@@ -61,6 +62,18 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
   useEffect(() => {
     setLayout(settings.panels);
   }, [settings.panels]);
+  useEffect(() => {
+    if (settings.Mobile) {
+      // example mobile size (iPhone 14-ish)
+      settings.Width=390
+      settings.Height=844
+    } else {
+      // example desktop size
+      settings.Width=1280
+      settings.Height=720
+    }
+  }, [settings.Mobile]);
+  
 
   const handleLayoutChange = (newLayout: PanelData[]) => {
     const fixedLayout = newLayout.map(item => {

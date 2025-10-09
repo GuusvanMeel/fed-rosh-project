@@ -1,13 +1,7 @@
 import React from 'react'
-import Canvas from '../component/Canvas'
-import { CanvasData } from '../component/Canvas'
-import Counter from '../component/Counter';
-import MyColorPicker from '../component/MyColorPicker';
-import { InputSwitch } from "primereact/inputswitch";
-import { redirect } from 'next/dist/server/api-utils';
-import axios from 'axios';
+
 import PanelSettings, { PanelSettingsProps } from '../component/panelsettings/PanelSettings';
-import { Layout } from 'react-grid-layout';
+
 
 export type PanelType = "text" | "video" | "image" | "carousel";
 
@@ -63,6 +57,7 @@ export default async function page() {
   {/* Controls on the right */}
   <PanelSettings width={370} 
         height={780}
+        mobile= {true}
         color="#1e3a8a" // Tailwind bg-blue-900 hex
         columns={20}
         rows={10}
