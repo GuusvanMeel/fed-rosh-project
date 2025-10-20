@@ -21,25 +21,25 @@ export type CanvasData = {
 };
 
 function renderPanel(panel : PanelData){
-switch (panel.type) {
+switch (panel.panelProps.type) {
       case "text":
-        if (typeof panel.content === "string") {
+        if (typeof panel.panelProps.content === "string") {
           return (
-            <TextPanel Text={panel.content}></TextPanel>
+            <TextPanel Text={panel.panelProps.content}></TextPanel>
           );
         }
 
       case "video":
-        if (typeof panel.content === "string") {
+        if (typeof panel.panelProps.content === "string") {
           return (
-            <VideoPanel source={panel.content}></VideoPanel>
+            <VideoPanel source={panel.panelProps.content}></VideoPanel>
           );
         }
       
         case "image":
-        if (typeof panel.content === "string") {
+        if (typeof panel.panelProps.content === "string") {
           return (
-            <ImagePanel source={panel.content}></ImagePanel>
+            <ImagePanel source={panel.panelProps.content}></ImagePanel>
           );
         }
               
@@ -81,7 +81,7 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
       if (item.y > maxY) {
         return { ...item, y: maxY };
       }
-      return item;
+      return item;  
     });
     setLayout(fixedLayout);
   };

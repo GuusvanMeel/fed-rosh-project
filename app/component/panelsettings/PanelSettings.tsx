@@ -24,6 +24,7 @@ export type PanelSettingsProps = {
 
 export default function PanelSettings( {width, height, color, columns, rows, panels}: PanelSettingsProps) {
     const [isPickerOpen, setIsPickerOpen] = useState(false);
+
     const [myCanvas, setMyCanvas] = useState<CanvasData>({
         Width:  width ? width : 370,
         Height: height ? height :780,
@@ -32,47 +33,8 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
         columns: columns? columns : 20,
         rows: rows ? rows : 10,
         showgrid: true,
-        panels: Array.isArray(panels) ? panels : [
-            {
-                i: "1",
-                x: 0,
-                y: 0,
-                w: 2,
-                h: 2,
-                type: 'text',
-                content: 'Panel 1',
-                isDraggable: true,
-                backgroundColor: '#1e3a8a',
-                textColor: '#ffffff',
-                fontFamily: 'Serif'
-            },
-            {
-                i: "2",
-                x: 2,
-                y: 0,
-                w: 2,
-                h: 4,
-                type: 'image',
-                content: '/next.svg',
-                isDraggable: true,
-                backgroundColor: '#1e3a8a',
-                textColor: '#ffffff',
-                fontFamily: 'Serif'
-            },
-            {
-                i: "3",
-                x: 4,
-                y: 0,
-                w: 2,
-                h: 5,
-                type: 'video',
-                content: '/window.svg',
-                isDraggable: true,
-                backgroundColor: '#1e3a8a',
-                textColor: '#ffffff',
-                fontFamily: 'Serif'
-            }
-        ]
+        panels: Array.isArray(panels) ? panels : []
+            
     });
 
     const [selectedpage, setSelectedPage] = useState<PanelSettingsProps | null>(null);
@@ -92,29 +54,21 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
                     ? Array.isArray(selectedpage.panels)
                         ? selectedpage.panels
                         : [selectedpage.panels]
-                    : [
-                        {
-                            i: "1",
-                            x: 4,
-                            y: 3,
-                            w: 2,
-                            h: 5,
-                            type: 'text',
-                            content: 'TEST TEST',
-                            isDraggable: true,
-                            backgroundColor: '#34eb5e',
-                            textColor: '#34eb5e',
-                            fontFamily: 'Serif'
-                        }
-                    ]
+                    : []
             });
         }
     }, [selectedpage]);
-    
     const addPanel = (type: PanelType) => {
-		const newPanel: PanelProps = {
-            id: id,
-            type: type,
+        const id = crypto.randomUUID();
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: {
+            id,
+            type,
             content:
               type === "text"
                 ? "New text panel"
@@ -122,22 +76,24 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
                 ? "/placeholder.jpg"
                 : type === "video"
                 ? "https://example.com/video.mp4"
-                : [], // for carousel, content is an array
-            layout: {
-              i: id, // must match or be unique
-              x: 0,
-              y: 0,
-              w: 3,
-              h: 3,
-            },
-            currentIndex: 0, // only used for carousel
-          };
-        
-          // Now add it to your panels array (state)
-          setPanels((prev) => [...prev, newPanel]);
+                : [],
+          },
+          isDraggable: true,
+          backgroundColor: "#1e3a8a",
+          textColor: "#ffffff",
+          fontFamily: "Serif",
         };
+      
+        setMyCanvas(prev => ({
+          ...prev,
+          panels: [...prev.panels, newPanel],
+        }));
+        setIsPickerOpen(false);
+      };
+      
 
-    }
+    
+    
     return (
         <>
         <button onClick={() => setIsPickerOpen(true)} className="bg-neutral-600 px-4 py-3 rounded-xl text-2xl leading-none">+</button>
@@ -180,7 +136,7 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
                 <MyColorPicker OnChange={(newColor) => setMyCanvas({ ...myCanvas, color: newColor })} />
             </div>
 
-            <Canvas settings={myCanvas} />
+            <Canvas settings={myCanvas}  />
             {isPickerOpen && (
 				<div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 					<div className="bg-white text-black rounded-lg p-6 w-96">
@@ -197,4 +153,5 @@ export default function PanelSettings( {width, height, color, columns, rows, pan
 			)}
         </>
     )
+
 }

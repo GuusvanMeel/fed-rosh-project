@@ -1,6 +1,7 @@
 import React from 'react'
 
 import PanelSettings, { PanelSettingsProps } from '../component/panelsettings/PanelSettings';
+import { PanelProps } from '../component/panel';
 
 
 export type PanelType = "text" | "video" | "image" | "carousel";
@@ -11,8 +12,7 @@ export type PanelData = {
 	y: number;
 	w: number;
 	h: number;
-	type: PanelType;
-	content: string | string[];
+  panelProps: PanelProps;
 	isDraggable: boolean;
 	backgroundColor: string;
 	textColor: string;
@@ -28,27 +28,12 @@ export default async function page() {
   // const response = await axios.get('http://localhost:3000/api/editcanvas');
   // const pages = response.data.data; // extract the "data" array from the API
 
-  // // if you only want the first page:
-  // const firstPage: PanelSettingsProps = pages[0];
-  //const panels: Layout[] = firstPage.panels as Layout[];
-  const emptyPanels: PanelData[] = [{
-    i: "1",
-    x: 4,
-    y: 3,
-    w: 2,
-    h: 5,
-    type: 'text',
-    content: 'TEST TEST',
-    isDraggable: true,
-    backgroundColor: '#34eb5e',
-    textColor: '#34eb5e',
-    fontFamily: 'Serif'
-  }];
+
+  
   
 
     return (
         <div className="flex gap-6 items-start">
-
         <button
         >Add panel</button>
         
@@ -68,8 +53,11 @@ export default async function page() {
                 y: 0,
                 w: 2,
                 h: 2,
+                panelProps:{
+                  id: "1",
                 type: 'text',
                 content: 'Panel 1',
+                },
                 isDraggable: true,
                 backgroundColor: '#1e3a8a',
                 textColor: '#ffffff',
@@ -81,8 +69,11 @@ export default async function page() {
                 y: 0,
                 w: 2,
                 h: 4,
+                panelProps:{
+                  id:"2",
                 type: 'image',
                 content: '/next.svg',
+                },
                 isDraggable: true,
                 backgroundColor: '#1e3a8a',
                 textColor: '#ffffff',
@@ -94,8 +85,11 @@ export default async function page() {
                 y: 0,
                 w: 2,
                 h: 5,
+                panelProps:{
+                  id: "3",
                 type: 'video',
                 content: '/window.svg',
+                },               
                 isDraggable: true,
                 backgroundColor: '#1e3a8a',
                 textColor: '#ffffff',
