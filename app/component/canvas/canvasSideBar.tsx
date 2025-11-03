@@ -1,12 +1,10 @@
 'use client'
 import React from 'react'
 import { useState } from 'react';
-import { CanvasData } from '../Canvas';
+import { CanvasData } from './Canvas';
 import { InputSwitch } from 'primereact/inputswitch';
 import MyColorPicker from '../MyColorPicker';
-import PageSelectDropdown from '../pageselectdropdown/PageSelectDropdown';
-import { PanelData } from '@/app/page';
-import { PanelType } from '@/app/page';
+import { PanelData, PanelType } from '@/app/page';
 
 export type PanelSettingsProps = {
   id?: string

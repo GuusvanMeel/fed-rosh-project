@@ -1,9 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react'
 
-import PanelSettings from './component/panelsettings/PanelSettings';
+import PanelSettings from './component/canvas/canvasSideBar';
 import { PanelProps } from './component/panel';
-import Canvas, { CanvasData } from './component/Canvas';
+import Canvas, { CanvasData } from './component/canvas/Canvas';
 
 
 export type PanelType = "text" | "video" | "image" | "carousel";
@@ -34,44 +34,7 @@ export default function Page() {
     panels: []
   });
   
-  const [panels, setPanels] = useState<PanelData[]>([
-    {
-      i: "1",
-      x: 0,
-      y: 0,
-      w: 2,
-      h: 2,
-      panelProps: { id: "1", type: "text", content: "Panel 1" },
-      isDraggable: true,
-      backgroundColor: "#1e3a8a",
-      textColor: "#ffffff",
-      fontFamily: "Serif"
-    },
-    {
-      i: "2",
-      x: 2,
-      y: 0,
-      w: 2,
-      h: 4,
-      panelProps: { id: "2", type: "image", content: "/next.svg" },
-      isDraggable: true,
-      backgroundColor: "#1e3a8a",
-      textColor: "#ffffff",
-      fontFamily: "Serif"
-    },
-    {
-      i: "3",
-      x: 4,
-      y: 0,
-      w: 2,
-      h: 5,
-      panelProps: { id: "3", type: "video", content: "/window.svg" },
-      isDraggable: true,
-      backgroundColor: "#1e3a8a",
-      textColor: "#ffffff",
-      fontFamily: "Serif"
-    }
-  ]);
+  const [panels, setPanels] = useState<PanelData[]>([]);
   
   useEffect(() => {
   // Whenever panels change, sync them into myCanvas
