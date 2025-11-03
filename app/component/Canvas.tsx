@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { PanelData } from '../editcanvas/page';
 import TextPanel from './panels/TextPanel';
 import VideoPanel from './panels/VideoPanel';
 import ImagePanel from './panels/ImagePanel';
+import { PanelData } from '../page';
 
 export type CanvasData = {
   Width: number;
@@ -52,39 +52,22 @@ switch (panel.panelProps.type) {
     }
 }
 
-export default function Canvas({ settings }: { settings: CanvasData }) {
+export default function Canvas({ settings, setPanels }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; }) {
+  
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   
-  // Use useState instead of useRef for layout
-  const [layout, setLayout] = useState<PanelData[]>(settings.panels);
 
-  // Only update layout when settings.panels changes (new page selected)
-  useEffect(() => {
-    setLayout(settings.panels);
-  }, [settings.panels]);
-  useEffect(() => {
-    if (settings.Mobile) {
-      // example mobile size (iPhone 14-ish)
-      settings.Width=390
-      settings.Height=844
-    } else {
-      // example desktop size
-      settings.Width=1280
-      settings.Height=720
-    }
-  }, [settings.Mobile]);
-  
+ const handleLayoutChange = (newLayout: Layout[]) => {
+  setPanels(prevPanels =>
+    prevPanels.map(panel => {
+      const layoutItem = newLayout.find(l => l.i === panel.i);
+      return layoutItem
+        ? { ...panel, x: layoutItem.x, y: layoutItem.y, w: layoutItem.w, h: layoutItem.h }
+        : panel;
+    })
+  );
+};
 
-  const handleLayoutChange = (newLayout: PanelData[]) => {
-    const fixedLayout = newLayout.map(item => {
-      const maxY = settings.rows - item.h;
-      if (item.y > maxY) {
-        return { ...item, y: maxY };
-      }
-      return item;  
-    });
-    setLayout(fixedLayout);
-  };
 
   return (
     <div
@@ -123,7 +106,7 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         className="layout"
         style={{height: "100%"}}
         onLayoutChange={handleLayoutChange}
-        layouts={{ lg: layout }}
+        layouts={{ lg: settings.panels }}
         breakpoints={{ lg: 0 }}
         cols={{ lg: settings.columns }}
         rowHeight={settings.Height / settings.rows}
@@ -135,7 +118,7 @@ export default function Canvas({ settings }: { settings: CanvasData }) {
         allowOverlap
         isBounded
       >
-        {layout.map((panel) => (
+        {settings.panels.map((panel) => (
             
           <div key={panel.i} className="bg-red-500 rounded">
             {renderPanel(panel)}
