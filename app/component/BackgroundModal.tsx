@@ -54,7 +54,7 @@ export default function BackgroundModal({ isOpen, device, background, onChange, 
                     <div className="space-y-4">
                         <div className="grid grid-cols-6 gap-2">
                             {["to-top","to-bottom","to-left","to-right","to-top-right","to-bottom-right"].map(d => (
-                                <button key={d} className={`border rounded py-2 text-xs ${background.direction === d ? "border-black" : "border-neutral-300"}`} onClick={() => onChange({ ...background, direction: d as any })}>
+                                <button key={d} className={`border rounded py-2 text-xs ${background.direction === d ? "border-black" : "border-neutral-300"}`} onClick={() => onChange({ ...background, direction: d as BackgroundConfig["direction"] })}>
                                     {d.replace("to-", "").replace("-", " ")}
                                 </button>
                             ))}
