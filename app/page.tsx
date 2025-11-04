@@ -24,9 +24,9 @@ export type PanelData = {
 
 export default function Page() {
   const [myCanvas, setMyCanvas] = useState<CanvasData>({
-    Width: 370,
-    Height: 780,
-    Mobile: true,
+    Width: 1280,
+    Height: 720,
+    Mobile: false,
     color: "#1e3a8a",
     columns: 20,
     rows: 10,

@@ -159,7 +159,7 @@ useEffect(() => {
     selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
   }`}
   
-  style={{ backgroundColor: panel.backgroundColor, }}
+  style={{ backgroundColor: panel.backgroundColor }}
 >
   {renderPanel(panel)}
 </div>

@@ -8,8 +8,6 @@ import { PanelData, PanelType } from '@/app/page';
 
 export type PanelSettingsProps = {
   id?: string
-  width: number
-  height: number
   mobile: boolean
   color: string
   columns: number
@@ -30,7 +28,6 @@ export default function PanelSettings({
   setPanels: React.Dispatch<React.SetStateAction<PanelData[]>>;
 }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
-
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
     const newPanel: PanelData = {
@@ -60,17 +57,21 @@ export default function PanelSettings({
 
       <div className="flex items-center gap-2">
         <InputSwitch
-          checked={myCanvas.Mobile}
-          onChange={(e) => {
-            const isMobile = e.value;
-            setMyCanvas({
-              ...myCanvas,
-              Mobile: isMobile,
-              Width: isMobile ? 390 : 1280,
-              Height: isMobile ? 844 : 720,
-            });
-          }}
-        />
+  checked={myCanvas.Mobile}
+  onChange={(e) => {
+    const isMobile = e.value;
+    const newWidth = isMobile ? 390 : 1280;
+    const newHeight = isMobile ? 844 : 720;
+
+    setMyCanvas({
+      ...myCanvas,
+      Mobile: isMobile,
+      Width: newWidth,
+      Height: newHeight,
+    });
+  }}
+/>
+
         <span className="text-sm text-white">
           {myCanvas.Mobile ? "Mobile" : "Desktop"}
         </span>
