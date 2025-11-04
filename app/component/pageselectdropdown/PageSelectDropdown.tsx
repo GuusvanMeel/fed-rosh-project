@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { PanelSettingsProps } from '../panelsettings/PanelSettings'
+import { PanelSettingsProps } from '../canvas/canvasSideBar'
 
 export default function PageSelectDropdown({ onSelectionChange }: { onSelectionChange: (page: PanelSettingsProps | null) => void }) {
   const [pages, setPages] = useState<PanelSettingsProps[]>([])
