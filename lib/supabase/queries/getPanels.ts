@@ -17,15 +17,14 @@ export async function getPanels(): Promise<PanelData[]> {
 
   if (!data) return [];
 
-  // ✅ Normalize database keys → frontend types
-  const mapped = data.map((row: any) => ({
-    i: row.id, // id from DB maps to i
+const mapped: PanelData[] = data.map((row) => ({
+    i: row.id,
     x: row.x,
     y: row.y,
     w: row.w,
     h: row.h,
     backgroundColor: row.background_color,
-    panelProps: row.panel_props, // your JSONB payload
+    panelProps: row.panel_props,
   }));
 
   return mapped;
