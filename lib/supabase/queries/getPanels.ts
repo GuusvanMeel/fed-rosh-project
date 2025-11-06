@@ -23,8 +23,8 @@ const mapped: PanelData[] = data.map((row) => ({
     y: row.y,
     w: row.w,
     h: row.h,
-    backgroundColor: row.background_color,
-    panelProps: row.panel_props,
+    backgroundColor: row.backgroundColor,
+    panelProps: row.panelProps,
   }));
 
   return mapped;
