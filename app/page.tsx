@@ -5,6 +5,8 @@ import { PanelProps } from './component/panel';
 import Canvas, { CanvasData } from './component/canvas/Canvas';
 import { getPanels } from '@/lib/supabase/queries/getPanels';
 import { savePanels } from '@/lib/supabase/queries/savePanels';
+import { Provider } from "@/components/ui/provider"
+import { Button, HStack } from "@chakra-ui/react"
 
 
 export type PanelType = "text" | "video" | "image" | "carousel";
@@ -55,6 +57,7 @@ export default function Page() {
 }, [panels]);
 
   return (
+    <Provider>
     <div className="flex gap-6 items-start">
       <PanelSettings
         myCanvas={myCanvas}
@@ -62,15 +65,11 @@ export default function Page() {
         panels={panels} 
         setPanels={setPanels} 
       />
-       <button
-        onClick={handleSave}
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 shadow-md"
-      >
-        💾 Save All Panels
-      </button>
+      <Button bg="#14cc54" onClick={handleSave}>save panels</Button>
       <Canvas settings={myCanvas} setPanels={setPanels}  />
     
     </div>
+    </Provider>
   );
 }
 

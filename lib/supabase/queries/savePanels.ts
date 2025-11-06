@@ -10,8 +10,8 @@ export async function savePanels(panels: PanelData[]) {
     y: panel.y,
     w: panel.w,
     h: panel.h,
-    background_color: panel.backgroundColor,
-    panel_props: panel.panelProps, // 👈 JSONB field
+    backgroundColor: panel.backgroundColor,
+    panelProps: panel.panelProps, // 👈 JSONB field
   }));
 
   const { error } = await supabase.from("panels").upsert(formatted);
