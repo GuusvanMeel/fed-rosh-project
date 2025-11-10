@@ -152,7 +152,6 @@ useEffect(() => {
         isBounded
       >
   {settings.panels.map(panel => {
-  console.log(panel.i, panel.backgroundColor); // 👈 check what colors you get
   return (
     <div
       key={panel.i}
