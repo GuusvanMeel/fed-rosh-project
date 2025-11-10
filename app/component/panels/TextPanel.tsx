@@ -7,7 +7,6 @@ export default function TextPanel({ Text }: { Text: string }) {
         w-full h-full 
         p-2 rounded 
         text-white text-sm leading-snug
-        bg-blue-900
         overflow-y-auto overflow-x-hidden
         select-none 
         break-words
