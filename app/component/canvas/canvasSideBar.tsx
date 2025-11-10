@@ -37,10 +37,7 @@ export default function PanelSettings({
       w: 3,
       h: 3,
       panelProps: { id, type, content: "New Panel" },
-      isDraggable: true,
       backgroundColor: "#1e3a8a",
-      textColor: "#ffffff",
-      fontFamily: "Serif",
     };
     setPanels(prev => [...prev, newPanel]);
     setIsPickerOpen(false);

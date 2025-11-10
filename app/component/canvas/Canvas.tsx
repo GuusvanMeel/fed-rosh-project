@@ -151,19 +151,19 @@ useEffect(() => {
         allowOverlap
         isBounded
       >
-      {settings.panels.map(panel => (
-        <div
-  key={panel.i}
-  onClick={() => handlePanelClick(panel.i)}
-  className={`cursor-pointer rounded ${
-    selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
-  }`}
-  
-  style={{ backgroundColor: panel.backgroundColor }}
->
+  {settings.panels.map(panel => {
+  return (
+    <div
+      key={panel.i}
+      onClick={() => handlePanelClick(panel.i)}
+      className={`cursor-pointer rounded ${
+        selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
+      }`}
+      style={{ backgroundColor: panel.backgroundColor }}
+    >
   {renderPanel(panel)}
 </div>
-      ))}
+      )})}
     </ResponsiveGridLayout>
   {isSettingsOpen && (
   <PanelSettingsModal
