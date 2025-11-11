@@ -30,7 +30,6 @@ export default function PanelSettings({
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
-    const nextZ = (panels?.reduce((m, p) => Math.max(m, p.zIndex ?? 0), 0) ?? 0) + 1;
     const newPanel: PanelData = {
       i: id,
       x: 0,
@@ -39,8 +38,6 @@ export default function PanelSettings({
       h: 3,
       panelProps: { id, type, content: "New Panel" },
       backgroundColor: "#1e3a8a",
-      zIndex: nextZ,
-      borderRadius: 8,
     };
     setPanels(prev => [...prev, newPanel]);
     setIsPickerOpen(false);
