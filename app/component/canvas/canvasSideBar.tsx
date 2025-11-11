@@ -100,7 +100,8 @@ export default function PanelSettings({
               <button onClick={() => addPanel("text")}>Text</button>
               <button onClick={() => addPanel("video")}>Video</button>
               <button onClick={() => addPanel("image")}>Image</button>
-              <button onClick={() => addPanel("carousel")}>Carousel</button>
+              <button onClick={() => addPanel("countdown")}>countdown</button>
+              <button onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
             </div>
             <button
               className="mt-4 w-full bg-neutral-800 text-white rounded py-2"
