@@ -38,7 +38,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-neutral-900 text-white shadow-2xl ring-1 ring-white/10"
+        className="w-full max-w-md rounded-2xl bg-neutral-900 text-white shadow-2xl ring-1 ring-white/10 m-[10px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between px-6 pt-6">
@@ -149,23 +149,15 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
               Delete
             </button>
 
-            <div className="ml-auto flex gap-3">
-              <button
-                onClick={onClose}
-                className="inline-flex items-center justify-center rounded-lg bg-neutral-800 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  onUpdate(draft);
-                  onClose();
-                }}
-                className="inline-flex items-center justify-center rounded-lg bg-yellow-400 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              >
-                Save
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                onUpdate(draft);
+                onClose();
+              }}
+              className="ml-auto inline-flex items-center justify-center rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
