@@ -57,6 +57,30 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
               }
             />
           </label>
+
+          <label className="flex flex-col">
+            <span className="text-sm font-medium mb-1">Corner Radius</span>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min={0}
+                max={64}
+                value={draft.borderRadius ?? 8}
+                onChange={(e) =>
+                  setDraft({ ...draft, borderRadius: Number(e.target.value) })
+                }
+                className="flex-1"
+              />
+              <input
+                type="number"
+                className="w-20 border rounded p-2"
+                value={draft.borderRadius ?? 8}
+                onChange={(e) =>
+                  setDraft({ ...draft, borderRadius: Number(e.target.value) })
+                }
+              />
+            </div>
+          </label>
         </div>
 
         <div className="mt-6 flex justify-between items-center gap-3">

@@ -160,7 +160,7 @@ useEffect(() => {
       className={`cursor-pointer rounded ${
         selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
       }`}
-      style={{ backgroundColor: panel.backgroundColor }}
+      style={{ backgroundColor: panel.backgroundColor, borderRadius: panel.borderRadius ?? 8 }}
     >
   {renderPanel(panel)}
 </div>
