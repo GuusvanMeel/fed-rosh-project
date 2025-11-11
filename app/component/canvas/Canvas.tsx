@@ -9,6 +9,7 @@ import VideoPanel from '../panels/VideoPanel';
 import ImagePanel from '../panels/ImagePanel';
 import { PanelData } from '../../page';
 import PanelSettingsModal from '../panels/panelModal';
+import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 export type CanvasData = {
   Width: number;
@@ -169,10 +170,16 @@ useEffect(() => {
   <PanelSettingsModal
     panel={selectedPanel}
     onUpdate={handlePanelUpdate}
-    onDelete={(id: string) => {
-      setPanels(prev => prev.filter(p => p.i !== id));
-      setIsSettingsOpen(false);
-      setSelectedPanelId(null);
+    onDelete={async (id: string) => {
+      try {
+        await deletePanel(id);
+      } catch (e) {
+        console.error("Failed to delete panel from database", e);
+      } finally {
+        setPanels(prev => prev.filter(p => p.i !== id));
+        setIsSettingsOpen(false);
+        setSelectedPanelId(null);
+      }
     }}
     onClose={() => {
       setIsSettingsOpen(false);
