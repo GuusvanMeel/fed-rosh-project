@@ -169,7 +169,12 @@ useEffect(() => {
   <PanelSettingsModal
     panel={selectedPanel}
     onUpdate={handlePanelUpdate}
-   onClose={() => {
+    onDelete={(id: string) => {
+      setPanels(prev => prev.filter(p => p.i !== id));
+      setIsSettingsOpen(false);
+      setSelectedPanelId(null);
+    }}
+    onClose={() => {
       setIsSettingsOpen(false);
       setSelectedPanelId(null); // ✅ clear selection
     }}

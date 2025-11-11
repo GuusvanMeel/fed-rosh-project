@@ -6,9 +6,10 @@ type Props = {
   panel: PanelData | null;
   onUpdate: (updated: PanelData) => void;
   onClose: () => void;
+  onDelete: (id: string) => void;
 };
 
-export default function PanelSettingsModal({ panel, onUpdate, onClose }: Props) {
+export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete }: Props) {
   const [draft, setDraft] = useState<PanelData | null>(panel);
 
   // When a new panel is selected, sync into draft
@@ -58,7 +59,19 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose }: Props) 
           </label>
         </div>
 
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex justify-between items-center gap-3">
+          <button
+            onClick={() => {
+              onDelete(draft.i);
+              onClose();
+            }}
+            className="bg-red-600 text-white rounded px-3 py-1"
+            aria-label="Delete selected panel"
+          >
+            Delete
+          </button>
+
+          <div className="ml-auto flex gap-3">
           <button
             onClick={onClose}
             className="bg-neutral-300 rounded px-3 py-1"
@@ -74,6 +87,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose }: Props) 
           >
             Save
           </button>
+          </div>
         </div>
       </div>
     </div>
