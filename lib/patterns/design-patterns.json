@@ -1,0 +1,18 @@
+{
+  "primary-color": "#11d1d4",
+  "secondary-color": "#FFFFFF",
+  "h1": {
+    "font-family": "titillium-web-regular",
+    "font-size": "32px"
+  },
+  "p": {
+    "font-family": "gilda-display-regular",
+    "font-size": "14px"
+  },
+  "button": {
+    "font-family": "gilda-display-regular",
+    "font-size": "14px",
+    "background-color": "#413312",
+    "text-color": "#FFFFFF"
+  }
+}
