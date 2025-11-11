@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import PanelSettings from './component/canvas/canvasSideBar';
 import { PanelProps } from './component/panel';
 import Canvas, { CanvasData } from './component/canvas/Canvas';
+import PanelEditor from './component/canvas/PanelEditor';
 import { getPanels } from '@/lib/supabase/queries/getPanels';
 import { savePanels } from '@/lib/supabase/queries/savePanels';
 import { Provider } from "@/components/ui/provider"
@@ -20,6 +21,8 @@ export type PanelData = {
 	h: number;
   panelProps: PanelProps;
 	backgroundColor: string;
+  zIndex?: number;
+  borderRadius?: number;
 }
 
 export default function Page() {
@@ -63,9 +66,17 @@ export default function Page() {
   };
   
   const [panels, setPanels] = useState<PanelData[]>([]);
+  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
    
   useEffect(() => {
-    getPanels().then(setPanels);
+    getPanels().then((loaded) => {
+      const withDefaults = loaded.map((p, idx) => ({
+        ...p,
+        zIndex: p.zIndex ?? (idx + 1),
+        borderRadius: p.borderRadius ?? 8,
+      }));
+      setPanels(withDefaults);
+    });
   }, []);
   useEffect(() =>
      {
@@ -86,7 +97,13 @@ export default function Page() {
         setPanels={setPanels} 
       />
       <Button bg="#14cc54" onClick={handleSave}>save panels</Button>
-      <Canvas settings={myCanvas} setPanels={setPanels}  />
+      <Canvas settings={myCanvas} setPanels={setPanels} selectedPanelId={selectedPanelId} setSelectedPanelId={setSelectedPanelId} />
+      <PanelEditor
+        panels={panels}
+        setPanels={setPanels}
+        selectedPanelId={selectedPanelId}
+        setSelectedPanelId={setSelectedPanelId}
+      />
     
     </div>
     <DialogBox

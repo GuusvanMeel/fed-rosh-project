@@ -53,10 +53,9 @@ switch (panel.panelProps.type) {
     }
 }
 
-export default function Canvas({ settings, setPanels }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; }) {
+export default function Canvas({ settings, setPanels, selectedPanelId, setSelectedPanelId }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; selectedPanelId: string | null; setSelectedPanelId: (id: string | null) => void; }) {
   
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
   const selectedPanel = settings.panels.find(p => p.i === selectedPanelId) ?? null;
   const [isDragging, setIsDragging] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -156,10 +155,14 @@ useEffect(() => {
     <div
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
-      className={`cursor-pointer rounded ${
+      className={`cursor-pointer ${
         selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
       }`}
-      style={{ backgroundColor: panel.backgroundColor }}
+      style={{
+        backgroundColor: panel.backgroundColor,
+        zIndex: panel.zIndex ?? 1,
+        borderRadius: (panel.borderRadius ?? 8),
+      }}
     >
   {renderPanel(panel)}
 </div>
