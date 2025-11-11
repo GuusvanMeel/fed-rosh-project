@@ -74,12 +74,15 @@ export default function PanelEditor({
     >
       <div className="mb-4">
         <h3 className="text-lg font-semibold">Layers</h3>
-        <p className="text-xs text-neutral-400">Topmost first</p>
+        <p className="text-xs text-neutral-400">
+          Topmost first{!selected && ' · Select a panel to adjust layers'}
+        </p>
       </div>
 
       <ul role="list" className="space-y-2 mb-6">
         {sorted.map(p => {
           const isSelected = p.i === selectedPanelId
+          const canAdjustThis = isSelected && !!selected
           return (
             <li
               key={p.i}
@@ -97,28 +100,30 @@ export default function PanelEditor({
                 <div className="text-sm font-medium capitalize">{p.panelProps.type}</div>
                 <div className="text-xs text-neutral-400">z {p.zIndex ?? 0}</div>
               </button>
-              <div className="flex items-center gap-1 pr-2">
-                <button
-                  type="button"
-                  onClick={() => moveUp(p.i)}
-                  className="px-2 py-1 rounded bg-neutral-700 hover:bg-neutral-600 disabled:opacity-50"
-                  aria-label="Move layer up"
-                  title="Move up"
-                  disabled={sorted.findIndex(x => x.i === p.i) === sorted.length - 1}
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  onClick={() => moveDown(p.i)}
-                  className="px-2 py-1 rounded bg-neutral-700 hover:bg-neutral-600 disabled:opacity-50"
-                  aria-label="Move layer down"
-                  title="Move down"
-                  disabled={sorted.findIndex(x => x.i === p.i) === 0}
-                >
-                  ↓
-                </button>
-              </div>
+              {canAdjustThis && (
+                <div className="flex items-center gap-1 pr-2">
+                  <button
+                    type="button"
+                    onClick={() => moveUp(p.i)}
+                    className="px-2 py-1 rounded bg-neutral-700 hover:bg-neutral-600 disabled:opacity-50"
+                    aria-label="Move layer up"
+                    title="Move up"
+                    disabled={sorted.findIndex(x => x.i === p.i) === sorted.length - 1}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveDown(p.i)}
+                    className="px-2 py-1 rounded bg-neutral-700 hover:bg-neutral-600 disabled:opacity-50"
+                    aria-label="Move layer down"
+                    title="Move down"
+                    disabled={sorted.findIndex(x => x.i === p.i) === 0}
+                  >
+                    ↓
+                  </button>
+                </div>
+              )}
             </li>
           )
         })}
