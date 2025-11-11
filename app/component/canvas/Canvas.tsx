@@ -50,10 +50,12 @@ switch (panel.panelProps.type) {
         }
 
         case "countdown":
-          const date : Date = new Date(Date.now() + 10000);
-          return (
-            <CountdownPanel targetTime={date}></CountdownPanel>
-          );
+          if (typeof panel.panelProps.content === "string") {
+            
+            return (
+              <CountdownPanel targetTime={new Date(Number(panel.panelProps.content))}></CountdownPanel>
+            );
+          }
 
 
         case "scrollingText":

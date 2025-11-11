@@ -47,6 +47,25 @@ export default function PanelSettings({
         break;
       }
 
+      case "countdown": {
+        
+        const date : string = (Date.now() + 100000).toString();
+
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+
+          panelProps: { id, type, content: date},
+          backgroundColor: "#1e3a8a",
+        };
+        setPanels(prev => [...prev, newPanel]);
+        break;
+      }
+      
+
       default : {
         const newPanel: PanelData = {
           i: id,
