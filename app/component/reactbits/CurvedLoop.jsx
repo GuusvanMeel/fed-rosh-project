@@ -102,12 +102,11 @@ const CurvedLoop = ({
     dirRef.current = velRef.current > 0 ? 'right' : 'left';
   };
 
-  const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
 
   return (
     <div
       className="curved-loop-jacket"
-      style={{ visibility: ready ? 'visible' : 'hidden', cursor: cursorStyle }}
+      style={{ visibility: ready ? 'visible' : 'hidden' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}

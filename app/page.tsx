@@ -10,7 +10,7 @@ import { Button, Dialog, DialogBody } from "@chakra-ui/react"
 import DialogBox from './component/DialogBox';
 
 
-export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText";
+export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url";
 
 export type PanelData = {
 	i: string;

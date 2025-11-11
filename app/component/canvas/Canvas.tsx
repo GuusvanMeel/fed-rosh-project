@@ -11,6 +11,8 @@ import { PanelData } from '../../page';
 import PanelSettingsModal from '../panels/panelModal';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
+import UrlPanel from '../panels/UrlPanel';
+
 
 
 export type CanvasData = {
@@ -58,6 +60,13 @@ switch (panel.panelProps.type) {
         if (typeof panel.panelProps.content === "string") {
           return (
             <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
+          );
+        }
+
+        case "url":
+        if (Array.isArray(panel.panelProps.content)) {
+          return (
+            <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
           );
         }
          
@@ -173,7 +182,7 @@ useEffect(() => {
     <div
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
-      className={`cursor-pointer rounded ${
+      className={`cursor-grab active:cursor-grabbing  rounded ${
         selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
       }`}
       style={{ backgroundColor: panel.backgroundColor }}

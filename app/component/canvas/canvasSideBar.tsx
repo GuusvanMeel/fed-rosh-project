@@ -5,6 +5,7 @@ import { CanvasData } from './Canvas';
 import { InputSwitch } from 'primereact/inputswitch';
 import MyColorPicker from '../MyColorPicker';
 import { PanelData, PanelType } from '@/app/page';
+import { url } from 'inspector';
 
 export type PanelSettingsProps = {
   id?: string
@@ -30,16 +31,39 @@ export default function PanelSettings({
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
-    const newPanel: PanelData = {
-      i: id,
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      panelProps: { id, type, content: "New Panel" },
-      backgroundColor: "#1e3a8a",
-    };
-    setPanels(prev => [...prev, newPanel]);
+    switch(type){
+
+      case "url": {
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: ["New Panel", "https://www.youtube.com"] },
+          backgroundColor: "#1e3a8a",
+        };
+        setPanels(prev => [...prev, newPanel]);
+        break;
+      }
+
+      default : {
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: "New Panel" },
+          backgroundColor: "#1e3a8a",
+          };
+        setPanels(prev => [...prev, newPanel]);
+        break
+      }
+   
+
+    }
+    
     setIsPickerOpen(false);
   };
 
@@ -102,6 +126,7 @@ export default function PanelSettings({
               <button onClick={() => addPanel("image")}>Image</button>
               <button onClick={() => addPanel("countdown")}>countdown</button>
               <button onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
+              <button onClick={() => addPanel("url")}>Url</button>
             </div>
             <button
               className="mt-4 w-full bg-neutral-800 text-white rounded py-2"
