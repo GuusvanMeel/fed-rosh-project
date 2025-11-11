@@ -1,5 +1,5 @@
 {
-  "primary-color": "#11d1d4",
+  "primary-color": "#9e0000",
   "secondary-color": "#FFFFFF",
   "h1": {
     "font-family": "titillium-web-regular",
@@ -14,5 +14,6 @@
     "font-size": "14px",
     "background-color": "#413312",
     "text-color": "#FFFFFF"
-  }
+  },
+  "colorType": "#00ffe1"
 }

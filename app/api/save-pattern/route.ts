@@ -3,7 +3,7 @@ import path from "path";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const filePath = path.join(process.cwd(), "lib/patterns/design-patterns.json");
+  const filePath = path.join(process.cwd(), "public/patterns/design-patterns.json");
 
   const existing = JSON.parse(await fs.readFile(filePath, "utf-8"));
   const updated = { ...existing, ...body };
