@@ -1,4 +1,5 @@
 'use client';
+import { Button } from 'primereact/button';
 import React, { useState, useEffect } from 'react';
 import { PanelData } from '@/app/page';
 
@@ -138,16 +139,25 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           </div>
 
           <div className="mt-6 flex items-center justify-between gap-3">
-            <button
+            {/* <button
               onClick={() => {
                 onDelete(draft.i);
                 onClose();
               }}
-              className="inline-flex items-center justify-center rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="inline-flex items-center justify-center rounded-lg !bg-red-600 px-3 py-2 text-sm font-medium text-white hover:!bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
               aria-label="Delete selected panel"
             >
               Delete
-            </button>
+            </button> */}
+
+            <Button label='delete'
+              onClick={() => {
+                onDelete(draft.i);
+                onClose();
+              }}
+              aria-label="Delete selected panel"
+            >
+            </Button>
 
             <button
               onClick={() => {
