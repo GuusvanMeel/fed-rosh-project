@@ -53,37 +53,20 @@ switch (panel.panelProps.type) {
     }
 }
 
-export default function Canvas({ settings, setPanels }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; }) {
+export default function Canvas({ settings, setPanels, onEdit }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; onEdit: (id: string) => void; }) {
   
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
-  const selectedPanel = settings.panels.find(p => p.i === selectedPanelId) ?? null;
   const [isDragging, setIsDragging] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   
 const handlePanelClick = (id: string) => {
   if (!isDragging) {
-    setSelectedPanelId(id);
+    onEdit(id);
   }
 };
 
-// React to selectedPanel changes
-useEffect(() => {
-  if (selectedPanel) {
-    setIsSettingsOpen(true);
-  }
-}, [selectedPanel]);
 
-useEffect(() => {
-  if (!selectedPanel) setIsSettingsOpen(false);
-}, [selectedPanel]);
 
-  const handlePanelUpdate = (updated: PanelData) => {
-    setPanels(prev =>
-      prev.map(p => (p.i === updated.i ? updated : p))
-    );
-  };
   
 
  const handleLayoutChange = (newLayout: Layout[]) => {
@@ -156,25 +139,14 @@ useEffect(() => {
     <div
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
-      className={`cursor-pointer rounded ${
-        selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
-      }`}
+      className={`cursor-pointer rounded `}
       style={{ backgroundColor: panel.backgroundColor }}
     >
   {renderPanel(panel)}
 </div>
       )})}
     </ResponsiveGridLayout>
-  {isSettingsOpen && (
-  <PanelSettingsModal
-    panel={selectedPanel}
-    onUpdate={handlePanelUpdate}
-   onClose={() => {
-      setIsSettingsOpen(false);
-      setSelectedPanelId(null); // ✅ clear selection
-    }}
-  />
-)}
+
 
     </div>
   );

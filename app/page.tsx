@@ -8,6 +8,7 @@ import { savePanels } from '@/lib/supabase/queries/savePanels';
 import { Provider } from "@/components/ui/provider"
 import { Button, Dialog, DialogBody } from "@chakra-ui/react"
 import DialogBox from './component/DialogBox';
+import PanelSettingsModal from './component/panels/panelModal';
 
 
 export type PanelType = "text" | "video" | "image" | "carousel";
@@ -63,6 +64,28 @@ export default function Page() {
   };
   
   const [panels, setPanels] = useState<PanelData[]>([]);
+  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
+const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+const selectedPanel = panels.find(p => p.i === selectedPanelId) ?? null;
+
+// Opens modal when user wants to edit
+const handleEditPanel = (id: string) => {
+  setSelectedPanelId(id);
+  setIsSettingsOpen(true);
+};
+
+// Updates a panel after editing
+const handlePanelUpdate = (updated: PanelData) => {
+  setPanels(prev =>
+    prev.map(p => (p.i === updated.i ? updated : p))
+  );
+};
+
+// Closes the modal
+const handleClosePanelSettings = () => {
+  setIsSettingsOpen(false);
+  setSelectedPanelId(null);
+};
    
   useEffect(() => {
     getPanels().then(setPanels);
@@ -78,16 +101,18 @@ export default function Page() {
 
   return (
     <Provider>
-    <div className="flex gap-6 items-start">
+    <div className="flex  items-start">
       <PanelSettings
         myCanvas={myCanvas}
         setMyCanvas={setMyCanvas}
         panels={panels} 
-        setPanels={setPanels} 
+        setPanels={setPanels}
+        onEdit={handleEditPanel} 
+        onSave={handleSave}
       />
-      <Button bg="#14cc54" onClick={handleSave}>save panels</Button>
-      <Canvas settings={myCanvas} setPanels={setPanels}  />
-    
+      
+      <Canvas settings={myCanvas} setPanels={setPanels} onEdit={handleEditPanel}   />
+
     </div>
     <DialogBox
         open={dialog.open}
@@ -98,7 +123,14 @@ export default function Page() {
         confirmText="OK"
         onConfirm={() => setDialog((d) => ({ ...d, open: false }))}
       />
-    
+    {isSettingsOpen && selectedPanel && (
+  <PanelSettingsModal
+    panel={selectedPanel}
+    onUpdate={handlePanelUpdate}
+    onClose={handleClosePanelSettings}
+  />
+)}
+
     </Provider>
   );
 }
