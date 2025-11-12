@@ -59,7 +59,7 @@ return (
         ＋ Add Panel
       </button>
       <button
-        onClick={() => console.log("Save panels")} // placeholder for save
+        onClick={onSave} // placeholder for save
         className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-sm font-semibold"
       >
         💾 Save
