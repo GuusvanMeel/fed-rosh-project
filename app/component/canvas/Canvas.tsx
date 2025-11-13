@@ -11,6 +11,7 @@ import { PanelData } from '../../page';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
+import { rounds, BracketWrapper } from '../panels/BracketPanel';
 
 
 export type CanvasData = {
@@ -68,6 +69,13 @@ switch (panel.panelProps.type) {
             <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
           );
         }
+
+        case "bracket":
+        if (typeof panel.panelProps.content === "string") {
+          return (
+            <BracketWrapper rounds={rounds}></BracketWrapper>
+          );
+        }
          
       default:
         return (
@@ -105,7 +113,7 @@ const handlePanelClick = (id: string) => {
 
   return (
     <div
-      className="bg-gray-400 rounded-2xl relative overflow-hidden"
+      className="bg-gray-400 rounded-2xl relative overflow-hidden border-4 border-red-500 "
       style={{
         backgroundColor: settings.color,
         height: settings.Height,

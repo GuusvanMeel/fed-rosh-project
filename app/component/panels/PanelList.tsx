@@ -5,9 +5,11 @@ import { PanelData } from "@/app/page";
 export default function PanelList({
   panels,
   onEdit,
+  onDelete
 }: {
   panels: PanelData[];
   onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
 
 
@@ -46,9 +48,9 @@ export default function PanelList({
               <Button
                 size="xs"
                 colorScheme="red"
-                
+                onClick={() => onDelete(panel.i)}
               >
-                Delete(not implemented)
+                Delete
               </Button>
             </HStack>
           </HStack>

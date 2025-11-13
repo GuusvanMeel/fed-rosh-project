@@ -11,7 +11,7 @@ import PanelSettingsModal from './component/panels/panelModal';
 import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 
-export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url";
+export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url" | "bracket";
 
 export type PanelData = {
 	i: string;
@@ -86,6 +86,17 @@ const handleClosePanelSettings = () => {
   setIsSettingsOpen(false);
   setSelectedPanelId(null);
 };
+const handleDeletePanel = async (id: string) => {
+  try {
+    await deletePanel(id);
+  } catch (err) {
+    console.error("Failed to delete panel from DB:", err);
+  } finally {
+    setPanels((prev) => prev.filter((p) => p.i !== id));
+    setIsSettingsOpen(false);
+    setSelectedPanelId(null);
+  }
+};
    
   useEffect(() => {
     getPanels().then(setPanels);
@@ -102,10 +113,15 @@ const handleClosePanelSettings = () => {
         setPanels={setPanels}
         onEdit={handleEditPanel} 
         onSave={handleSave}
+        onDelete={handleDeletePanel}
       />
       
-      <Canvas settings={myCanvas} panels={panels} setPanels={setPanels} onEdit={handleEditPanel}   />
-
+  <Canvas
+    settings={myCanvas}
+    panels={panels}
+    setPanels={setPanels}
+    onEdit={handleEditPanel}
+  />
     </div>
     <DialogBox
         open={dialog.open}
@@ -121,17 +137,7 @@ const handleClosePanelSettings = () => {
     panel={selectedPanel}
     onUpdate={handlePanelUpdate}
     onClose={handleClosePanelSettings}
-    onDelete={async (id: string) => {
-      try {
-        await deletePanel(id);
-      } catch (e) {
-        console.error("Failed to delete panel from database", e);
-      } finally {
-        setPanels(prev => prev.filter(p => p.i !== id));
-        setIsSettingsOpen(false);
-        setSelectedPanelId(null);
-      }
-    }}
+    onDelete={handleDeletePanel}
   />
 )}
 

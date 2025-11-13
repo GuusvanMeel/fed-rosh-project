@@ -117,7 +117,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
                 <input
                   type="range"
                   min={0}
-                  max={2000}
+                  max={100}
                   value={draft.borderRadius ?? 8}
                   onChange={(e) =>
                     setDraft({ ...draft, borderRadius: Number(e.target.value) })
