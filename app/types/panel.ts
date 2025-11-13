@@ -15,7 +15,7 @@ export type PanelData = {
   backgroundColor: string;
   borderRadius?: number;
 
-    fontSize?: number;
+  fontSize?: number;
   fontFamily?: string;
   textColor?: string;
   padding?: number;
