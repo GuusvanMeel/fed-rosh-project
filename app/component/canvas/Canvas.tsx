@@ -8,13 +8,10 @@ import TextPanel from '../panels/TextPanel';
 import VideoPanel from '../panels/VideoPanel';
 import ImagePanel from '../panels/ImagePanel';
 import { PanelData } from '../../page';
-import PanelSettingsModal from '../panels/panelModal';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
 
-
-import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 export type CanvasData = {
   Width: number;
@@ -24,7 +21,6 @@ export type CanvasData = {
   columns: number;
   rows: number;
   showgrid: boolean
-  panels: PanelData[]
 };
 
 function renderPanel(panel : PanelData){
@@ -82,7 +78,7 @@ switch (panel.panelProps.type) {
     }
 }
 
-export default function Canvas({ settings, setPanels, onEdit }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; onEdit: (id: string) => void; }) {
+export default function Canvas({ settings,panels, setPanels, onEdit }: { settings: CanvasData,panels: PanelData[], setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; onEdit: (id: string) => void; }) {
   
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   const [isDragging, setIsDragging] = useState(false);
@@ -93,9 +89,6 @@ const handlePanelClick = (id: string) => {
     onEdit(id);
   }
 };
-
-
-
   
 
  const handleLayoutChange = (newLayout: Layout[]) => {
@@ -112,7 +105,7 @@ const handlePanelClick = (id: string) => {
 
   return (
     <div
-      className="bg-blue-900 rounded-2xl relative overflow-hidden"
+      className="bg-gray-400 rounded-2xl relative overflow-hidden"
       style={{
         backgroundColor: settings.color,
         height: settings.Height,
@@ -145,13 +138,19 @@ const handlePanelClick = (id: string) => {
 
       <ResponsiveGridLayout
        onDragStart={() => setIsDragging(true)}
-       onDragStop={() => setTimeout(() => setIsDragging(false), 150)} 
+       onDragStop={(layout) => {
+  handleLayoutChange(layout);
+  setTimeout(() => setIsDragging(false), 150);
+}}
+
        onResizeStart={() => setIsDragging(true)}                     
-       onResizeStop={() => setTimeout(() => setIsDragging(false), 150)} 
+       onResizeStop={(layout) => {
+  handleLayoutChange(layout);
+  setTimeout(() => setIsDragging(false), 150);
+}}
         className="layout"
         style={{height: "100%"}}
-        onLayoutChange={handleLayoutChange}
-        layouts={{ lg: settings.panels }}
+        layouts={{ lg: panels }}
         breakpoints={{ lg: 0 }}
         cols={{ lg: settings.columns }}
         rowHeight={settings.Height / settings.rows}
@@ -163,7 +162,7 @@ const handlePanelClick = (id: string) => {
         allowOverlap
         isBounded
       >
-  {settings.panels.map(panel => {
+  {panels.map(panel => {
   return (
     <div
       key={panel.i}

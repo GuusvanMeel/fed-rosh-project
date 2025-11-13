@@ -6,9 +6,9 @@ import Canvas, { CanvasData } from './component/canvas/Canvas';
 import { getPanels } from '@/lib/supabase/queries/getPanels';
 import { savePanels } from '@/lib/supabase/queries/savePanels';
 import { Provider } from "@/components/ui/provider"
-import { Button, Dialog, DialogBody } from "@chakra-ui/react"
 import DialogBox from './component/DialogBox';
 import PanelSettingsModal from './component/panels/panelModal';
+import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 
 export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url";
@@ -35,11 +35,10 @@ export default function Page() {
     Width: 1280,
     Height: 720,
     Mobile: false,
-    color: "#1e3a8a",
+    color: "#838485",
     columns: 20,
     rows: 10,
     showgrid: true,
-    panels: []
   });
   const handleSave = async () => {
     try {
@@ -64,8 +63,8 @@ export default function Page() {
     }
   };
   
-  const [panels, setPanels] = useState<PanelData[]>([]);
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
+const [panels, setPanels] = useState<PanelData[]>([]);
+const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
 const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 const selectedPanel = panels.find(p => p.i === selectedPanelId) ?? null;
 
@@ -91,14 +90,7 @@ const handleClosePanelSettings = () => {
   useEffect(() => {
     getPanels().then(setPanels);
   }, []);
-  useEffect(() =>
-     {
-  // Whenever panels change, sync them into myCanvas
-  setMyCanvas(prev => ({
-    ...prev,
-    panels: panels,
-  }));
-}, [panels]);
+
 
   return (
     <Provider>
@@ -112,7 +104,7 @@ const handleClosePanelSettings = () => {
         onSave={handleSave}
       />
       
-      <Canvas settings={myCanvas} setPanels={setPanels} onEdit={handleEditPanel}   />
+      <Canvas settings={myCanvas} panels={panels} setPanels={setPanels} onEdit={handleEditPanel}   />
 
     </div>
     <DialogBox
@@ -129,6 +121,17 @@ const handleClosePanelSettings = () => {
     panel={selectedPanel}
     onUpdate={handlePanelUpdate}
     onClose={handleClosePanelSettings}
+    onDelete={async (id: string) => {
+      try {
+        await deletePanel(id);
+      } catch (e) {
+        console.error("Failed to delete panel from database", e);
+      } finally {
+        setPanels(prev => prev.filter(p => p.i !== id));
+        setIsSettingsOpen(false);
+        setSelectedPanelId(null);
+      }
+    }}
   />
 )}
 
