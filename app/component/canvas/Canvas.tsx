@@ -8,7 +8,10 @@ import TextPanel from '../panels/TextPanel';
 import VideoPanel from '../panels/VideoPanel';
 import ImagePanel from '../panels/ImagePanel';
 import { PanelData } from '../../page';
-import PanelSettingsModal from '../panels/panelModal';
+import { CountdownPanel } from '../panels/CountdownPanel';
+import ScrollingTextPanel from '../panels/ScrollingTextPanel';
+import UrlPanel from '../panels/UrlPanel';
+
 
 export type CanvasData = {
   Width: number;
@@ -18,7 +21,6 @@ export type CanvasData = {
   columns: number;
   rows: number;
   showgrid: boolean
-  panels: PanelData[]
 };
 
 function renderPanel(panel : PanelData){
@@ -43,7 +45,30 @@ switch (panel.panelProps.type) {
             <ImagePanel source={panel.panelProps.content}></ImagePanel>
           );
         }
-              
+
+        case "countdown":
+          if (typeof panel.panelProps.content === "string") {
+            
+            return (
+              <CountdownPanel targetTime={new Date(Number(panel.panelProps.content))}></CountdownPanel>
+            );
+          }
+
+
+        case "scrollingText":
+        if (typeof panel.panelProps.content === "string") {
+          return (
+            <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
+          );
+        }
+
+        case "url":
+        if (Array.isArray(panel.panelProps.content)) {
+          return (
+            <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
+          );
+        }
+         
       default:
         return (
           <div key={panel.i} className="bg-red-500 rounded">
@@ -53,37 +78,17 @@ switch (panel.panelProps.type) {
     }
 }
 
-export default function Canvas({ settings, setPanels }: { settings: CanvasData, setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; }) {
+export default function Canvas({ settings,panels, setPanels, onEdit }: { settings: CanvasData,panels: PanelData[], setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; onEdit: (id: string) => void; }) {
   
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null);
-  const selectedPanel = settings.panels.find(p => p.i === selectedPanelId) ?? null;
   const [isDragging, setIsDragging] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   
 const handlePanelClick = (id: string) => {
   if (!isDragging) {
-    setSelectedPanelId(id);
+    onEdit(id);
   }
 };
-
-// React to selectedPanel changes
-useEffect(() => {
-  if (selectedPanel) {
-    setIsSettingsOpen(true);
-  }
-}, [selectedPanel]);
-
-useEffect(() => {
-  if (!selectedPanel) setIsSettingsOpen(false);
-}, [selectedPanel]);
-
-  const handlePanelUpdate = (updated: PanelData) => {
-    setPanels(prev =>
-      prev.map(p => (p.i === updated.i ? updated : p))
-    );
-  };
   
 
  const handleLayoutChange = (newLayout: Layout[]) => {
@@ -100,7 +105,7 @@ useEffect(() => {
 
   return (
     <div
-      className="bg-blue-900 rounded-2xl relative overflow-hidden"
+      className="bg-gray-400 rounded-2xl relative overflow-hidden"
       style={{
         backgroundColor: settings.color,
         height: settings.Height,
@@ -133,13 +138,19 @@ useEffect(() => {
 
       <ResponsiveGridLayout
        onDragStart={() => setIsDragging(true)}
-       onDragStop={() => setTimeout(() => setIsDragging(false), 150)} 
+       onDragStop={(layout) => {
+  handleLayoutChange(layout);
+  setTimeout(() => setIsDragging(false), 150);
+}}
+
        onResizeStart={() => setIsDragging(true)}                     
-       onResizeStop={() => setTimeout(() => setIsDragging(false), 150)} 
+       onResizeStop={(layout) => {
+  handleLayoutChange(layout);
+  setTimeout(() => setIsDragging(false), 150);
+}}
         className="layout"
         style={{height: "100%"}}
-        onLayoutChange={handleLayoutChange}
-        layouts={{ lg: settings.panels }}
+        layouts={{ lg: panels }}
         breakpoints={{ lg: 0 }}
         cols={{ lg: settings.columns }}
         rowHeight={settings.Height / settings.rows}
@@ -151,30 +162,20 @@ useEffect(() => {
         allowOverlap
         isBounded
       >
-  {settings.panels.map(panel => {
+  {panels.map(panel => {
   return (
     <div
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
-      className={`cursor-pointer rounded ${
-        selectedPanelId === panel.i ? "ring-4 ring-yellow-400" : ""
-      }`}
-      style={{ backgroundColor: panel.backgroundColor }}
+      className={`cursor-grab active:cursor-grabbing  rounded`}
+      style={{ backgroundColor: panel.backgroundColor,
+          borderRadius: panel.borderRadius ?? 8,
+       }}
     >
   {renderPanel(panel)}
 </div>
       )})}
     </ResponsiveGridLayout>
-  {isSettingsOpen && (
-  <PanelSettingsModal
-    panel={selectedPanel}
-    onUpdate={handlePanelUpdate}
-   onClose={() => {
-      setIsSettingsOpen(false);
-      setSelectedPanelId(null); // ✅ clear selection
-    }}
-  />
-)}
 
     </div>
   );
