@@ -169,6 +169,7 @@ return (
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("url")}>URL</button>
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("countdown")}>Countdown</button>
+            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("bracket")}>Bracket</button>
           </div>
           <button
             className="mt-3 w-full bg-neutral-800 hover:bg-neutral-900 text-white rounded py-2 text-sm"
