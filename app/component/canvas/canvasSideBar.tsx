@@ -5,6 +5,7 @@ import { CanvasData } from './Canvas';
 import { InputSwitch } from 'primereact/inputswitch';
 import MyColorPicker from '../MyColorPicker';
 import { PanelData, PanelType } from '@/app/page';
+import { url } from 'inspector';
 import PanelList from '../panels/PanelList';
 
 export type PanelSettingsProps = {
@@ -35,16 +36,58 @@ export default function PanelSettings({
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
-    const newPanel: PanelData = {
-      i: id,
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      panelProps: { id, type, content: "New Panel" },
-      backgroundColor: "#1e3a8a",
-    };
-    setPanels(prev => [...prev, newPanel]);
+    switch(type){
+
+      case "url": {
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: ["New Panel", "https://www.youtube.com"] },
+          backgroundColor: "#1e3a8a",
+        };
+        setPanels(prev => [...prev, newPanel]);
+        break;
+      }
+
+      case "countdown": {
+        
+        const date : string = (Date.now() + 100000).toString();
+
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+
+          panelProps: { id, type, content: date},
+          backgroundColor: "#1e3a8a",
+        };
+        setPanels(prev => [...prev, newPanel]);
+        break;
+      }
+      
+
+      default : {
+        const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: "New Panel" },
+          backgroundColor: "#1e3a8a",
+          };
+        setPanels(prev => [...prev, newPanel]);
+        break
+      }
+   
+
+    }
+    
     setIsPickerOpen(false);
   };
 
@@ -122,7 +165,9 @@ return (
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("text")}>Text</button>
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("video")}>Video</button>
             <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("image")}>Image</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("carousel")}>Carousel</button>
+            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("url")}>URL</button>
+            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
+            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("countdown")}>Countdown</button>
           </div>
           <button
             className="mt-3 w-full bg-neutral-800 hover:bg-neutral-900 text-white rounded py-2 text-sm"

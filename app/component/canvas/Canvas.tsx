@@ -9,6 +9,11 @@ import VideoPanel from '../panels/VideoPanel';
 import ImagePanel from '../panels/ImagePanel';
 import { PanelData } from '../../page';
 import PanelSettingsModal from '../panels/panelModal';
+import { CountdownPanel } from '../panels/CountdownPanel';
+import ScrollingTextPanel from '../panels/ScrollingTextPanel';
+import UrlPanel from '../panels/UrlPanel';
+
+
 
 export type CanvasData = {
   Width: number;
@@ -43,7 +48,30 @@ switch (panel.panelProps.type) {
             <ImagePanel source={panel.panelProps.content}></ImagePanel>
           );
         }
-              
+
+        case "countdown":
+          if (typeof panel.panelProps.content === "string") {
+            
+            return (
+              <CountdownPanel targetTime={new Date(Number(panel.panelProps.content))}></CountdownPanel>
+            );
+          }
+
+
+        case "scrollingText":
+        if (typeof panel.panelProps.content === "string") {
+          return (
+            <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
+          );
+        }
+
+        case "url":
+        if (Array.isArray(panel.panelProps.content)) {
+          return (
+            <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
+          );
+        }
+         
       default:
         return (
           <div key={panel.i} className="bg-red-500 rounded">
@@ -139,7 +167,7 @@ const handlePanelClick = (id: string) => {
     <div
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
-      className={`cursor-pointer rounded `}
+      className={`cursor-grab active:cursor-grabbing  rounded`}
       style={{ backgroundColor: panel.backgroundColor }}
     >
   {renderPanel(panel)}

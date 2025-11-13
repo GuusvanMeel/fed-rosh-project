@@ -11,7 +11,7 @@ import DialogBox from './component/DialogBox';
 import PanelSettingsModal from './component/panels/panelModal';
 
 
-export type PanelType = "text" | "video" | "image" | "carousel";
+export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url";
 
 export type PanelData = {
 	i: string;
