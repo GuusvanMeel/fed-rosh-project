@@ -146,6 +146,7 @@ export default function PanelSettings({
               <button onClick={() => addPanel("countdown")}>countdown</button>
               <button onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
               <button onClick={() => addPanel("url")}>Url</button>
+              <button onClick={() => addPanel("bracket")}>Bracket</button>
             </div>
             <button
               className="mt-4 w-full bg-neutral-800 text-white rounded py-2"

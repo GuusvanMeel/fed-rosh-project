@@ -71,6 +71,13 @@ switch (panel.panelProps.type) {
             <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
           );
         }
+
+        case "bracket":
+        if (typeof panel.panelProps.content === "string") {
+          return (
+            <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
+          );
+        }
          
       default:
         return (
