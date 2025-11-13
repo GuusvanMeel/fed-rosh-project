@@ -1,11 +1,12 @@
 'use client'
 import React from 'react'
 import { useState } from 'react';
-import { CanvasData } from './Canvas';
 import { InputSwitch } from 'primereact/inputswitch';
 import MyColorPicker from '../MyColorPicker';
-import { PanelData, PanelType } from '@/app/page';
 import PanelList from '../panels/PanelList';
+import { PanelData, PanelType } from '@/app/types/panel';
+import { CanvasData } from '@/app/types/canvas';
+import { panelRegistry } from '../panels/panelRegistry';
 
 export type PanelSettingsProps = {
   id?: string
@@ -16,6 +17,8 @@ export type PanelSettingsProps = {
   panels?: PanelData[]
   setPanels: React.Dispatch<React.SetStateAction<PanelData[]>>;
 }
+
+export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
 
 export default function PanelSettings({
   myCanvas,
@@ -35,44 +38,10 @@ export default function PanelSettings({
   onDelete: (id: string) => void;
 }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
-    switch(type){
-
-      case "url": {
-        const newPanel: PanelData = {
-          i: id,
-          x: 0,
-          y: 0,
-          w: 3,
-          h: 3,
-          panelProps: { id, type, content: ["New Panel", "https://www.youtube.com"] },
-          backgroundColor: "#1e3a8a",
-        };
-        setPanels(prev => [...prev, newPanel]);
-        break;
-      }
-
-      case "countdown": {
-        
-        const date : string = (Date.now() + 100000).toString();
-
-        const newPanel: PanelData = {
-          i: id,
-          x: 0,
-          y: 0,
-          w: 3,
-          h: 3,
-
-          panelProps: { id, type, content: date},
-          backgroundColor: "#1e3a8a",
-        };
-        setPanels(prev => [...prev, newPanel]);
-        break;
-      }
-      
-
-      default : {
+     
         const newPanel: PanelData = {
           i: id,
           x: 0,
@@ -81,13 +50,9 @@ export default function PanelSettings({
           h: 3,
           panelProps: { id, type, content: "New Panel" },
           backgroundColor: "#1e3a8a",
+          textColor: "fffff"
           };
         setPanels(prev => [...prev, newPanel]);
-        break
-      }
-   
-
-    }
     
     setIsPickerOpen(false);
   };
@@ -163,14 +128,16 @@ return (
         <div className="bg-white text-black rounded-lg p-4 w-80">
           <div className="text-base font-semibold mb-3">Add panel</div>
           <div className="grid grid-cols-2 gap-2">
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("text")}>Text</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("video")}>Video</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("image")}>Image</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("url")}>URL</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("countdown")}>Countdown</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("bracket")}>Bracket</button>
-          </div>
+            {panelTypes.map((type) => (
+              <button
+                key={type}
+                className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm capitalize"
+                onClick={() => addPanel(type)}
+              >
+                {type === "scrollingText" ? "Scrolling Text" : type}
+              </button>
+            ))}
+            </div>
           <button
             className="mt-3 w-full bg-neutral-800 hover:bg-neutral-900 text-white rounded py-2 text-sm"
             onClick={() => setIsPickerOpen(false)}

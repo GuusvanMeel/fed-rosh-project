@@ -1,7 +1,7 @@
 'use client';
+import { PanelData } from '@/app/types/panel';
 import { Button } from 'primereact/button';
 import React, { useState, useEffect } from 'react';
-import { PanelData } from '@/app/page';
 
 type Props = {
   panel: PanelData | null;
@@ -137,6 +137,60 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
               </div>
             </label>
           </div>
+          <label className="flex flex-col">
+  <span className="text-sm font-medium mb-1">Text Color</span>
+ <input
+                  type="color"
+                  className="h-9 w-12 cursor-pointer rounded border border-neutral-700 bg-neutral-800 p-1"
+                  value={draft.textColor}
+                  onChange={(e) =>
+                    setDraft({ ...draft, textColor: e.target.value })
+                  }
+                  aria-label="Pick background color"
+                  title="Pick background color"
+                />
+</label>
+<label className="flex flex-col">
+  <span className="text-sm font-medium mb-1">Font Size</span>
+  <input
+    type="range"
+    min={8}
+    max={64}
+    value={draft.fontSize ?? 16}
+    onChange={(e) =>
+      setDraft({ ...draft, fontSize: Number(e.target.value) })
+    }
+  />
+</label>
+<label className="flex flex-col">
+  <span className="text-sm font-medium mb-1">Padding</span>
+  <input
+    type="range"
+    min={0}
+    max={50}
+    value={draft.padding ?? 8}
+    onChange={(e) =>
+      setDraft({ ...draft, padding: Number(e.target.value) })
+    }
+  />
+</label>
+<label className="flex flex-col">
+  <span className="text-sm font-medium mb-1">Text Align</span>
+  <select
+    value={draft.contentAlign ?? "left"}
+    onChange={(e) =>
+      setDraft({ ...draft, contentAlign: e.target.value as any })
+    }
+    className="rounded border bg-neutral-800 px-2 py-1"
+  >
+    <option value="left">Left</option>
+    <option value="center">Center</option>
+    <option value="right">Right</option>
+  </select>
+</label>
+
+
+
 
           <div className="mt-6 flex items-center justify-between gap-3">
       

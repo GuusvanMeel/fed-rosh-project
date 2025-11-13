@@ -4,86 +4,32 @@ import React, { useMemo, useEffect, useState } from 'react'
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import TextPanel from '../panels/TextPanel';
-import VideoPanel from '../panels/VideoPanel';
-import ImagePanel from '../panels/ImagePanel';
-import { PanelData } from '../../page';
-import { CountdownPanel } from '../panels/CountdownPanel';
-import ScrollingTextPanel from '../panels/ScrollingTextPanel';
-import UrlPanel from '../panels/UrlPanel';
-import { rounds, BracketWrapper } from '../panels/BracketPanel';
+import { PanelData } from '@/app/types/panel';
+import { CanvasData } from '@/app/types/canvas';
+import { PanelWrapper } from '../panels/panelWrapper';
+import { panelRegistry } from '../panels/panelRegistry';
 
 
-export type CanvasData = {
-  Width: number;
-  Height: number;
-  Mobile: boolean;
-  color: string;
-  columns: number;
-  rows: number;
-  showgrid: boolean
-};
 
-function renderPanel(panel : PanelData){
-switch (panel.panelProps.type) {
-      case "text":
-        if (typeof panel.panelProps.content === "string") {
-          return (
-            <TextPanel Text={panel.panelProps.content}></TextPanel>
-          );
-        }
+function renderPanel(panel: PanelData) {
+  const entry = panelRegistry[panel.panelProps.type];
 
-      case "video":
-        if (typeof panel.panelProps.content === "string") {
-          return (
-            <VideoPanel source={panel.panelProps.content}></VideoPanel>
-          );
-        }
-      
-        case "image":
-        if (typeof panel.panelProps.content === "string") {
-          return (
-            <ImagePanel source={panel.panelProps.content}></ImagePanel>
-          );
-        }
+  if (!entry) {
+    return (
+      <div key={panel.i} className="bg-red-500 rounded">
+        <span>Unknown panel type: {panel.panelProps.type}</span>
+      </div>
+    );
+  }
 
-        case "countdown":
-          if (typeof panel.panelProps.content === "string") {
-            
-            return (
-              <CountdownPanel targetTime={new Date(Number(panel.panelProps.content))}></CountdownPanel>
-            );
-          }
+  const Component = entry.component;
+  const mappedProps = entry.mapProps(panel.panelProps.content);
 
-
-        case "scrollingText":
-        if (typeof panel.panelProps.content === "string") {
-          return (
-            <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
-          );
-        }
-
-        case "url":
-        if (Array.isArray(panel.panelProps.content)) {
-          return (
-            <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
-          );
-        }
-
-        case "bracket":
-        if (typeof panel.panelProps.content === "string") {
-          return (
-            <BracketWrapper rounds={rounds}></BracketWrapper>
-          );
-        }
-         
-      default:
-        return (
-          <div key={panel.i} className="bg-red-500 rounded">
-            <span>Item {panel.i}</span>
-          </div>
-        );
-    }
+  return (
+    <PanelWrapper panel={panel}>
+      <Component {...mappedProps} />
+    </PanelWrapper>
+  );
 }
 
 export default function Canvas({ settings,panels, setPanels, onEdit }: { settings: CanvasData,panels: PanelData[], setPanels: (next: PanelData[] | ((p: PanelData[]) => PanelData[])) => void; onEdit: (id: string) => void; }) {
@@ -176,9 +122,7 @@ const handlePanelClick = (id: string) => {
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
       className={`cursor-grab active:cursor-grabbing  rounded`}
-      style={{ backgroundColor: panel.backgroundColor,
-          borderRadius: panel.borderRadius ?? 8,
-       }}
+      
     >
   {renderPanel(panel)}
 </div>

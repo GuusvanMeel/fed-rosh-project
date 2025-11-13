@@ -3,16 +3,8 @@ import { useState } from "react";
 import ImagePanel from "./panels/ImagePanel";
 import VideoPanel from "./panels/VideoPanel";
 import TextPanel from "./panels/TextPanel";
-import { Layout } from "react-grid-layout";
-import { PanelType } from "../page";
+import { PanelProps } from "../types/panel";
 
-export type PanelProps = {
-  id: string;
-  type: PanelType
-  content: string | string[];
-  currentIndex?: number;
-  layout?: Layout;
-};
 
 
 

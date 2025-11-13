@@ -1,28 +1,18 @@
 'use client';
 import React, { useEffect, useState } from 'react'
 import PanelSettings from './component/canvas/canvasSideBar';
-import { PanelProps } from './component/panel';
-import Canvas, { CanvasData } from './component/canvas/Canvas';
 import { getPanels } from '@/lib/supabase/queries/getPanels';
 import { savePanels } from '@/lib/supabase/queries/savePanels';
 import { Provider } from "@/components/ui/provider"
 import DialogBox from './component/DialogBox';
 import PanelSettingsModal from './component/panels/panelModal';
 import { deletePanel } from '@/lib/supabase/queries/deletePanel';
+import { PanelData } from './types/panel';
+import { CanvasData } from './types/canvas';
+import Canvas from './component/canvas/Canvas';
 
 
-export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url" | "bracket";
 
-export type PanelData = {
-	i: string;
-	x: number;
-	y: number;
-	w: number;
-	h: number;
-  panelProps: PanelProps;
-	backgroundColor: string;
-  borderRadius?: number;
-}
 
 export default function Page() {
    const [dialog, setDialog] = useState({
@@ -76,6 +66,7 @@ const handleEditPanel = (id: string) => {
 
 // Updates a panel after editing
 const handlePanelUpdate = (updated: PanelData) => {
+  console.log("UPDATED PANEL:", updated.textColor);
   setPanels(prev =>
     prev.map(p => (p.i === updated.i ? updated : p))
   );
