@@ -26,7 +26,7 @@
 
     // 🎥 Direct video (like Cloudinary or .mp4)
     return (
-      <div className="w-full h-full rounded overflow-hidden pointer-events-none select-none flex items-center justify-center bg-black">
+      <div className="w-full h-full flex items-center justify-center overflow-hidden">
         <video
           src={source}
           className="w-full h-full object-contain rounded"

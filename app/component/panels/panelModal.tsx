@@ -14,6 +14,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
   const [draft, setDraft] = useState<PanelData | null>(panel);
 
   useEffect(() => {
+    console.log(panel?.styling.textColor);
     setDraft(panel);
   }, [panel]);
 
