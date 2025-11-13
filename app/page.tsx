@@ -21,6 +21,7 @@ export type PanelData = {
 	h: number;
   panelProps: PanelProps;
 	backgroundColor: string;
+  borderRadius?: number;
 }
 
 export default function Page() {

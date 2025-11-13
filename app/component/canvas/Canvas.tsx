@@ -14,6 +14,7 @@ import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
 
 
+import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 export type CanvasData = {
   Width: number;
@@ -174,7 +175,6 @@ const handlePanelClick = (id: string) => {
 </div>
       )})}
     </ResponsiveGridLayout>
-
 
     </div>
   );
