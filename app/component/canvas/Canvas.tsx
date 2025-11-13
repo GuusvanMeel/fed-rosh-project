@@ -12,6 +12,8 @@ import PanelSettingsModal from '../panels/panelModal';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
+import { Bracket } from 'react-brackets';
+import { rounds, BracketWrapper } from '../panels/BracketPanel';
 
 
 
@@ -75,7 +77,7 @@ switch (panel.panelProps.type) {
         case "bracket":
         if (typeof panel.panelProps.content === "string") {
           return (
-            <ScrollingTextPanel Text={panel.panelProps.content}></ScrollingTextPanel>
+            <BracketWrapper rounds={rounds}></BracketWrapper>
           );
         }
          
