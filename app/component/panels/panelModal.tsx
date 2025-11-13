@@ -91,20 +91,32 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
                 <input
                   type="color"
                   className="h-9 w-12 cursor-pointer rounded border border-neutral-700 bg-neutral-800 p-1"
-                  value={draft.backgroundColor}
+                  value={draft.styling.backgroundColor}
                   onChange={(e) =>
-                    setDraft({ ...draft, backgroundColor: e.target.value })
-                  }
+                                      setDraft({
+                        ...draft,
+                        styling: {
+                          ...draft.styling,
+                          backgroundColor: e.target.value,
+                        },
+                      })
+                    }
                   aria-label="Pick background color"
                   title="Pick background color"
                 />
                 <input
                   type="text"
                   className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  value={draft.backgroundColor}
-                  onChange={(e) =>
-                    setDraft({ ...draft, backgroundColor: e.target.value })
-                  }
+                  value={draft.styling.backgroundColor}
+                    onChange={(e) =>
+                                      setDraft({
+                        ...draft,
+                        styling: {
+                          ...draft.styling,
+                          backgroundColor: e.target.value,
+                        },
+                      })
+                    }
                   aria-label="Background color hex"
                   placeholder="#1e3a8a"
                 />
@@ -118,20 +130,32 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
                   type="range"
                   min={0}
                   max={100}
-                  value={draft.borderRadius ?? 8}
-                  onChange={(e) =>
-                    setDraft({ ...draft, borderRadius: Number(e.target.value) })
-                  }
+                  value={draft.styling.borderRadius ?? 8}
+                 onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    styling: {
+                      ...draft.styling,
+                      borderRadius: Number(e.target.value),
+                    },
+                  })
+  }
                   className="flex-1 accent-yellow-400"
                   aria-label="Corner radius slider"
                 />
                 <input
                   type="number"
                   className="w-24 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  value={draft.borderRadius ?? 8}
+                  value={draft.styling.borderRadius ?? 8}
                   onChange={(e) =>
-                    setDraft({ ...draft, borderRadius: Number(e.target.value) })
-                  }
+                  setDraft({
+                    ...draft,
+                    styling: {
+                      ...draft.styling,
+                      borderRadius: Number(e.target.value),
+                    },
+                  })
+                }
                   aria-label="Corner radius value"
                 />
               </div>
@@ -142,9 +166,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
  <input
                   type="color"
                   className="h-9 w-12 cursor-pointer rounded border border-neutral-700 bg-neutral-800 p-1"
-                  value={draft.textColor}
+                  value={draft.styling.textColor}
                   onChange={(e) =>
-                    setDraft({ ...draft, textColor: e.target.value })
+                    setDraft({ ...draft, styling: {...draft.styling, textColor: e.target.value }})
                   }
                   aria-label="Pick background color"
                   title="Pick background color"
@@ -156,9 +180,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
     type="range"
     min={8}
     max={64}
-    value={draft.fontSize ?? 16}
+    value={draft.styling.fontSize ?? 16}
     onChange={(e) =>
-      setDraft({ ...draft, fontSize: Number(e.target.value) })
+      setDraft({ ...draft, styling: {...draft.styling, fontSize: Number(e.target.value) }})
     }
   />
 </label>
@@ -168,18 +192,18 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
     type="range"
     min={0}
     max={50}
-    value={draft.padding ?? 8}
+    value={draft.styling.padding ?? 8}
     onChange={(e) =>
-      setDraft({ ...draft, padding: Number(e.target.value) })
+      setDraft({ ...draft, styling:{...draft.styling, padding: Number(e.target.value) }})
     }
   />
 </label>
 <label className="flex flex-col">
   <span className="text-sm font-medium mb-1">Text Align</span>
   <select
-    value={draft.contentAlign ?? "left"}
+    value={draft.styling.contentAlign ?? "left"}
     onChange={(e) =>
-      setDraft({ ...draft, contentAlign: e.target.value as any })
+      setDraft({ ...draft, styling: {...draft.styling, contentAlign: e.target.value as any }})
     }
     className="rounded border bg-neutral-800 px-2 py-1"
   >

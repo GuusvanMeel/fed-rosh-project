@@ -49,8 +49,10 @@ export default function PanelSettings({
           w: 3,
           h: 3,
           panelProps: { id, type, content: "New Panel" },
-          backgroundColor: "#1e3a8a",
-          textColor: "fffff"
+          styling:{
+          backgroundColor: "#ffff",
+          textColor: "#030303"
+          } 
           };
         setPanels(prev => [...prev, newPanel]);
     
@@ -116,11 +118,10 @@ return (
         OnChange={(newColor) => setMyCanvas({ ...myCanvas, color: newColor })}
       />
     </div>
+  <div className="flex-1 overflow-y-auto">
+        <PanelList panels={panels} onEdit={onEdit} onDelete={onDelete} />
+      </div>
 
-    {/* --- Panel list --- */}
-    <div className="flex-1 overflow-y-auto">
-      <PanelList panels={panels} onEdit={onEdit} onDelete={onDelete} />
-    </div>
 
     {/* --- Add Panel Modal --- */}
     {isPickerOpen && (
