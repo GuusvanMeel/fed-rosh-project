@@ -1,6 +1,7 @@
 {
-  "primary-color": "#9e0000",
-  "secondary-color": "#FFFFFF",
+  "primary-color": "#f40b0b",
+  "secondary-color": "#780707",
+  "accent-color": "#2474f5",
   "h1": {
     "font-family": "titillium-web-regular",
     "font-size": "32px"
@@ -15,5 +16,7 @@
     "background-color": "#413312",
     "text-color": "#FFFFFF"
   },
-  "colorType": "#00ffe1"
+  "colorType": "#bd4747",
+  "primary": "#f90b0b",
+  "secondary": "#05ffb4"
 }

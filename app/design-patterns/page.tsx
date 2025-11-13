@@ -6,15 +6,15 @@ export default function Page() {
   const [secondaryColor, setSecondaryColor] = useState("#ffffffff");
   const [accentColor, setAccentColor] = useState("#9700abff");
 
-  async function saveColor(newColor: string, colorType: "primary" | "secondary" | "accent") {
+  async function saveColor(newColor: string, colorType: "primary-color" | "secondary-color" | "accent-color") {
     switch (colorType) {
-    case "primary":
+    case "primary-color":
       setPrimaryColor(newColor);
       break;
-    case "secondary":
+    case "secondary-color":
       setSecondaryColor(newColor);
       break;
-    case "accent":
+    case "accent-color":
       setAccentColor(newColor);
       break;
     default:
@@ -27,7 +27,7 @@ export default function Page() {
     await fetch("/api/save-pattern", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ colorType: newColor }),
+      body: JSON.stringify({ [colorType]: newColor }),
     });
   }
 
@@ -41,19 +41,19 @@ export default function Page() {
       <input
         type="color"
         value={primaryColor}
-        onChange={(e) => saveColor(e.target.value, "primary")}
+        onChange={(e) => saveColor(e.target.value, "primary-color")}
         className="w-16 h-10 cursor-pointer border border-gray-300 rounded"
       />
       <input
         type="color"
         value={secondaryColor}
-        onChange={(e) => saveColor(e.target.value, "secondary")}
+        onChange={(e) => saveColor(e.target.value, "secondary-color")}
         className="w-16 h-10 cursor-pointer border border-gray-300 rounded"
       />
       <input
         type="color"
         value={accentColor}
-        onChange={(e) => saveColor(e.target.value, "accent")}
+        onChange={(e) => saveColor(e.target.value, "accent-color")}
         className="w-16 h-10 cursor-pointer border border-gray-300 rounded"
       />
 
