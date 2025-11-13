@@ -6,6 +6,7 @@ export function CountdownPanel({ targetTime }: { targetTime: Date }) {
   const calculateTimeLeft = () => {
     const now = new Date()
     const difference = targetTime.getTime() - now.getTime()
+
     return difference > 0 ? difference : 0
   }
 

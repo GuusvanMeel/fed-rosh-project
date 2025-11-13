@@ -10,11 +10,16 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
+function toLocalInputValue(date: string) {
+  const d = new Date(date);
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 16);
+}
+
 export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete }: Props) {
   const [draft, setDraft] = useState<PanelData | null>(panel);
 
   useEffect(() => {
-    console.log(panel?.styling.textColor);
     setDraft(panel);
   }, [panel]);
 
@@ -27,6 +32,17 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
   }, [onClose]);
 
   if (!panel || !draft) return null;
+
+
+ const content = draft.panelProps.content;
+
+// check if it's an array with exactly 2 strings
+const isTuple =
+  Array.isArray(content) &&
+  content.length === 2 &&
+  typeof content[0] === "string" &&
+  typeof content[1] === "string";
+
 
   return (
     <div
@@ -63,18 +79,62 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           {/* Panel Content */}
           <label className="flex flex-col">
             <span className="text-sm font-medium mb-1">Content</span>
-            <input
-              type="text"
-              className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              placeholder="Enter panel content"
-              value={typeof draft.panelProps.content === 'string' ? draft.panelProps.content : ''}
-              onChange={(e) =>
-                setDraft({
-                  ...draft,
-                  panelProps: { ...draft.panelProps, content: e.target.value },
-                })
-              }
-            />
+            {panel.panelProps.type === "countdown" && typeof draft.panelProps.content === "string" ? (
+              <input
+                type="datetime-local"
+                defaultValue={toLocalInputValue(draft.panelProps.content) ?? new Date(Date.now())}
+                className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    panelProps: { ...draft.panelProps, content: e.target.value },
+                  })
+                }
+              />
+            ) : panel.panelProps.type === "url" && isTuple ? (
+              <div>
+                <input
+                  type="text"
+                  className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  placeholder={draft.panelProps.content[0] as string}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      panelProps: { ...draft.panelProps, content: [e.target.value, draft.panelProps.content[1]] },
+                    })
+                  }
+                />
+
+                <input
+                  type="text"
+                  className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  placeholder={draft.panelProps.content[1] as string}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      panelProps: { ...draft.panelProps, content: [draft.panelProps.content[0], e.target.value] },
+                    })
+                  }
+                />
+              </div>
+            ) : ( // else
+              <input
+                type="text"
+                className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="Enter panel content"
+                value={typeof draft.panelProps.content === "string" ? draft.panelProps.content : ""}
+                onChange={(e) =>
+                  setDraft({
+                    ...draft,
+                    panelProps: {
+                      ...draft.panelProps,
+                      content: e.target.value,
+                    },
+                  })
+                }
+              />
+            )}
+
           </label>
 
           {/* Background Color */}
@@ -82,7 +142,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
             defaultValue={parseColor(draft.styling.backgroundColor)}
             maxW="200px"
             className="border border-white/20 rounded-lg p-2 shadow-sm"
-            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, backgroundColor: e.value.toString("hex") }})}>
+            onValueChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, backgroundColor: e.value.toString("hex") } })}>
             <ColorPicker.HiddenInput />
             <Heading size="lg">Background Color</Heading>
             <ColorPicker.Control
@@ -114,7 +174,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
 
           <Slider.Root min={0} max={100} size="md" defaultValue={[draft.styling.borderRadius ?? 8]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, styling:  {...draft.styling, borderRadius: Number(e.value) }})}
+            onValueChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, borderRadius: Number(e.value) } })}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -135,7 +195,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
             defaultValue={parseColor(draft.styling.textColor || "#ffffff")}
             maxW="200px"
             className="border border-white/20 rounded-lg p-2 shadow-sm"
-            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, textColor: e.value.toString("hex") }})}>
+            onValueChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, textColor: e.value.toString("hex") } })}>
             <ColorPicker.HiddenInput />
             <Heading size="lg">Text Color</Heading>
             <ColorPicker.Control
@@ -164,7 +224,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           {/* Font Size */}
           <Slider.Root min={8} max={64} size="md" defaultValue={[draft.styling.fontSize ?? 16]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, fontSize: Number(e.value) }})}
+            onValueChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, fontSize: Number(e.value) } })}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -183,7 +243,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           {/* Padding */}
           <Slider.Root min={0} max={50} size="md" defaultValue={[draft.styling.padding ?? 8]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, padding: Number(e.value) }})}
+            onValueChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, padding: Number(e.value) } })}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -203,7 +263,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
             <span className="text-sm font-medium mb-1">Text Align</span>
             <select
               value={draft.styling.contentAlign ?? "left"}
-              onChange={(e) => setDraft({ ...draft, styling: {...draft.styling, contentAlign: e.target.value as any }})}
+              onChange={(e) => setDraft({ ...draft, styling: { ...draft.styling, contentAlign: e.target.value as any } })}
               className="rounded border border-neutral-700 bg-neutral-800 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="left">Left</option>

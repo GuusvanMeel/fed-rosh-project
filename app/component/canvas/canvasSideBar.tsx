@@ -34,6 +34,38 @@ export default function PanelSettings({
 
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
+
+        if (type == "countdown")
+        {
+          const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: (new Date(Date.now() + 100000).toString())},
+          styling:{
+          backgroundColor: "#ffff",
+          textColor: "#030303"
+          } 
+          };
+        setPanels(prev => [...prev, newPanel]);
+        }else if (type == "url")
+        {
+          const newPanel: PanelData = {
+          i: id,
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 3,
+          panelProps: { id, type, content: (["New Panel" , "https://www.youtube.com"])},
+          styling:{
+          backgroundColor: "#ffff",
+          textColor: "#030303"
+          } 
+          };
+        setPanels(prev => [...prev, newPanel])
+        } else{
      
         const newPanel: PanelData = {
           i: id,
@@ -48,6 +80,7 @@ export default function PanelSettings({
           } 
           };
         setPanels(prev => [...prev, newPanel]);
+        }
     
     setIsPickerOpen(false);
   };
