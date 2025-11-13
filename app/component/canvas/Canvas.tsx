@@ -11,6 +11,8 @@ import { PanelData } from '../../page';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
+import { Bracket } from 'react-brackets';
+import { rounds, BracketWrapper } from '../panels/BracketPanel';
 
 
 export type CanvasData = {
@@ -66,6 +68,13 @@ switch (panel.panelProps.type) {
         if (Array.isArray(panel.panelProps.content)) {
           return (
             <UrlPanel Text={panel.panelProps.content[0]} url={panel.panelProps.content[1]} ></UrlPanel>
+          );
+        }
+
+        case "bracket":
+        if (typeof panel.panelProps.content === "string") {
+          return (
+            <BracketWrapper rounds={rounds}></BracketWrapper>
           );
         }
          

@@ -11,7 +11,7 @@ import PanelSettingsModal from './component/panels/panelModal';
 import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 
 
-export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url";
+export type PanelType = "text" | "video" | "image" | "countdown" | "scrollingText" | "url" | "bracket";
 
 export type PanelData = {
 	i: string;
