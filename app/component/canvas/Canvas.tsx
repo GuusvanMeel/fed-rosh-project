@@ -168,7 +168,9 @@ const handlePanelClick = (id: string) => {
       key={panel.i}
       onClick={() => handlePanelClick(panel.i)}
       className={`cursor-grab active:cursor-grabbing  rounded`}
-      style={{ backgroundColor: panel.backgroundColor }}
+      style={{ backgroundColor: panel.backgroundColor,
+          borderRadius: panel.borderRadius ?? 8,
+       }}
     >
   {renderPanel(panel)}
 </div>

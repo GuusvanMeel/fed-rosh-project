@@ -118,7 +118,7 @@ return (
           onChange={(e) => {
             const isMobile = e.value;
             const newWidth = isMobile ? 390 : 1280;
-            const newHeight = isMobile ? 844 : 720;
+            const newHeight = isMobile ? 844 : 3000;
             setMyCanvas({
               ...myCanvas,
               Mobile: isMobile,
