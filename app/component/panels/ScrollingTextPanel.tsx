@@ -11,9 +11,7 @@ export default function ScrollingTextPanel({ Text }: { Text: string }) {
         curveAmount={0}
         direction="right"
         interactive={false}
-        className=" select-none"
-        
-        
+        className=" select-none"       
       />
     </div>
   );
