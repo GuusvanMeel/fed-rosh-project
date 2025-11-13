@@ -11,7 +11,6 @@ import { PanelData } from '../../page';
 import { CountdownPanel } from '../panels/CountdownPanel';
 import ScrollingTextPanel from '../panels/ScrollingTextPanel';
 import UrlPanel from '../panels/UrlPanel';
-import { Bracket } from 'react-brackets';
 import { rounds, BracketWrapper } from '../panels/BracketPanel';
 
 
@@ -114,7 +113,7 @@ const handlePanelClick = (id: string) => {
 
   return (
     <div
-      className="bg-gray-400 rounded-2xl relative overflow-hidden"
+      className="bg-gray-400 rounded-2xl relative overflow-hidden border-4 border-red-500 "
       style={{
         backgroundColor: settings.color,
         height: settings.Height,

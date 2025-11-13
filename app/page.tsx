@@ -116,8 +116,12 @@ const handleDeletePanel = async (id: string) => {
         onDelete={handleDeletePanel}
       />
       
-      <Canvas settings={myCanvas} panels={panels} setPanels={setPanels} onEdit={handleEditPanel}   />
-
+  <Canvas
+    settings={myCanvas}
+    panels={panels}
+    setPanels={setPanels}
+    onEdit={handleEditPanel}
+  />
     </div>
     <DialogBox
         open={dialog.open}
