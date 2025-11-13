@@ -86,6 +86,17 @@ const handleClosePanelSettings = () => {
   setIsSettingsOpen(false);
   setSelectedPanelId(null);
 };
+const handleDeletePanel = async (id: string) => {
+  try {
+    await deletePanel(id);
+  } catch (err) {
+    console.error("Failed to delete panel from DB:", err);
+  } finally {
+    setPanels((prev) => prev.filter((p) => p.i !== id));
+    setIsSettingsOpen(false);
+    setSelectedPanelId(null);
+  }
+};
    
   useEffect(() => {
     getPanels().then(setPanels);
@@ -102,6 +113,7 @@ const handleClosePanelSettings = () => {
         setPanels={setPanels}
         onEdit={handleEditPanel} 
         onSave={handleSave}
+        onDelete={handleDeletePanel}
       />
       
       <Canvas settings={myCanvas} panels={panels} setPanels={setPanels} onEdit={handleEditPanel}   />
@@ -121,17 +133,7 @@ const handleClosePanelSettings = () => {
     panel={selectedPanel}
     onUpdate={handlePanelUpdate}
     onClose={handleClosePanelSettings}
-    onDelete={async (id: string) => {
-      try {
-        await deletePanel(id);
-      } catch (e) {
-        console.error("Failed to delete panel from database", e);
-      } finally {
-        setPanels(prev => prev.filter(p => p.i !== id));
-        setIsSettingsOpen(false);
-        setSelectedPanelId(null);
-      }
-    }}
+    onDelete={handleDeletePanel}
   />
 )}
 

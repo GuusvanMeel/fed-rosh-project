@@ -5,7 +5,6 @@ import { CanvasData } from './Canvas';
 import { InputSwitch } from 'primereact/inputswitch';
 import MyColorPicker from '../MyColorPicker';
 import { PanelData, PanelType } from '@/app/page';
-import { url } from 'inspector';
 import PanelList from '../panels/PanelList';
 
 export type PanelSettingsProps = {
@@ -24,7 +23,8 @@ export default function PanelSettings({
   panels,
   setPanels,
   onEdit,
-  onSave
+  onSave,
+  onDelete
 }: {
   myCanvas: CanvasData;
   setMyCanvas: React.Dispatch<React.SetStateAction<CanvasData>>;
@@ -32,6 +32,7 @@ export default function PanelSettings({
   setPanels: React.Dispatch<React.SetStateAction<PanelData[]>>;
   onEdit: (id: string) => void;
   onSave: () => Promise<void>; 
+  onDelete: (id: string) => void;
 }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const addPanel = (type: PanelType) => {
@@ -153,7 +154,7 @@ return (
 
     {/* --- Panel list --- */}
     <div className="flex-1 overflow-y-auto">
-      <PanelList panels={panels} onEdit={onEdit} />
+      <PanelList panels={panels} onEdit={onEdit} onDelete={onDelete} />
     </div>
 
     {/* --- Add Panel Modal --- */}
