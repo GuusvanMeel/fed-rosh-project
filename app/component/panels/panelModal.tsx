@@ -78,10 +78,10 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
 
           {/* Background Color */}
           <ColorPicker.Root
-            defaultValue={parseColor(draft.backgroundColor)}
+            defaultValue={parseColor(draft.styling.backgroundColor)}
             maxW="200px"
             className="border border-white/20 rounded-lg p-2 shadow-sm"
-            onValueChange={(e) => setDraft({ ...draft, backgroundColor: e.value.toString("hex") })}>
+            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, backgroundColor: e.value.toString("hex") }})}>
             <ColorPicker.HiddenInput />
             <Heading size="lg">Background Color</Heading>
             <ColorPicker.Control
@@ -111,9 +111,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
 
           {/* Corner Radius */}
 
-          <Slider.Root min={0} max={100} size="md" defaultValue={[draft.borderRadius ?? 8]}
+          <Slider.Root min={0} max={100} size="md" defaultValue={[draft.styling.borderRadius ?? 8]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, borderRadius: Number(e.value) })}
+            onValueChange={(e) => setDraft({ ...draft, styling:  {...draft.styling, borderRadius: Number(e.value) }})}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -131,10 +131,10 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
 
           {/* Text Color */}
           <ColorPicker.Root
-            defaultValue={parseColor(draft.textColor || "#ffffff")}
+            defaultValue={parseColor(draft.styling.textColor || "#ffffff")}
             maxW="200px"
             className="border border-white/20 rounded-lg p-2 shadow-sm"
-            onValueChange={(e) => setDraft({ ...draft, textColor: e.value.toString("hex") })}>
+            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, textColor: e.value.toString("hex") }})}>
             <ColorPicker.HiddenInput />
             <Heading size="lg">Text Color</Heading>
             <ColorPicker.Control
@@ -161,9 +161,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           </ColorPicker.Root>
 
           {/* Font Size */}
-          <Slider.Root min={8} max={64} size="md" defaultValue={[draft.fontSize ?? 16]}
+          <Slider.Root min={8} max={64} size="md" defaultValue={[draft.styling.fontSize ?? 16]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, fontSize: Number(e.value) })}
+            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, fontSize: Number(e.value) }})}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -180,9 +180,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
 
 
           {/* Padding */}
-          <Slider.Root min={0} max={50} size="md" defaultValue={[draft.padding ?? 8]}
+          <Slider.Root min={0} max={50} size="md" defaultValue={[draft.styling.padding ?? 8]}
             variant="outline"
-            onValueChange={(e) => setDraft({ ...draft, padding: Number(e.value) })}
+            onValueChange={(e) => setDraft({ ...draft, styling: {...draft.styling, padding: Number(e.value) }})}
           >
             <HStack justify="space-between">
               <Slider.Label
@@ -201,8 +201,8 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           <label className="flex flex-col">
             <span className="text-sm font-medium mb-1">Text Align</span>
             <select
-              value={draft.contentAlign ?? "left"}
-              onChange={(e) => setDraft({ ...draft, contentAlign: e.target.value as any })}
+              value={draft.styling.contentAlign ?? "left"}
+              onChange={(e) => setDraft({ ...draft, styling: {...draft.styling, contentAlign: e.target.value as any }})}
               className="rounded border border-neutral-700 bg-neutral-800 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="left">Left</option>

@@ -66,7 +66,6 @@ const handleEditPanel = (id: string) => {
 
 // Updates a panel after editing
 const handlePanelUpdate = (updated: PanelData) => {
-  console.log("UPDATED PANEL:", updated.textColor);
   setPanels(prev =>
     prev.map(p => (p.i === updated.i ? updated : p))
   );

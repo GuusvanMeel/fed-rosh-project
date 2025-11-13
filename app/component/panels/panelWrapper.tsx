@@ -14,13 +14,13 @@ export function PanelWrapper({
         "w-full h-full overflow-hidden",
       )}
       style={{
-        backgroundColor: panel.backgroundColor,
-        borderRadius: panel.borderRadius ?? 8,
-        padding: panel.padding ?? 8,
-        color: panel.textColor ?? "white",
-        fontSize: panel.fontSize ?? 14,
-        fontFamily: panel.fontFamily ?? "sans-serif",
-        textAlign: panel.contentAlign ?? "left",
+        backgroundColor: panel.styling.backgroundColor ?? "white",
+        borderRadius: panel.styling.borderRadius ?? 8,
+        padding: panel.styling.padding ?? 8,
+        color: panel.styling.textColor ?? "white",
+        fontSize: panel.styling.fontSize ?? 14,
+        fontFamily: panel.styling.fontFamily ?? "sans-serif",
+        textAlign: panel.styling.contentAlign ?? "left",
       }}
     >
       {children}

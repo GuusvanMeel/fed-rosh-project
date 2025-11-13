@@ -11,8 +11,11 @@ export type PanelData = {
     w: number;
     h: number;
   panelProps: PanelProps;
-
-  backgroundColor: string;
+    styling: PanelStyling;
+ 
+}
+export type PanelStyling={
+ backgroundColor: string;
   borderRadius?: number;
 
   fontSize?: number;
@@ -22,7 +25,6 @@ export type PanelData = {
 
   contentAlign?: "left" | "center" | "right";
 }
-
 export type PanelProps = {
   id: string;
   type: PanelType

@@ -42,8 +42,10 @@ export default function PanelSettings({
           w: 3,
           h: 3,
           panelProps: { id, type, content: "New Panel" },
-          backgroundColor: "#1e3a8a",
-          textColor: "fffff"
+          styling:{
+          backgroundColor: "#ffff",
+          textColor: "#030303"
+          } 
           };
         setPanels(prev => [...prev, newPanel]);
     
