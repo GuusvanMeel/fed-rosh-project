@@ -33,11 +33,11 @@ export default function Page() {
   });
   const [myCanvas, setMyCanvas] = useState<CanvasData>({
     Width: 1280,
-    Height: 720,
+    Height: 3000,
     Mobile: false,
     color: "#838485",
     columns: 20,
-    rows: 10,
+    rows: 40,
     showgrid: true,
   });
   const handleSave = async () => {
