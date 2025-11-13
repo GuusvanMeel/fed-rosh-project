@@ -139,18 +139,9 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
           </div>
 
           <div className="mt-6 flex items-center justify-between gap-3">
-            {/* <button
-              onClick={() => {
-                onDelete(draft.i);
-                onClose();
-              }}
-              className="inline-flex items-center justify-center rounded-lg !bg-red-600 px-3 py-2 text-sm font-medium text-white hover:!bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
-              aria-label="Delete selected panel"
-            >
-              Delete
-            </button> */}
+      
 
-            <Button label='delete'
+            <Button label='delete' severity="success"
               onClick={() => {
                 onDelete(draft.i);
                 onClose();
@@ -159,15 +150,13 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
             >
             </Button>
 
-            <button
+            <Button label='save' severity="danger"
               onClick={() => {
                 onUpdate(draft);
                 onClose();
               }}
-              className="ml-auto inline-flex items-center justify-center rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400"
             >
-              Save
-            </button>
+            </Button>
           </div>
         </div>
       </div>
