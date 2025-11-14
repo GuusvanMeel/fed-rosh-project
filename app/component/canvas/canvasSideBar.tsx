@@ -1,21 +1,16 @@
-'use client'
-import React from 'react'
-import { useState } from 'react';
-import { CanvasData } from './Canvas';
-import { InputSwitch } from 'primereact/inputswitch';
+'use client';
+import React, { useState } from 'react';
 import MyColorPicker from '../MyColorPicker';
-import { PanelData, PanelType } from '@/app/page';
 import PanelList from '../panels/PanelList';
+import { PanelData, PanelType } from '@/app/types/panel';
+import { CanvasData } from '@/app/types/canvas';
+import { panelRegistry } from '../panels/panelRegistry';
+import { Switch, Button, Heading, ColorPicker, HStack, Portal, parseColor } from "@chakra-ui/react";
+import { HiCheck, HiX } from "react-icons/hi";
 
-export type PanelSettingsProps = {
-  id?: string
-  mobile: boolean
-  color: string
-  columns: number
-  rows: number
-  panels?: PanelData[]
-  setPanels: React.Dispatch<React.SetStateAction<PanelData[]>>;
-}
+export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
+
+
 
 export default function PanelSettings({
   myCanvas,
@@ -31,48 +26,15 @@ export default function PanelSettings({
   panels: PanelData[];
   setPanels: React.Dispatch<React.SetStateAction<PanelData[]>>;
   onEdit: (id: string) => void;
-  onSave: () => Promise<void>; 
+  onSave: () => Promise<void>;
   onDelete: (id: string) => void;
 }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
   const addPanel = (type: PanelType) => {
     const id = crypto.randomUUID();
-    switch(type){
-
-      case "url": {
-        const newPanel: PanelData = {
-          i: id,
-          x: 0,
-          y: 0,
-          w: 3,
-          h: 3,
-          panelProps: { id, type, content: ["New Panel", "https://www.youtube.com"] },
-          backgroundColor: "#1e3a8a",
-        };
-        setPanels(prev => [...prev, newPanel]);
-        break;
-      }
-
-      case "countdown": {
-        
-        const date : string = (Date.now() + 100000).toString();
-
-        const newPanel: PanelData = {
-          i: id,
-          x: 0,
-          y: 0,
-          w: 3,
-          h: 3,
-
-          panelProps: { id, type, content: date},
-          backgroundColor: "#1e3a8a",
-        };
-        setPanels(prev => [...prev, newPanel]);
-        break;
-      }
-      
-
-      default : {
+     
         const newPanel: PanelData = {
           i: id,
           x: 0,
@@ -80,106 +42,151 @@ export default function PanelSettings({
           w: 3,
           h: 3,
           panelProps: { id, type, content: "New Panel" },
-          backgroundColor: "#1e3a8a",
+          styling:{
+          backgroundColor: "#ffff",
+          textColor: "#030303"
+          } 
           };
         setPanels(prev => [...prev, newPanel]);
-        break
-      }
-   
-
-    }
     
     setIsPickerOpen(false);
   };
 
-return (
-  <div className="flex flex-col gap-3 w-[400px] p-3 bg-neutral-700 rounded-lg text-white">
-    {/* --- Add / Save buttons --- */}
-    <div className="flex flex-col gap-2">
-      <button
-        onClick={() => setIsPickerOpen(true)}
-        className="bg-neutral-500 hover:bg-neutral-600 px-3 py-2 rounded text-sm font-semibold"
-      >
-        ＋ Add Panel
-      </button>
-      <button
-        onClick={onSave} // placeholder for save
-        className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-sm font-semibold"
-      >
-        💾 Save
-      </button>
-    </div>
 
-    {/* --- Mobile/Desktop toggle --- */}
-    <div className="flex items-center justify-between">
-      <span className="text-xs">Device:</span>
-      <div className="flex items-center gap-2">
-        <InputSwitch
-          checked={myCanvas.Mobile}
-          onChange={(e) => {
-            const isMobile = e.value;
-            const newWidth = isMobile ? 390 : 1280;
-            const newHeight = isMobile ? 844 : 3000;
-            setMyCanvas({
-              ...myCanvas,
-              Mobile: isMobile,
-              Width: newWidth,
-              Height: newHeight,
-            });
-          }}
-        />
-        <span className="text-xs">{myCanvas.Mobile ? "Mobile" : "Desktop"}</span>
+  return (
+    <div className="flex flex-col gap-4 w-[400px] h-full p-4 bg-neutral-800 rounded-2xl text-white shadow-lg">
+      {/* Header */}
+      <div className="flex ml-2! items-center justify-between">
+        <Heading size="lg">Canvas Settings</Heading>
+        <Button rounded="l3" mr={5} mt={2} variant="subtle" onClick={onSave}>Save Page</Button>
       </div>
-    </div>
 
-    {/* --- Grid toggle --- */}
-    <div className="flex items-center justify-between">
-      <span className="text-xs">Grid:</span>
-      <div className="flex items-center gap-2">
-        <InputSwitch
-          checked={myCanvas.showgrid}
-          onChange={(e) => setMyCanvas({ ...myCanvas, showgrid: e.value })}
-        />
-        <span className="text-xs">{myCanvas.showgrid ? "On" : "Off"}</span>
+      
+      {/* Mobile toggle */}
+      <div className="flex ml-2! items-center justify-between mt-2">
+        <Heading size="lg">Mobile View</Heading>
+
+        <Switch.Root
+        size="lg"
+        checked={isMobile}
+        variant={"raised"}
+        mr={5}
+        onCheckedChange={(e) => {
+          const newMobile = e.checked; // this is the updated value
+          setIsMobile(newMobile);
+          const newWidth = newMobile ? 390 : 1280;
+          const newHeight = newMobile ? 844 : 3000;
+          setMyCanvas({
+            ...myCanvas,
+            Mobile: newMobile,
+            Width: newWidth,
+            Height: newHeight,
+          });
+        }}
+      >
+        <Switch.HiddenInput />
+        <Switch.Control>
+          <Switch.Thumb>
+            <Switch.ThumbIndicator fallback={<HiX color="black" />}>
+              <HiCheck />
+            </Switch.ThumbIndicator>
+          </Switch.Thumb>
+        </Switch.Control>
+      </Switch.Root>
       </div>
-    </div>
 
-    {/* --- Color picker --- */}
-    <div>
-      <span className="text-xs block mb-1">Background</span>
-      <MyColorPicker
-        OnChange={(newColor) => setMyCanvas({ ...myCanvas, color: newColor })}
-      />
-    </div>
+      {/* Background color picker */}
+      <div className="ml-2!">
 
-    {/* --- Panel list --- */}
-    <div className="flex-1 overflow-y-auto">
-      <PanelList panels={panels} onEdit={onEdit} onDelete={onDelete} />
-    </div>
+        <ColorPicker.Root 
+          defaultValue={parseColor(myCanvas.color)}
+          maxW="200px"
+          className="border border-white/20 rounded-lg p-2 shadow-sm"
+          onValueChange={(e) => setMyCanvas({ ...myCanvas, color: e.value.toString("hex") })}>
+          <ColorPicker.HiddenInput />
+          <Heading size="lg">Background Color</Heading>
+          <ColorPicker.Control
+            style={{
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "0.5rem",
+              padding: "0.4rem",
+              backgroundColor: "rgba(255,255,255,0.02)",
+            }}>
+            <ColorPicker.Input />
+            <ColorPicker.Trigger />
+          </ColorPicker.Control>
+          <Portal>
+            <ColorPicker.Positioner>
+              <ColorPicker.Content>
+                <ColorPicker.Area />
+                <HStack>
+                  <ColorPicker.EyeDropper size="xs" variant="outline" />
+                  <ColorPicker.Sliders />
+                </HStack>
+              </ColorPicker.Content>
+            </ColorPicker.Positioner>
+          </Portal>
+        </ColorPicker.Root>
+       
+      </div>
+
+      {/* Add Panel */}
+      <Button 
+        variant="subtle"
+        className='w-2/4 self-center'
+        onClick={() => setIsPickerOpen(true)}>＋ Add Panel</Button>
+
+
+
+      {/* Panel list */}
+      <div className="flex-1 overflow-y-auto mt-3 space-y-2">
+        <PanelList panels={panels} onEdit={onEdit} onDelete={onDelete} />
+      </div>
 
     {/* --- Add Panel Modal --- */}
     {isPickerOpen && (
-      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-        <div className="bg-white text-black rounded-lg p-4 w-80">
-          <div className="text-base font-semibold mb-3">Add panel</div>
-          <div className="grid grid-cols-2 gap-2">
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("text")}>Text</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("video")}>Video</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("image")}>Image</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("url")}>URL</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("scrollingText")}>Scrolling Text</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("countdown")}>Countdown</button>
-            <button className="bg-neutral-200 hover:bg-neutral-300 py-2 rounded text-sm" onClick={() => addPanel("bracket")}>Bracket</button>
-          </div>
-          <button
-            className="mt-3 w-full bg-neutral-800 hover:bg-neutral-900 text-white rounded py-2 text-sm"
-            onClick={() => setIsPickerOpen(false)}
-          >
-            Close
-          </button>
-        </div>
+  <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+    <div className="bg-neutral-800 text-white rounded-2xl p-6 w-[380px] shadow-2xl border border-white/10">
+      <div className="text-lg font-semibold mb-4 text-center">
+        Add Panel
       </div>
-    )}
+
+      <div className="grid grid-cols-2 gap-3">
+        {panelTypes.map((type) => (
+          <Button
+            key={type}
+            variant="surface"
+            size="sm"
+            className="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg transition-all duration-150"
+            onClick={() => addPanel(type)}
+          >
+            {type === "scrollingText" ? "Scrolling Text" : type}
+          </Button>
+        ))}
+      </div>
+
+      <Button
+        size="sm"
+        variant="surface"
+        onClick={() => setIsPickerOpen(false)}
+        style={{
+          marginTop: "1.25rem",
+          width: "100%",
+          borderRadius: "0.5rem",
+          padding: "0.5rem",
+          backgroundColor: "rgba(64,64,64,0.9)",
+          color: "white",
+          transition: "background-color 0.15s ease",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(82,82,82,1)")}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(64,64,64,0.9)")}
+      >
+        Close
+      </Button>
+    </div>
+  </div>
+)}
+
   </div>
 );
 }

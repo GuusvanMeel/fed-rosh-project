@@ -13,7 +13,7 @@
     date?: string;
     }
 
-    interface Round {
+    export interface Round {
     title: string;
     matches: Match[];
     }

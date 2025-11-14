@@ -1,5 +1,5 @@
+import { PanelData } from "@/app/types/panel";
 import { createClient } from "@/lib/supabase/client";
-import { PanelData } from "@/app/page";
 
 const supabase = createClient();
 
@@ -10,12 +10,11 @@ export async function savePanels(panels: PanelData[]) {
     y: panel.y,
     w: panel.w,
     h: panel.h,
-    backgroundColor: panel.backgroundColor,
-    borderRadius: panel.borderRadius,
+    styling: panel.styling,
     panelProps: panel.panelProps,
   }));
 
-  const { error } = await supabase.from("panels").upsert(formatted);
+  const { error } = await supabase.from("panels_v2").upsert(formatted);
 
   if (error) {
     console.error("Error saving panels:", error);
