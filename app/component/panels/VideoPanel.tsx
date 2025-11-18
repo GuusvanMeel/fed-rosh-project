@@ -16,7 +16,7 @@
           <iframe
             src={embedUrl}
             title="YouTube video"
-            className="w-full h-full object-contain rounded"
+            className="w-full h-full object-contain rounded pointer-events-none"
             allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
