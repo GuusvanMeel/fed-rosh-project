@@ -43,6 +43,13 @@ export default function Sidebar() {
     e.dataTransfer.effectAllowed = "copy";
   };
 
+  const handleDragEnd = (e: React.DragEvent) => {
+    const locationX = e.pageX;
+    const locationY = e.pageY;
+
+    console.log("Drag ended at:", locationX, locationY);
+    };
+
   return (
     <>
       {/* Main Sidebar */}
@@ -90,10 +97,10 @@ export default function Sidebar() {
           transition="left 0.2s"
         >
           <Box w="100%" p={4}>
-            <Text fontSize="lg" fontWeight="bold" mb={4} color="white">
+            <Text fontSize="2xl" fontWeight="bold" mb={2} color="white" textAlign="center" bg="black" w={"100%"}  borderRadius={6} p={2}>
               {activeMenu}
             </Text>
-            <VStack align="stretch" spacing={2}>
+            <VStack align="stretch" gap={2}>
               {navItems
                 .find((item) => item.label === activeMenu)
                 ?.submenu.map((subItem) => (
@@ -101,6 +108,7 @@ export default function Sidebar() {
                     key={subItem}
                     draggable
                     onDragStart={(e: any) => handleDragStart(e, subItem)}
+                    onDragEnd={(e: any) => handleDragEnd(e)}
                     whileHover={{ backgroundColor: "rgba(0, 0, 0)" }}
                     whileTap={{ scale: 0.95 }}
                     style={{
