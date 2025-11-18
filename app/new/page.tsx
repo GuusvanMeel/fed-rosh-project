@@ -19,30 +19,7 @@ interface PanelItem {
 }
 
 export default function MovableColumnList() {
-  const [items, setItems] = useState<PanelItem[]>([
-    { id: "1", type: "VideoPanel" },
-    { id: "2", type: "VideoPanel" },
-    { id: "3", type: "VideoPanel" },
-    { id: "4", type: "VideoPanel" },
-  ]);
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const componentName = e.dataTransfer.getData("component");
-    
-    if (componentName) {
-      const newItem: PanelItem = {
-        id: `${Date.now()}`,
-        type: componentName,
-      };
-      setItems([...items, newItem]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
+  
  
 
 return (
