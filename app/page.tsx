@@ -10,6 +10,7 @@ import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 import { PanelData } from './types/panel';
 import { CanvasData } from './types/canvas';
 import Canvas from './component/canvas/Canvas';
+import Sidebar from '@/components/ui/sidebar';
 
 
 
@@ -95,6 +96,7 @@ const handleDeletePanel = async (id: string) => {
 
   return (
     <Provider>
+    <Sidebar/>
     <div className="flex  items-start">
       <PanelSettings
         myCanvas={myCanvas}

@@ -27,7 +27,7 @@ export default function MovableColumnList() {
             className="p-6 bg-white rounded-2xl shadow-lg cursor-grab active:cursor-grabbing h-[500px] min-w-[150px] text-center font-semibold pointer-none: select-none"
             whileDrag={{ scale: 1.05 }}
           >
-            <VideoPanel source="https://www.youtube.com/watch?v=cN9p0AYDA8A"></VideoPanel>
+            <VideoPanel source="https://www.youtube.com/watch?v=YYjyjxeF5Jk"></VideoPanel>
           </Reorder.Item>
         ))}
       </Reorder.Group>
