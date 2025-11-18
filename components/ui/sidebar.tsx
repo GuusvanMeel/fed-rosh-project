@@ -4,48 +4,119 @@ import React, { useState } from "react";
 import { Box, Flex, VStack, Text } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
+import { motion } from "framer-motion";
+import { panelRegistry } from "@/app/component/panels/panelRegistry";
+
+// Dynamically get all panel types from the registry
+export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const navItems = [
-    { label: "Components", icon: LuBox },
-    { label: "Design", icon: LuPalette },
-    { label: "Settings", icon: FiSettings },
+    { 
+      label: "Components", 
+      icon: LuBox,
+      submenu: panelTypes
+    },
+    { 
+      label: "Design", 
+      icon: LuPalette,
+      submenu: ["Colors", "Typography", "Spacing", "Layout"]
+    },
+    { 
+      label: "Settings", 
+      icon: FiSettings,
+      submenu: ["Profile", "Account", "Privacy", "Notifications"]
+    },
   ];
 
+  const handleItemClick = (label: string) => {
+    setActiveMenu(activeMenu === label ? null : label);
+  };
+
+  const handleDragStart = (e: React.DragEvent, componentName: string) => {
+    e.dataTransfer.setData("component", componentName);
+    e.dataTransfer.effectAllowed = "copy";
+  };
+
   return (
-    <Flex
-      position="fixed"
-      left={0}
-      top={0}
-      h="100vh"
-      bg="gray.800"
-      borderRight="1px solid #090909ff"
-      zIndex={1000}
-      boxShadow="xl"
-    >
-      <Box w={collapsed ? "70px" : "200px"} transition="width 0.2s" p={1}>
-        <VStack align="stretch" spacing={4}>
-          {navItems.map((item) => (
-            <Flex
-              key={item.label}
-              align="center"
-              p={3}
-              borderRadius="md"
-              _hover={{ bg: "gray.900", cursor: "pointer" }}
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              <item.icon size={50} />
-              {!collapsed && (
-                <Text ml={3} fontSize="md" fontWeight="medium">
-                  {item.label}
-                </Text>
-              )}
-            </Flex>
-          ))}
-        </VStack>
-      </Box>
-    </Flex>
+    <>
+      {/* Main Sidebar */}
+      <Flex
+        position="fixed"
+        left={0}
+        top={0}
+        h="100vh"
+        bg="gray.800"
+        borderRight="1px solid #090909ff"
+        zIndex={1000}
+        boxShadow="xl"
+      >
+        <Box w={"70px"} transition="width 0.2s" p={1}>
+          <VStack align="stretch" spacing={4}>
+            {navItems.map((item) => (
+              <Flex
+                key={item.label}
+                align="center"
+                p={3}
+                borderRadius="md"
+                bg={activeMenu === item.label ? "gray.900" : "transparent"}
+                _hover={{ bg: "gray.900", cursor: "pointer" }}
+                onClick={() => handleItemClick(item.label)}
+              >
+                <item.icon size={40} />
+              </Flex>
+            ))}
+          </VStack>
+        </Box>
+      </Flex>
+
+      {/* Secondary Sidebar */}
+      {activeMenu && (
+        <Flex
+          position="fixed"
+          left={"70px"}
+          top={0}
+          h="100vh"
+          w="250px"
+          bg="gray.700"
+          borderRight="1px solid #090909ff"
+          zIndex={999}
+          boxShadow="xl"
+          transition="left 0.2s"
+        >
+          <Box w="100%" p={4}>
+            <Text fontSize="lg" fontWeight="bold" mb={4} color="white">
+              {activeMenu}
+            </Text>
+            <VStack align="stretch" spacing={2}>
+              {navItems
+                .find((item) => item.label === activeMenu)
+                ?.submenu.map((subItem) => (
+                  <motion.div
+                    key={subItem}
+                    draggable
+                    onDragStart={(e: any) => handleDragStart(e, subItem)}
+                    whileHover={{ scale: 1.05, x: 10 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      padding: "12px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      cursor: "grab",
+                      userSelect: "none",
+                    }}
+                  >
+                    <Text color="gray.200" fontSize="sm">
+                      {subItem}
+                    </Text>
+                  </motion.div>
+                ))}
+            </VStack>
+          </Box>
+        </Flex>
+      )}
+    </>
   );
 }
