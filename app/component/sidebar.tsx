@@ -54,17 +54,16 @@ export default function Sidebar() {
     <>
       {/* Main Sidebar */}
       <Flex
-        position="fixed"
-        left={0}
-        top={0}
+        
         h="100vh"
+        w="70px"
         bg="gray.800"
         borderRight="1px solid #090909ff"
-        zIndex={1000}
+        
         boxShadow="xl"
       >
         <Box w={"70px"} transition="width 0.2s" p={1}>
-          <VStack align="stretch" spacing={4}>
+          <VStack align="stretch" gap={4}>
             {navItems.map((item) => (
               <Flex
                 key={item.label}

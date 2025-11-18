@@ -4,7 +4,7 @@ import CurvedLoop from '../reactbits/CurvedLoop';
 
 export default function ScrollingTextPanel({ Text }: { Text: string }) {
   return (
-    <div className="  w-full h-full flex items-center justify-center select-none">
+    <div className="  w-full h-full flex items-center justify-center select-none max-h-[200px]">
       <CurvedLoop
         marqueeText={Text}
         speed={3}

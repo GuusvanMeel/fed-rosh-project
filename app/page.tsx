@@ -10,7 +10,7 @@ import { deletePanel } from '@/lib/supabase/queries/deletePanel';
 import { PanelData } from './types/panel';
 import { CanvasData } from './types/canvas';
 import Canvas from './component/canvas/Canvas';
-import Sidebar from '@/components/ui/sidebar';
+import Sidebar from '@/app/component/sidebar';
 
 
 

@@ -7,6 +7,11 @@ import ImagePanel from "../component/panels/ImagePanel";
 import ScrollingTextPanel from "../component/panels/ScrollingTextPanel";
 import TextPanel from "../component/panels/TextPanel";
 import UrlPanel from "../component/panels/UrlPanel";
+import { CountdownPanel } from "../component/panels/CountdownPanel";
+import { Provider } from "@/components/ui/provider";
+import SectionCanvas from "../component/Sections/SectionCanvas";
+import Sidebar from "../component/sidebar";
+import { Flex } from "@chakra-ui/react";
 
 interface PanelItem {
   id: string;
@@ -38,54 +43,16 @@ export default function MovableColumnList() {
     e.preventDefault();
   };
 
-  const renderPanel = (type: string) => {
-    switch (type) {
-      case "VideoPanel":
-        return <VideoPanel source="https://www.youtube.com/watch?v=YYjyjxeF5Jk" />;
-      case "BracketPanel":
-        return <BracketPanel />;
-      case "CountdownPanel":
-        return <CountdownPanel />;
-      case "ImagePanel":
-        return <ImagePanel />;
-      case "ScrollingTextPanel":
-        return <ScrollingTextPanel />;
-      case "TextPanel":
-        return <TextPanel />;
-      case "UrlPanel":
-        return <UrlPanel />;
-      default:
-        return <div>Unknown Panel</div>;
-    }
-  };
+ 
 
-  return (
-    <div 
-      className="flex flex-col gap-4 p-4 min-h-screen"
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-    >
-      <div className="mb-4 p-4 bg-blue-50 border-2 border-dashed border-blue-300 rounded-lg text-center">
-        <p className="text-blue-600 font-medium">Drop components here from the sidebar</p>
-      </div>
-      
-      <Reorder.Group
-        axis="y"
-        values={items}
-        onReorder={setItems}
-        className="flex flex-col gap-4"
-      >
-        {items.map((item) => (
-          <Reorder.Item
-            key={item.id}
-            value={item}
-            className="p-6 bg-white rounded-2xl shadow-lg cursor-grab active:cursor-grabbing h-[500px] min-w-[150px] text-center font-semibold select-none"
-            whileDrag={{ scale: 1.05 }}
-          >
-            {renderPanel(item.type)}
-          </Reorder.Item>
-        ))}
-      </Reorder.Group>
+return (
+  <Provider>
+    <div className="flex w-full h-screen">
+      <Sidebar />
+      <SectionCanvas />
     </div>
-  );
+  </Provider>
+);
+
+
 }

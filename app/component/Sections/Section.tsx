@@ -184,7 +184,7 @@ export default function Section({
               <Reorder.Item
                 key={panel.i}
                 value={panel}
-                className="min-w-[200px] max-h-[200px] cursor-grab"
+                className="min-w-[200px]  cursor-grab"
                 onPointerDown={(e) => e.stopPropagation()} // ✅ don't drag section when dragging panel
               >
                 {renderPanel(panel)}

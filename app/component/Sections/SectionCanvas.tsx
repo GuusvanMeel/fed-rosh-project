@@ -33,7 +33,7 @@ export default function SectionCanvas() {
     };
 
     return (
-        <div className="p-6 space-y-6 bg-gray-200 min-h-screen">
+        <div className="flex-1 p-6 space-y-6 bg-gray-200">
             <Button
 
                 size="xs"
