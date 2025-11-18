@@ -12,6 +12,7 @@ export function PanelWrapper({
     <div
       className={cn(
         "w-full h-full overflow-hidden",
+       "transition-all  hover:outline-3 hover:outline-blue-400 hover:outline-offset-[-3px]"
       )}
       style={{
         backgroundColor: panel.styling.backgroundColor ?? "white",

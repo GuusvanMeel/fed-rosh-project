@@ -29,7 +29,7 @@ export const panelRegistry: Record<string, RegistryEntry> = {
   },
   countdown: {
     component: CountdownPanel,
-    mapProps: (content: string) => ({ targetTime: new Date(Number(content)) }),
+    mapProps: (content: string) => ({ targetTime: new Date(content) }),
   },
   scrollingText: {
     component: ScrollingTextPanel,
