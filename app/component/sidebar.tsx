@@ -53,13 +53,11 @@ export default function Sidebar() {
   return (
     <>
       {/* Main Sidebar */}
-      <Flex
-        
+      <Flex        
         h="100vh"
         w="70px"
         bg="gray.800"
-        borderRight="1px solid #090909ff"
-        
+        borderRight="1px solid #090909ff"        
         boxShadow="xl"
       >
         <Box w={"70px"} transition="width 0.2s" p={1}>
