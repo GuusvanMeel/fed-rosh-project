@@ -17,17 +17,20 @@ export default function Sidebar() {
     { 
       label: "Components", 
       icon: LuBox,
-      submenu: panelTypes
+      submenu: panelTypes,
+      cursor: "grab"
     },
     { 
       label: "Design", 
       icon: LuPalette,
-      submenu: ["Colors", "Typography", "Spacing", "Layout"]
+      submenu: ["Colors", "Typography", "Spacing", "Layout"],
+      cursor: "pointer"
     },
     { 
       label: "Settings", 
       icon: FiSettings,
-      submenu: ["Profile", "Account", "Privacy", "Notifications"]
+      submenu: ["Profile", "Account", "Privacy", "Notifications"],
+      cursor: "pointer"
     },
   ];
 
@@ -98,17 +101,17 @@ export default function Sidebar() {
                     key={subItem}
                     draggable
                     onDragStart={(e: any) => handleDragStart(e, subItem)}
-                    whileHover={{ scale: 1.05, x: 10 }}
+                    whileHover={{ backgroundColor: "rgba(0, 0, 0)" }}
                     whileTap={{ scale: 0.95 }}
                     style={{
                       padding: "12px",
                       borderRadius: "6px",
-                      backgroundColor: "rgba(255, 255, 255, 0.05)",
-                      cursor: "grab",
+                      backgroundColor: "rgba(17, 17, 17, 0.55)",
                       userSelect: "none",
+                      cursor: navItems.find((item) => item.label === activeMenu)?.cursor || "pointer",
                     }}
                   >
-                    <Text color="gray.200" fontSize="sm">
+                    <Text color="white" fontSize="lg">
                       {subItem}
                     </Text>
                   </motion.div>
