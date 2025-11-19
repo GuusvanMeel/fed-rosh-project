@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { PanelData } from "@/app/types/panel";
-
+import { ResizableBox, Resizable } from "react-resizable";
 export function PanelWrapper({
   panel,
   children,
@@ -9,6 +9,15 @@ export function PanelWrapper({
   children: React.ReactNode;
 }) {
   return (
+    <ResizableBox
+      width={200}
+      height={150}
+      axis="both"
+      resizeHandles={["se", "ne", "n", "nw", "w", "sw", ]}
+      minConstraints={[100, 80]}
+      maxConstraints={[600, 400]}
+      className="border border-gray-400 bg-white"
+    >
     <div
       className={cn(
         "w-full h-full overflow-hidden",
@@ -26,5 +35,6 @@ export function PanelWrapper({
     >
       {children}
     </div>
+    </ResizableBox>
   );
 }

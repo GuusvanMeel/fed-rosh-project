@@ -4,9 +4,6 @@ import ImagePanel from "./ImagePanel";
 import { CountdownPanel } from "./CountdownPanel";
 import ScrollingTextPanel from "./ScrollingTextPanel";
 import UrlPanel from "./UrlPanel";
-import { BracketWrapper } from "./BracketPanel";
-import { rounds } from "./BracketPanel";
-import { Round } from "./BracketPanel";
 
 
 type RegistryEntry = {

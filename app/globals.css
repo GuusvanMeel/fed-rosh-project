@@ -3,6 +3,7 @@
 @import "primereact/resources/primereact.min.css";
 @import "primeicons/primeicons.css";
 @import "tw-animate-css";
+@import "react-resizable/css/styles.css";
 
 :root {
   --background: #ffffff;
