@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Reorder } from "framer-motion";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { PanelData } from "@/app/types/panel";
-import { PanelData } from "@/app/types/panel";
-import PanelSettingsModal from "../panels/panelModal";
 
 export default function SectionCanvas() {
         const [sections, setSections] = useState<SectionData[]>([
@@ -196,6 +193,9 @@ export default function SectionCanvas() {
         ))}
       </div>
     </DndContext>
+    </div>
+
+
 {/* Right-side panel menu */}
             {selectedPanel && (
                 <div className="w-[400px] bg-neutral-900 shadow-2xl overflow-y-auto border-l border-neutral-700">
@@ -223,18 +223,14 @@ export default function SectionCanvas() {
                 </div>
             )}
 
-            {/* Alternative: Use existing modal instead of side panel */}
-            {/* <PanelSettingsModal
-                panel={selectedPanel?.panel || null}
-                onUpdate={handlePanelUpdate}
-                onClose={() => setSelectedPanel(null)}
-                onDelete={handlePanelDelete}
-            /> */}
+           
         </div>
-    );
-}
+        );
+        }
 
-// Inline panel settings form component
+ 
+
+
 function PanelSettingsForm({
     panel,
     onUpdate,
