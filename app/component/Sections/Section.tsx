@@ -171,6 +171,7 @@ export default function Section({
         
      
       <div className="grid grid-cols-4 gap-4">
+        
         <Droppable UID={`${data.id}-zone-1`}>
             <div className="space-y-2">
               {data.panels

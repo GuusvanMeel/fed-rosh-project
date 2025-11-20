@@ -8,6 +8,7 @@ export default function Droppable({ UID, children }: { UID: string, children: Re
     id: UID,
   });
   
+  
   return (
     <div 
       ref={setNodeRef}
@@ -16,7 +17,7 @@ export default function Droppable({ UID, children }: { UID: string, children: Re
         border: isOver ? '2px solid green' : '2px dashed gray',
         transition: 'all 0.2s',
         minHeight: '150px',
-        padding: '1rem',
+     
         borderRadius: '8px',
       }}
     >
