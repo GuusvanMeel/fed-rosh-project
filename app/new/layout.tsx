@@ -4,7 +4,7 @@ export default function NewLayout({
   children: React.ReactNode;
 }>) {
    return (
-    <div className="overflow-hidden">
+    <div className="overflow-x-hidden">
       {children}
     </div>
   );

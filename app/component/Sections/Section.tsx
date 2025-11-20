@@ -1,12 +1,12 @@
 "use client";
 
-import { DragControls, motion, Reorder, useDragControls } from "framer-motion";
 import { PanelData, PanelType } from "@/app/types/panel";
 import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
-
+import { DndContext, DragEndEvent, PointerSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
+import Droppable from "./Droppable";
 
 export interface SectionData {
     id: string;
@@ -25,7 +25,16 @@ export default function Section({
     onDelete: () => void;
 
 }) {
-    const Controls = useDragControls();
+  
+  const sensors = useSensors(
+  useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8, // Prevents accidental drags
+    },
+  })
+);
+
+    
 
     const addPanel = (type: PanelType) => {
         const id = crypto.randomUUID();
@@ -37,6 +46,7 @@ export default function Section({
           y: 0,
           w: 3,
           h: 3,
+          dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: (new Date(Date.now() + 100000).toString())},
           styling:{
           backgroundColor: "#ffff",
@@ -52,6 +62,7 @@ export default function Section({
           y: 0,
           w: 3,
           h: 3,
+          dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: (["New Panel" , "https://www.youtube.com"])},
           styling:{
           backgroundColor: "#ffff",
@@ -67,6 +78,7 @@ export default function Section({
           y: 0,
           w: 3,
           h: 3,
+          dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: "New Panel" },
           styling:{
           backgroundColor: "#ffff",
@@ -76,10 +88,6 @@ export default function Section({
 
         onChange({ ...data, panels: [...data.panels, newPanel] });
     }};
-
-    const updatePanelOrder = (newPanels: PanelData[]) => {
-        onChange({ ...data, panels: newPanels });
-    };
 
     const renderPanel = (panel: PanelData) => {
         const entry = panelRegistry[panel.panelProps.type];
@@ -95,18 +103,10 @@ export default function Section({
     };
 
     return (
-    <Reorder.Item
-      value={data}
-      dragListener={false}
-      dragControls={Controls}
-      layout
-    >
-      <motion.div
+    
+      <div
         className="p-6 space-y-6 bg-gray-100 cursor-grab active:cursor-grabbing select-none"
-        layout
-        onPointerDown={(e) => {
-          Controls.start(e);
-        }}
+       
       >
         {/* Section header */}
         <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-gray-200">
@@ -167,32 +167,48 @@ export default function Section({
             </Button>
           </div>
         </div>
-
-        {/* Panels */}
-        {data.panels.length === 0 ? (
-          <div className="text-gray-400 text-center py-6">
-            No panels yet
-          </div>
-        ) : (
-          <Reorder.Group
-            axis="x"
-            values={data.panels}
-            onReorder={updatePanelOrder}
-            className="flex gap-4 overflow-x-auto pb-2"
-          >
-            {data.panels.map(panel => (
-              <Reorder.Item
-                key={panel.i}
-                value={panel}
-                className="min-w-[200px]  cursor-grab"
-                onPointerDown={(e) => e.stopPropagation()} // ✅ don't drag section when dragging panel
-              >
-                {renderPanel(panel)}
-              </Reorder.Item>
-            ))}
-          </Reorder.Group>
-        )}
-      </motion.div>
-    </Reorder.Item>
+        
+        
+     
+      <div className="grid grid-cols-4 gap-4">
+        <Droppable UID={`${data.id}-zone-1`}>
+            <div className="space-y-2">
+              {data.panels
+                .filter(panel => panel.dropZoneId === `${data.id}-zone-1`)
+                .map(panel => renderPanel(panel))
+              }
+            </div>
+          </Droppable>
+        <Droppable UID={`${data.id}-zone-2`}>
+            <div className="space-y-2">
+              {data.panels
+                .filter(panel => panel.dropZoneId === `${data.id}-zone-2`)
+                .map(panel => renderPanel(panel))
+              }
+            </div>
+          </Droppable>
+          
+          <Droppable UID={`${data.id}-zone-3`}>
+            <div className="space-y-2">
+              {data.panels
+                .filter(panel => panel.dropZoneId === `${data.id}-zone-3`)
+                .map(panel => renderPanel(panel))
+              }
+            </div>
+          </Droppable>
+          
+          <Droppable UID={`${data.id}-zone-4`}>
+            <div className="space-y-2">
+              {data.panels
+                .filter(panel => panel.dropZoneId === `${data.id}-zone-4`)
+                .map(panel => renderPanel(panel))
+              }
+            </div>
+          </Droppable>
+      </div>
+ 
+        
+     </div>
+    
   );
 }

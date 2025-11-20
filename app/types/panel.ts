@@ -10,6 +10,7 @@ export type PanelData = {
     y: number;
     w: number;
     h: number;
+  dropZoneId?: string; 
   panelProps: PanelProps;
     styling: PanelStyling;
  
