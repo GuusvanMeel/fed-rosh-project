@@ -6,12 +6,40 @@ import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
 import { motion } from "framer-motion";
 import { panelRegistry } from "@/app/component/panels/panelRegistry";
+import Droppable from "./Sections/Droppable";
+import { PanelWrapper } from "./panels/panelWrapper";
+import { PanelData } from "../types/panel";
+import { DndContext } from "@dnd-kit/core";
 
 // Dynamically get all panel types from the registry
 export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
 
 export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const testpanel : PanelData = {
+    i: crypto.randomUUID(),
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    panelProps: {
+      id: crypto.randomUUID(),
+      type: "text",
+      content: "new panel",
+      currentIndex: 1,
+      layout: undefined
+    },
+    styling: {
+      backgroundColor: "",
+      borderRadius: undefined,
+      fontSize: undefined,
+      fontFamily: undefined,
+      textColor: undefined,
+      padding: undefined,
+      contentAlign: undefined
+    }
+  }
 
   const navItems = [
     { 
@@ -93,6 +121,7 @@ export default function Sidebar() {
           boxShadow="xl"
           transition="left 0.2s"
         >
+          <DndContext>
           <Box w="100%" p={4}>
             <Text fontSize="2xl" fontWeight="bold" mb={2} color="white" textAlign="center" bg="black" w={"100%"}  borderRadius={6} p={2}>
               {activeMenu}
@@ -101,29 +130,17 @@ export default function Sidebar() {
               {navItems
                 .find((item) => item.label === activeMenu)
                 ?.submenu.map((subItem) => (
-                  <motion.div
-                    key={subItem}
-                    draggable
-                    onDragStart={(e: any) => handleDragStart(e, subItem)}
-                    onDragEnd={(e: any) => handleDragEnd(e)}
-                    whileHover={{ backgroundColor: "rgba(0, 0, 0)" }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                      padding: "12px",
-                      borderRadius: "6px",
-                      backgroundColor: "rgba(17, 17, 17, 0.55)",
-                      userSelect: "none",
-                      cursor: navItems.find((item) => item.label === activeMenu)?.cursor || "pointer",
-                    }}
-                  >
+                  <PanelWrapper key={crypto.randomUUID()} panel={testpanel}>
                     <Text color="white" fontSize="lg">
                       {subItem}
                     </Text>
-                  </motion.div>
+                  </PanelWrapper>
                 ))}
             </VStack>
           </Box>
+          </DndContext>
         </Flex>
+        
       )}
     </>
   );

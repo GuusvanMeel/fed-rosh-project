@@ -12,6 +12,7 @@ import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
 import { Flex } from "@chakra-ui/react";
+import { DndContext } from "@dnd-kit/core";
 
 interface PanelItem {
   id: string;
@@ -20,13 +21,16 @@ interface PanelItem {
 
 export default function MovableColumnList() {
   
+  
  
 
 return (
   <Provider>
     <div className="flex w-full h-screen">
+      <DndContext>
       <Sidebar />
       <SectionCanvas />
+      </DndContext>
     </div>
   </Provider>
 );
