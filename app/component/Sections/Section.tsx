@@ -12,6 +12,7 @@ export interface SectionData {
     id: string;
     name: string;
     panels: PanelData[];
+      dropZones: string[]; // 👈 NEW
 }
 
 export default function Section({
@@ -101,6 +102,14 @@ export default function Section({
             </PanelWrapper>
         );
     };
+    const addDropZone = () => {
+  const newZoneId = `${data.id}-zone-${data.dropZones.length + 1}`;
+
+  onChange({
+    ...data,
+    dropZones: [...data.dropZones, newZoneId],
+  });
+};
 
     return (
     
@@ -165,47 +174,41 @@ export default function Section({
             >
               Delete
             </Button>
+            <Button
+  size="xs"
+  variant="surface"
+  style={{
+    backgroundColor: "rgba(0,0,160,0.8)",
+    color: "white",
+    borderRadius: "0.4rem",
+    padding: "0.25rem 0.6rem",
+    fontSize: "0.75rem",
+  }}
+  onClick={addDropZone}
+>
+  Add Column
+</Button>
           </div>
         </div>
         
         
      
-      <div className="grid grid-cols-4 gap-4">
+      <div >
         
-        <Droppable UID={`${data.id}-zone-1`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-1`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-        <Droppable UID={`${data.id}-zone-2`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-2`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-          
-          <Droppable UID={`${data.id}-zone-3`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-3`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-          
-          <Droppable UID={`${data.id}-zone-4`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-4`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
+        <div
+  className={`grid gap-4`}
+  style={{ gridTemplateColumns: `repeat(${data.dropZones.length}, 1fr)` }}
+>
+  {data.dropZones.map((zoneId) => (
+    <Droppable UID={zoneId} key={zoneId}>
+      <div className="">
+        {data.panels
+          .filter((panel) => panel.dropZoneId === zoneId)
+          .map((panel) => renderPanel(panel))}
+      </div>
+    </Droppable>
+  ))}
+</div>
       </div>
  
         

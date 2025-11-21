@@ -8,7 +8,7 @@ import { PanelData } from "@/app/types/panel";
 
 export default function SectionCanvas() {
         const [sections, setSections] = useState<SectionData[]>([
-            { id: "section-1", name: "Section 1", panels: [] },
+            { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
         ]);
 
     const [selectedPanel, setSelectedPanel] = useState<{
@@ -18,7 +18,7 @@ export default function SectionCanvas() {
 
         const addSection = () => {
               const id = crypto.randomUUID();
-            setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [] }]);
+            setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [], dropZones: [] }]);
         };
 
 

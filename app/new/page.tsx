@@ -24,7 +24,7 @@ export default function MovableColumnList() {
 
 return (
   <Provider>
-    <div className="flex w-full h-screen">
+    <div className="flex w-full h-screen overflow-x-hidden">
       <Sidebar />
       <SectionCanvas />
     </div>
