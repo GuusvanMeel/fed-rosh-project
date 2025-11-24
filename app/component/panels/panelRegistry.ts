@@ -1,43 +1,47 @@
 import TextPanel from "./TextPanel";
-import VideoPanel from "./VideoPanel";
 import ImagePanel from "./ImagePanel";
-import { CountdownPanel } from "./CountdownPanel";
+import VideoPanel from "./VideoPanel";
 import ScrollingTextPanel from "./ScrollingTextPanel";
 import UrlPanel from "./UrlPanel";
-import { BracketWrapper } from "./BracketPanel";
-import { rounds } from "./BracketPanel";
-import { Round } from "./BracketPanel";
+import { CountdownPanel } from "./CountdownPanel";
+import { PanelStyling } from "@/app/types/panel";
 
-
-type RegistryEntry = {
-  component: React.ComponentType<any>;
-  mapProps: (content: any) => Record<string, any>;
-};
-
-export const panelRegistry: Record<string, RegistryEntry> = {
+export const panelRegistry = {
   text: {
     component: TextPanel,
-    mapProps: (content: string) => ({ Text: content }),
-  },
-  video: {
-    component: VideoPanel,
-    mapProps: (content: string) => ({ source: content }),
+    mapProps: (content: string | string[]) => ({ text: typeof content === 'string' ? content : content[0] }),
   },
   image: {
     component: ImagePanel,
-    mapProps: (content: string) => ({ source: content }),
+    mapProps: (content: string | string[]) => ({ src: typeof content === 'string' ? content : content[0] }),
   },
-  countdown: {
-    component: CountdownPanel,
-    mapProps: (content: string) => ({ targetTime: new Date(content) }),
+  video: {
+    component: VideoPanel,
+    mapProps: (content: string | string[]) => ({ src: typeof content === 'string' ? content : content[0] }),
   },
   scrollingText: {
     component: ScrollingTextPanel,
-    mapProps: (content: string) => ({ Text: content }),
+    mapProps: (content: string | string[], styling?: PanelStyling) => ({
+      text: typeof content === 'string' ? content : content[0],
+      direction: styling?.scrollDirection || 'left',
+      fontSize: styling?.fontSize,
+      fontFamily: styling?.fontFamily,
+      textColor: styling?.textColor,
+    }),
   },
   url: {
     component: UrlPanel,
-    mapProps: ([text, url]: [string, string]) => ({ Text: text, url }),
+    mapProps: (content: string | string[]) => {
+      if (Array.isArray(content)) {
+        return { text: content[0], url: content[1] };
+      }
+      return { text: content, url: '#' };
+    },
   },
-} as const;
-
+  countdown: {
+    component: CountdownPanel,
+    mapProps: (content: string | string[]) => ({
+      targetDate: typeof content === 'string' ? content : content[0],
+    }),
+  },
+};

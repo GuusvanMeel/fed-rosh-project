@@ -93,13 +93,13 @@ export default function Section({
         const entry = panelRegistry[panel.panelProps.type];
         if (!entry) return <div>Unknown panel type</div>;
         const Component = entry.component;
-        const mappedProps = entry.mapProps(panel.panelProps.content);
+        const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
 
-        return (
-            <PanelWrapper panel={panel}>
-                <Component {...mappedProps} />
-            </PanelWrapper>
-        );
+        // return (
+        //     <PanelWrapper panel={panel}>
+        //         <Component {...mappedProps} />
+        //     </PanelWrapper>
+        // );
     };
 
     return (
@@ -199,7 +199,7 @@ export default function Section({
                                     {hoveredPanelId === panel.i && (
                                         <button
                                             onClick={(e) => handleEditClick(e, panel.i)}
-                                            className="absolute -top-0 -right-0 w-7 h-7 !bg-blue-600 hover:bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
+                                            className="absolute -top-2 -right-2 w-7 h-7 bg-blue-600 hover:bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
                                             aria-label="Edit panel"
                                         >
                                             <svg 

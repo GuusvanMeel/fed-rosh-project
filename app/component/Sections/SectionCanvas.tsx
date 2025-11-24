@@ -22,6 +22,9 @@ export default function SectionCanvas() {
     };
 
     const deleteSection = (sectionId: string) => {
+        if (!confirm("Are you sure you want to delete this section?")) {
+            return;
+        }
         setSections(prev => prev.filter(s => s.id !== sectionId));
         if (selectedPanel?.sectionId === sectionId) {
             setSelectedPanel(null);
@@ -74,6 +77,10 @@ export default function SectionCanvas() {
 
     const handlePanelDelete = (panelId: string) => {
         if (!selectedPanel) return;
+        
+        if (!confirm("Are you sure you want to delete this panel?")) {
+            return;
+        }
         
         setSections(prev =>
             prev.map(section => {
@@ -176,6 +183,7 @@ function PanelSettingsForm({
     onDelete: (id: string) => void;
 }) {
     const panelType = panel.panelProps.type;
+    const isCountdown = panelType === 'countdown';
     
     const updateStyling = (styleUpdates: Partial<PanelData['styling']>) => {
         onUpdate({
@@ -229,30 +237,26 @@ function PanelSettingsForm({
             {/* Panel Size */}
             <div className="space-y-3">
                 <label className="flex flex-col">
-                    <span className="text-sm font-medium mb-1 text-white">
-                        Width: {panel.w} units
-                    </span>
+                    <span className="text-sm font-medium mb-1 text-white">Width (units)</span>
                     <input
-                        type="range"
+                        type="number"
                         min="1"
                         max="12"
-                        className="w-full accent-blue-500"
+                        className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={panel.w}
-                        onChange={(e) => updatePanelSize({ w: Number(e.target.value) })}
+                        onChange={(e) => updatePanelSize({ w: Math.max(1, Math.min(12, Number(e.target.value))) })}
                     />
                 </label>
 
                 <label className="flex flex-col">
-                    <span className="text-sm font-medium mb-1 text-white">
-                        Height: {panel.h} units
-                    </span>
+                    <span className="text-sm font-medium mb-1 text-white">Height (units)</span>
                     <input
-                        type="range"
+                        type="number"
                         min="1"
                         max="12"
-                        className="w-full accent-blue-500"
+                        className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={panel.h}
-                        onChange={(e) => updatePanelSize({ h: Number(e.target.value) })}
+                        onChange={(e) => updatePanelSize({ h: Math.max(1, Math.min(12, Number(e.target.value))) })}
                     />
                 </label>
             </div>
@@ -270,16 +274,14 @@ function PanelSettingsForm({
 
             {/* Opacity */}
             <label className="flex flex-col">
-                <span className="text-sm font-medium mb-1 text-white">
-                    Opacity: {((panel.styling.opacity ?? 1) * 100).toFixed(0)}%
-                </span>
+                <span className="text-sm font-medium mb-1 text-white">Opacity (%)</span>
                 <input
-                    type="range"
+                    type="number"
                     min="0"
                     max="100"
-                    className="w-full accent-blue-500"
-                    value={(panel.styling.opacity ?? 1) * 100}
-                    onChange={(e) => updateStyling({ opacity: Number(e.target.value) / 100 })}
+                    className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={Math.round((panel.styling.opacity ?? 1) * 100)}
+                    onChange={(e) => updateStyling({ opacity: Math.max(0, Math.min(100, Number(e.target.value))) / 100 })}
                 />
             </label>
 
@@ -378,16 +380,14 @@ function PanelSettingsForm({
 
                     {/* Font Size */}
                     <label className="flex flex-col">
-                        <span className="text-sm font-medium mb-1 text-white">
-                            Font Size: {panel.styling.fontSize || 16}px
-                        </span>
+                        <span className="text-sm font-medium mb-1 text-white">Font Size (px)</span>
                         <input
-                            type="range"
+                            type="number"
                             min="8"
                             max="64"
-                            className="w-full accent-blue-500"
+                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={panel.styling.fontSize || 16}
-                            onChange={(e) => updateStyling({ fontSize: Number(e.target.value) })}
+                            onChange={(e) => updateStyling({ fontSize: Math.max(8, Math.min(64, Number(e.target.value))) })}
                         />
                     </label>
 
@@ -411,23 +411,25 @@ function PanelSettingsForm({
                         </select>
                     </label>
 
-                    {/* Text Align */}
-                    <label className="flex flex-col">
-                        <span className="text-sm font-medium mb-1 text-white">Text Align</span>
-                        <select
-                            value={panel.styling.contentAlign || "left"}
-                            onChange={(e) =>
-                                updateStyling({
-                                    contentAlign: e.target.value as "left" | "center" | "right",
-                                })
-                            }
-                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="left">Left</option>
-                            <option value="center">Center</option>
-                            <option value="right">Right</option>
-                        </select>
-                    </label>
+                    {/* Text Align - only for text, not scrollingText */}
+                    {!isScrollingText && (
+                        <label className="flex flex-col">
+                            <span className="text-sm font-medium mb-1 text-white">Text Align</span>
+                            <select
+                                value={panel.styling.contentAlign || "left"}
+                                onChange={(e) =>
+                                    updateStyling({
+                                        contentAlign: e.target.value as "left" | "center" | "right",
+                                    })
+                                }
+                                className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="left">Left</option>
+                                <option value="center">Center</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </label>
+                    )}
                 </>
             )}
 
@@ -443,6 +445,26 @@ function PanelSettingsForm({
                         <option value="left">Left to Right</option>
                         <option value="right">Right to Left</option>
                     </select>
+                </label>
+            )}
+
+            {/* Countdown Date/Time Selection */}
+            {isCountdown && (
+                <label className="flex flex-col">
+                    <span className="text-sm font-medium mb-1 text-white">Target Date & Time</span>
+                    <input
+                        type="datetime-local"
+                        className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={
+                            typeof panel.panelProps.content === 'string'
+                                ? new Date(panel.panelProps.content).toISOString().slice(0, 16)
+                                : ''
+                        }
+                        onChange={(e) => {
+                            const selectedDate = new Date(e.target.value);
+                            updateContent(selectedDate.toISOString());
+                        }}
+                    />
                 </label>
             )}
 
@@ -478,7 +500,7 @@ function PanelSettingsForm({
             <div className="pt-4">
                 <button
                     onClick={() => onDelete(panel.i)}
-                    className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
+                    className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
                     Delete Panel
                 </button>
