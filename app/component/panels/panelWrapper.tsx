@@ -6,20 +6,40 @@ import {CSS} from '@dnd-kit/utilities';
 export function PanelWrapper({
   panel,
   children,
+  onDragStart
 }: {
   panel: PanelData;
   children: React.ReactNode;
+  onDragStart?: (panel: PanelData) => void;
  
 }) {
-  const {attributes, listeners, setNodeRef, transform} = useDraggable({
+  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: panel.i,
+    data: {
+      type: 'panel',
+      panel: panel
+    }
   });
+  
   const style = {
     transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  const handleDragStart = () => {
+    console.log('Panel drag started:', panel.i);
+    if (onDragStart) onDragStart(panel);
   };
  
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...listeners} 
+      {...attributes} 
+      onDragStart={handleDragStart}
+      className="cursor-grab active:cursor-grabbing"
+    >
     <div 
       className={cn(
         "w-full h-full overflow-hidden",
