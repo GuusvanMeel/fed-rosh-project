@@ -49,7 +49,7 @@ export default function Sidebar({ setSections }: SidebarProps) {
 
   const addSection = () => {
     const id = crypto.randomUUID();
-    setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [] }]);
+    setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [], dropZones: [] }]);
   };
 
   return (
