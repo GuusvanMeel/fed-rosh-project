@@ -5,36 +5,28 @@ import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
-import { DndContext, DragEndEvent, PointerSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
+import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import Droppable from "./Droppable";
+import { SortableContext } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 
 export interface SectionData {
     id: string;
     name: string;
     panels: PanelData[];
-      dropZones: string[]; // 👈 NEW
+      dropZones: string[];
 }
 
 export default function Section({
     data,
     onChange,
     onDelete,
-    onPanelEdit,
 }: {
     data: SectionData;
     onChange: (updated: SectionData) => void;
     onDelete: () => void;
     onPanelEdit?: (panelId: string) => void;
 }) {
-  
-  const sensors = useSensors(
-  useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 8, // Prevents accidental drags
-    },
-  })
-);
-
     
 
     const addPanel = (type: PanelType) => {
@@ -97,7 +89,7 @@ export default function Section({
         const mappedProps = entry.mapProps(panel.panelProps.content);
 
         return (
-            <PanelWrapper panel={panel}>
+            <PanelWrapper key={panel.i} panel={panel}>
                 <Component {...mappedProps} />
             </PanelWrapper>
         );
@@ -199,15 +191,23 @@ export default function Section({
   className={`grid gap-4`}
   style={{ gridTemplateColumns: `repeat(${data.dropZones.length}, 1fr)` }}
 >
-  {data.dropZones.map((zoneId) => (
+  {data.dropZones.map((zoneId) => {
+  // 1. Get all panels inside this zone
+  const panelsInZone = data.panels.filter(
+    (panel) => panel.dropZoneId === zoneId
+  );
+
+  return (
     <Droppable UID={zoneId} key={zoneId}>
-      <div className="">
-        {data.panels
-          .filter((panel) => panel.dropZoneId === zoneId)
-          .map((panel) => renderPanel(panel))}
-      </div>
+      {/* 2. SortableContext MUST get the IDs of items in this zone */}
+      <SortableContext items={panelsInZone.map((p) => p.i)} >    
+          {/* 3. Render sortable panels */}
+          {panelsInZone.map((panel) => renderPanel(panel))}
+       
+      </SortableContext>
     </Droppable>
-  ))}
+  );
+})}
 </div>
       </div>
  

@@ -3,13 +3,22 @@
 import { useState } from "react";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core";
 import { PanelData } from "@/app/types/panel";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { SortableSectionWrapper } from "./SectionWrapper";
+import { panelRegistry } from "../panels/panelRegistry";
+import { PanelWrapper } from "../panels/panelWrapper";
 
 export default function SectionCanvas() {
         const [sections, setSections] = useState<SectionData[]>([
             { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
         ]);
+
+    const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
+     const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+
+
 
     const [selectedPanel, setSelectedPanel] = useState<{
         panel: PanelData;
@@ -20,13 +29,6 @@ export default function SectionCanvas() {
               const id = crypto.randomUUID();
             setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [], dropZones: [] }]);
         };
-
-
-    const updateSection = (updated: SectionData) => {
-        setSections(prev =>
-            prev.map(s => (s.id === updated.id ? updated : s))
-        );
-    };
      const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -34,83 +36,164 @@ export default function SectionCanvas() {
       },
     })
   );
-
-  const handleDragEnd = (event: DragEndEvent) => {
+  function handleSectionDragEnd(event: DragEndEvent) {
   const { active, over } = event;
-  
   if (!over) return;
-  
-  const panelId = active.id as string;
-  const newZoneId = over.id as string;
-  
-  // Extract section ID from zone ID (e.g., "section-1-zone-2" -> "section-1")
-  const newSectionId = newZoneId.split('-zone-')[0];
-  
-  console.log(`Panel ${panelId} dropped on zone ${newZoneId} in section ${newSectionId}`);
-  
+
+  if (active.id !== over.id) {
+    setSections((prev) => {
+      const oldIndex = prev.findIndex(s => s.id === active.id);
+      const newIndex = prev.findIndex(s => s.id === over.id);
+
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  }
+}
+
+ const handlePanelDragEnd = (event: DragEndEvent) => {
+  const { active, over } = event;
+    console.log("🔵 DRAG END", {
+  activeId: active.id,
+  overId: over?.id,
+});
+  if (!over) return;
+
+  const activeId = active.id as string;
+  const overId = over.id as string;
+
   setSections(prevSections => {
-    // Find which section currently has the panel
+    // ---- Step 1: FIND ACTIVE PANEL + SOURCE SECTION ----
     let panelToMove: PanelData | null = null;
     let sourceSectionId: string | null = null;
     
+
     for (const section of prevSections) {
-      const panel = section.panels.find(p => p.i === panelId);
-      if (panel) {
+      const panel = section.panels.find(p => p.i === activeId);
+      if (panel) {        
         panelToMove = panel;
         sourceSectionId = section.id;
+        
         break;
       }
     }
-    
+
     if (!panelToMove || !sourceSectionId) return prevSections;
-    
-    // Update the panel's dropZoneId
-    const updatedPanel = { ...panelToMove, dropZoneId: newZoneId };
-    
-    // If moving within the same section, just update the dropZoneId
-    if (sourceSectionId === newSectionId) {
+
+    const sourceSection = prevSections.find(s => s.id === sourceSectionId)!;
+
+    // ---- Helper: find panel by ID ----
+    const isPanel = (id: string) =>
+      sourceSection.panels.some(p => p.i === id);
+
+    // ---- CASE A — Sorting inside same dropzone ----
+    if (isPanel(overId)) {
+      const overPanel = sourceSection.panels.find(p => p.i === overId)!;
+
+      // same dropzone?
+      if (panelToMove.dropZoneId === overPanel.dropZoneId) {
+        const zone = panelToMove.dropZoneId;
+
+        const zonePanels = sourceSection.panels.filter(
+          p => p.dropZoneId === zone
+        );
+
+        const oldIndex = zonePanels.findIndex(p => p.i === activeId);
+        const newIndex = zonePanels.findIndex(p => p.i === overId);
+
+        const reordered = arrayMove(zonePanels, oldIndex, newIndex);
+
+        return prevSections.map(s => {
+          if (s.id !== sourceSectionId) return s;
+
+          return {
+            ...s,
+            panels: [
+              // keep panels from other zones
+              ...s.panels.filter(p => p.dropZoneId !== zone),
+              // insert reordered zone panels
+              ...reordered,
+            ],
+          };
+        });
+      }
+    }
+
+            const newSectionId = overId.split("-zone-")[0];
+
+        if (overId.includes("-zone-") && newSectionId === sourceSectionId) {
+        console.log("🟣 SAME SECTION - SWITCH ZONE");
+
+        const updatedPanel = { ...panelToMove, dropZoneId: overId };
+
+        return prevSections.map(section => {
+            if (section.id !== sourceSectionId) return section;
+
+            return {
+            ...section,
+            panels: section.panels.map(p =>
+                p.i === activeId ? updatedPanel : p
+            ),
+            };
+        });
+}
+    // ---- CASE B — Dropped over a dropzone (change dropzone) ----
+    const isDropzone = overId.includes("-zone-");
+
+    if (isDropzone && sourceSectionId !== newSectionId) {
+      const newZoneId = overId;
+      const updatedPanel = { ...panelToMove, dropZoneId: newZoneId };
+
       return prevSections.map(section => {
         if (section.id === sourceSectionId) {
+          // remove from old section
+                    console.log("❌ REMOVE from source section", {
+            sectionId: section.id,
+            activeId,
+            sourceSectionId
+            });
           return {
             ...section,
-            panels: section.panels.map(p => 
-              p.i === panelId ? updatedPanel : p
-            )
+            panels: section.panels.filter(p => p.i !== activeId),
           };
         }
+
+        if (section.dropZones.includes(newZoneId)) {
+          // add to target section at the end of its zone
+                    console.log("➕ ADD to target section", {
+            sectionId: section.id,
+            newZoneId,
+            activeId
+            });
+          return {
+            ...section,
+            panels: [...section.panels, updatedPanel],
+          };
+        }
+
         return section;
       });
     }
-    
-    // Moving between sections: remove from source, add to target
-    return prevSections.map(section => {
-      if (section.id === sourceSectionId) {
-        // Remove panel from source section
-        return {
-          ...section,
-          panels: section.panels.filter(p => p.i !== panelId)
-        };
-      }
-      if (section.id === newSectionId) {
-        // Add panel to target section
-        return {
-          ...section,
-          panels: [...section.panels, updatedPanel]
-        };
-      }
-      return section;
-    });
+
+    return prevSections;
   });
 };
+function renderPanelById(id: UniqueIdentifier) {
+  const panel = sections.flatMap(s => s.panels).find(p => p.i === id);
+  if (!panel) return null;
 
-    // Handle panel selection
-    const handlePanelEdit = (sectionId: string, panelId: string) => {
-        const section = sections.find(s => s.id === sectionId);
-        const panel = section?.panels.find(p => p.i === panelId);
-        if (panel) {
-            setSelectedPanel({ panel, sectionId });
-        }
-    };
+  const entry = panelRegistry[panel.panelProps.type];
+  const Component = entry.component;
+  const mappedProps = entry.mapProps(panel.panelProps.content);
+
+  return (
+    <PanelWrapper panel={panel}>
+      <Component {...mappedProps} />
+    </PanelWrapper>
+  );
+}
+
+
+   
 
     // Handle panel update from modal
     const handlePanelUpdate = (updatedPanel: PanelData) => {
@@ -175,9 +258,22 @@ export default function SectionCanvas() {
                     Add Section
                 </Button>
 
-          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <DndContext sensors={sensors}
+          onDragStart={({ active }) => {
+        setActivePanelId(active.id);
+        }}
+   onDragEnd={(event) => {
+    handleSectionDragEnd(event);  // 🔵 handles section reordering
+    handlePanelDragEnd(event);    // 🔴 your existing panel movement logic
+    setActivePanelId(null);
+  }}
+    onDragCancel={() => setActivePanelId(null)}>
+    
+    
+            <SortableContext items={sections.map(s => s.id)}>
       <div className="space-y-4">
         {sections.map(section => (
+            <SortableSectionWrapper id={section.id} key={section.id}>
           <Section
             key={section.id}
             data={section}
@@ -190,8 +286,13 @@ export default function SectionCanvas() {
               setSections(prev => prev.filter(s => s.id !== section.id));
             }}
           />
+          </SortableSectionWrapper>
         ))}
       </div>
+      </SortableContext>
+        <DragOverlay>
+    {activePanelId ? renderPanelById(activePanelId) : null}
+  </DragOverlay>
     </DndContext>
     </div>
 

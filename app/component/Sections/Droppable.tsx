@@ -1,4 +1,3 @@
-import { JsxElement } from '@chakra-ui/react';
 import {useDroppable} from '@dnd-kit/core';
 import React from 'react';
 
@@ -17,12 +16,14 @@ export default function Droppable({ UID, children }: { UID: string, children: Re
         border: isOver ? '2px solid green' : '2px dashed gray',
         transition: 'all 0.2s',
         minHeight: '150px',
-     
+        pointerEvents: "none",
         borderRadius: '8px',
       }}
     >
-      <div className="text-sm text-gray-500 mb-2">Drop Zone: {UID}</div>
-      {children}
-    </div>
+    <div style={{ pointerEvents: "auto" }}>
+    <div className="text-sm text-gray-500 mb-2">Drop Zone: {UID}</div>
+    {children}
+  </div>
+</div>
   );
 }

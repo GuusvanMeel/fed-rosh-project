@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { PanelData } from "@/app/types/panel";
-import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 
 export function PanelWrapper({
@@ -11,11 +11,20 @@ export function PanelWrapper({
   children: React.ReactNode;
  
 }) {
-  const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: panel.i,
-  });
+  const {
+  attributes,
+  listeners,
+  setNodeRef,
+  transform,
+  transition
+} = useSortable({
+  id: panel.i
+});
+
   const style = {
     transform: CSS.Translate.toString(transform),
+    transition,
+    
   };
  
   return (
@@ -23,8 +32,10 @@ export function PanelWrapper({
     <div 
       className={cn(
         "w-full h-full overflow-hidden",
-       "transition-all  hover:outline-3 hover:outline-blue-400 hover:outline-offset-[-3px]"
-      )}
+       "transition-all  hover:outline-3 hover:outline-blue-400 hover:outline-offset-[-3px]",
+      )
+    }
+    
       style={{
         backgroundColor: panel.styling.backgroundColor ?? "white",
         borderRadius: panel.styling.borderRadius ?? 8,
