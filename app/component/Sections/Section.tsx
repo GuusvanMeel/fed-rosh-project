@@ -80,8 +80,11 @@ export default function Section({
         onChange({ ...data, panels: newPanels });
     };
 
-    const handlePanelClick = (panelId: string) => {
-        if (!isDragging && onPanelEdit) {
+    const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
+
+    const handleEditClick = (e: React.MouseEvent, panelId: string) => {
+        e.stopPropagation();
+        if (onPanelEdit) {
             onPanelEdit(panelId);
         }
     };
@@ -178,7 +181,7 @@ export default function Section({
                             <Reorder.Item
                                 key={panel.i}
                                 value={panel}
-                                className="min-w-[200px] cursor-grab active:cursor-grabbing"
+                                className="min-w-[200px] cursor-grab active:cursor-grabbing relative"
                                 onPointerDown={(e) => {
                                     e.stopPropagation();
                                     setIsDragging(true);
@@ -186,10 +189,29 @@ export default function Section({
                                 onPointerUp={() => {
                                     setTimeout(() => setIsDragging(false), 100);
                                 }}
-                                onClick={() => handlePanelClick(panel.i)}
+                                onMouseEnter={() => setHoveredPanelId(panel.i)}
+                                onMouseLeave={() => setHoveredPanelId(null)}
                             >
-                                <div className="hover:ring-2 transition-all">
+                                <div className="relative rounded-lg">
                                     {renderPanel(panel)}
+                                    
+                                    {/* Edit button that appears on hover */}
+                                    {hoveredPanelId === panel.i && (
+                                        <button
+                                            onClick={(e) => handleEditClick(e, panel.i)}
+                                            className="absolute -top-0 -right-0 w-7 h-7 !bg-blue-600 hover:bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
+                                            aria-label="Edit panel"
+                                        >
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                className="h-4 w-4 text-white" 
+                                                viewBox="0 0 20 20" 
+                                                fill="currentColor"
+                                            >
+                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                             </Reorder.Item>
                         ))}

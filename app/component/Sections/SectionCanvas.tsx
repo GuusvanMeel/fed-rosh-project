@@ -5,7 +5,6 @@ import { Reorder } from "framer-motion";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { PanelData } from "@/app/types/panel";
-import PanelSettingsModal from "../panels/panelModal";
 
 export default function SectionCanvas() {
     const [sections, setSections] = useState<SectionData[]>([
@@ -24,6 +23,9 @@ export default function SectionCanvas() {
 
     const deleteSection = (sectionId: string) => {
         setSections(prev => prev.filter(s => s.id !== sectionId));
+        if (selectedPanel?.sectionId === sectionId) {
+            setSelectedPanel(null);
+        }
     };
 
     const updateSectionOrder = (next: SectionData[]) => {
@@ -31,12 +33,17 @@ export default function SectionCanvas() {
     };
 
     const updateSection = (updated: SectionData) => {
-        setSections(prev =>
-            prev.map(s => (s.id === updated.id ? updated : s))
-        );
+        setSections(prev => prev.map(s => (s.id === updated.id ? updated : s)));
+        
+        // Update selectedPanel if it's in this section
+        if (selectedPanel?.sectionId === updated.id) {
+            const updatedPanel = updated.panels.find(p => p.i === selectedPanel.panel.i);
+            if (updatedPanel) {
+                setSelectedPanel({ ...selectedPanel, panel: updatedPanel });
+            }
+        }
     };
 
-    // Handle panel selection
     const handlePanelEdit = (sectionId: string, panelId: string) => {
         const section = sections.find(s => s.id === sectionId);
         const panel = section?.panels.find(p => p.i === panelId);
@@ -45,7 +52,6 @@ export default function SectionCanvas() {
         }
     };
 
-    // Handle panel update from modal
     const handlePanelUpdate = (updatedPanel: PanelData) => {
         if (!selectedPanel) return;
         
@@ -62,9 +68,10 @@ export default function SectionCanvas() {
                 return section;
             })
         );
+        
+        setSelectedPanel({ ...selectedPanel, panel: updatedPanel });
     };
 
-    // Handle panel delete
     const handlePanelDelete = (panelId: string) => {
         if (!selectedPanel) return;
         
@@ -103,7 +110,7 @@ export default function SectionCanvas() {
                     onMouseLeave={(e) =>
                         (e.currentTarget.style.backgroundColor = "rgba(0,128,0,0.85)")
                     }
-                    onClick={() => addSection()}
+                    onClick={addSection}
                 >
                     Add Section
                 </Button>
@@ -126,45 +133,39 @@ export default function SectionCanvas() {
                 </Reorder.Group>
             </div>
 
-            {/* Right-side panel menu */}
-            {selectedPanel && (
-                <div className="w-[400px] bg-neutral-900 shadow-2xl overflow-y-auto border-l border-neutral-700">
+            {/* Right-side panel menu - always visible */}
+            <div className="w-[400px] bg-neutral-900 shadow-2xl overflow-y-auto border-l border-neutral-700">
+                {selectedPanel ? (
                     <div className="p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">Panel Settings</h2>
                             <button
                                 onClick={() => setSelectedPanel(null)}
-                                className="h-8 w-8 flex items-center justify-center rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white"
-                                aria-label="Close panel menu"
+                                className="h-8 w-8 flex items-center justify-center rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+                                aria-label="Close panel settings"
                             >
                                 ✕
                             </button>
                         </div>
 
-                        {/* Panel settings form */}
-                        <div className="space-y-4">
-                            <PanelSettingsForm
-                                panel={selectedPanel.panel}
-                                onUpdate={handlePanelUpdate}
-                                onDelete={handlePanelDelete}
-                            />
-                        </div>
+                        <PanelSettingsForm
+                            panel={selectedPanel.panel}
+                            onUpdate={handlePanelUpdate}
+                            onDelete={handlePanelDelete}
+                        />
                     </div>
-                </div>
-            )}
-
-            {/* Alternative: Use existing modal instead of side panel */}
-            {/* <PanelSettingsModal
-                panel={selectedPanel?.panel || null}
-                onUpdate={handlePanelUpdate}
-                onClose={() => setSelectedPanel(null)}
-                onDelete={handlePanelDelete}
-            /> */}
+                ) : (
+                    <div className="flex items-center justify-center h-full text-neutral-500">
+                        <p className="text-center px-8">
+                            Select a panel to edit its properties
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
 
-// Inline panel settings form component
 function PanelSettingsForm({
     panel,
     onUpdate,
@@ -174,7 +175,19 @@ function PanelSettingsForm({
     onUpdate: (updated: PanelData) => void;
     onDelete: (id: string) => void;
 }) {
-    const [draft, setDraft] = useState<PanelData>(panel);
+    const updateStyling = (styleUpdates: Partial<PanelData['styling']>) => {
+        onUpdate({
+            ...panel,
+            styling: { ...panel.styling, ...styleUpdates },
+        });
+    };
+
+    const updateContent = (content: string) => {
+        onUpdate({
+            ...panel,
+            panelProps: { ...panel.panelProps, content },
+        });
+    };
 
     return (
         <div className="space-y-4">
@@ -183,15 +196,10 @@ function PanelSettingsForm({
                 <span className="text-sm font-medium mb-1 text-white">Content</span>
                 <input
                     type="text"
-                    className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter panel content"
-                    value={typeof draft.panelProps.content === 'string' ? draft.panelProps.content : ''}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            panelProps: { ...draft.panelProps, content: e.target.value },
-                        })
-                    }
+                    value={typeof panel.panelProps.content === 'string' ? panel.panelProps.content : ''}
+                    onChange={(e) => updateContent(e.target.value)}
                 />
             </label>
 
@@ -201,13 +209,8 @@ function PanelSettingsForm({
                 <input
                     type="color"
                     className="h-10 w-full rounded-lg border border-neutral-700 bg-neutral-800 cursor-pointer"
-                    value={draft.styling.backgroundColor}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: { ...draft.styling, backgroundColor: e.target.value },
-                        })
-                    }
+                    value={panel.styling.backgroundColor}
+                    onChange={(e) => updateStyling({ backgroundColor: e.target.value })}
                 />
             </label>
 
@@ -217,73 +220,53 @@ function PanelSettingsForm({
                 <input
                     type="color"
                     className="h-10 w-full rounded-lg border border-neutral-700 bg-neutral-800 cursor-pointer"
-                    value={draft.styling.textColor || "#ffffff"}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: { ...draft.styling, textColor: e.target.value },
-                        })
-                    }
+                    value={panel.styling.textColor || "#ffffff"}
+                    onChange={(e) => updateStyling({ textColor: e.target.value })}
                 />
             </label>
 
             {/* Font Size */}
             <label className="flex flex-col">
                 <span className="text-sm font-medium mb-1 text-white">
-                    Font Size: {draft.styling.fontSize || 16}px
+                    Font Size: {panel.styling.fontSize || 16}px
                 </span>
                 <input
                     type="range"
                     min="8"
                     max="64"
-                    className="w-full"
-                    value={draft.styling.fontSize || 16}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: { ...draft.styling, fontSize: Number(e.target.value) },
-                        })
-                    }
+                    className="w-full accent-blue-500"
+                    value={panel.styling.fontSize || 16}
+                    onChange={(e) => updateStyling({ fontSize: Number(e.target.value) })}
                 />
             </label>
 
             {/* Border Radius */}
             <label className="flex flex-col">
                 <span className="text-sm font-medium mb-1 text-white">
-                    Corner Radius: {draft.styling.borderRadius || 8}px
+                    Corner Radius: {panel.styling.borderRadius || 8}px
                 </span>
                 <input
                     type="range"
                     min="0"
                     max="50"
-                    className="w-full"
-                    value={draft.styling.borderRadius || 8}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: { ...draft.styling, borderRadius: Number(e.target.value) },
-                        })
-                    }
+                    className="w-full accent-blue-500"
+                    value={panel.styling.borderRadius || 8}
+                    onChange={(e) => updateStyling({ borderRadius: Number(e.target.value) })}
                 />
             </label>
 
             {/* Padding */}
             <label className="flex flex-col">
                 <span className="text-sm font-medium mb-1 text-white">
-                    Padding: {draft.styling.padding || 8}px
+                    Padding: {panel.styling.padding || 8}px
                 </span>
                 <input
                     type="range"
                     min="0"
                     max="50"
-                    className="w-full"
-                    value={draft.styling.padding || 8}
-                    onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: { ...draft.styling, padding: Number(e.target.value) },
-                        })
-                    }
+                    className="w-full accent-blue-500"
+                    value={panel.styling.padding || 8}
+                    onChange={(e) => updateStyling({ padding: Number(e.target.value) })}
                 />
             </label>
 
@@ -291,17 +274,13 @@ function PanelSettingsForm({
             <label className="flex flex-col">
                 <span className="text-sm font-medium mb-1 text-white">Text Align</span>
                 <select
-                    value={draft.styling.contentAlign || "left"}
+                    value={panel.styling.contentAlign || "left"}
                     onChange={(e) =>
-                        setDraft({
-                            ...draft,
-                            styling: {
-                                ...draft.styling,
-                                contentAlign: e.target.value as "left" | "center" | "right",
-                            },
+                        updateStyling({
+                            contentAlign: e.target.value as "left" | "center" | "right",
                         })
                     }
-                    className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="left">Left</option>
                     <option value="center">Center</option>
@@ -309,19 +288,13 @@ function PanelSettingsForm({
                 </select>
             </label>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
-                <button
-                    onClick={() => onUpdate(draft)}
-                    className="flex-1 rounded-lg bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm font-medium text-white transition-colors"
-                >
-                    Apply Changes
-                </button>
+            {/* Delete Button */}
+            <div className="pt-4">
                 <button
                     onClick={() => onDelete(panel.i)}
-                    className="rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
+                    className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
-                    Delete
+                    Delete Panel
                 </button>
             </div>
         </div>
