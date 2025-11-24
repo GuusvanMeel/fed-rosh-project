@@ -5,35 +5,28 @@ import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
-import { DndContext, DragEndEvent, PointerSensor, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
+import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import Droppable from "./Droppable";
+import { SortableContext } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 
 export interface SectionData {
     id: string;
     name: string;
     panels: PanelData[];
+      dropZones: string[];
 }
 
 export default function Section({
     data,
     onChange,
     onDelete,
-    onPanelEdit,
 }: {
     data: SectionData;
     onChange: (updated: SectionData) => void;
     onDelete: () => void;
     onPanelEdit?: (panelId: string) => void;
 }) {
-  
-  const sensors = useSensors(
-  useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 8, // Prevents accidental drags
-    },
-  })
-);
-
     
 
     const addPanel = (type: PanelType) => {
@@ -96,11 +89,19 @@ export default function Section({
         const mappedProps = entry.mapProps(panel.panelProps.content);
 
         return (
-            <PanelWrapper panel={panel}>
+            <PanelWrapper key={panel.i} panel={panel}>
                 <Component {...mappedProps} />
             </PanelWrapper>
         );
     };
+    const addDropZone = () => {
+  const newZoneId = `${data.id}-zone-${data.dropZones.length + 1}`;
+
+  onChange({
+    ...data,
+    dropZones: [...data.dropZones, newZoneId],
+  });
+};
 
     return (
     
@@ -165,47 +166,49 @@ export default function Section({
             >
               Delete
             </Button>
+            <Button
+  size="xs"
+  variant="surface"
+  style={{
+    backgroundColor: "rgba(0,0,160,0.8)",
+    color: "white",
+    borderRadius: "0.4rem",
+    padding: "0.25rem 0.6rem",
+    fontSize: "0.75rem",
+  }}
+  onClick={addDropZone}
+>
+  Add Column
+</Button>
           </div>
         </div>
         
         
      
-      <div className="grid grid-cols-4 gap-4">
+      <div >
         
-        <Droppable UID={`${data.id}-zone-1`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-1`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-        <Droppable UID={`${data.id}-zone-2`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-2`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-          
-          <Droppable UID={`${data.id}-zone-3`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-3`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
-          
-          <Droppable UID={`${data.id}-zone-4`}>
-            <div className="space-y-2">
-              {data.panels
-                .filter(panel => panel.dropZoneId === `${data.id}-zone-4`)
-                .map(panel => renderPanel(panel))
-              }
-            </div>
-          </Droppable>
+        <div
+  className={`grid gap-4`}
+  style={{ gridTemplateColumns: `repeat(${data.dropZones.length}, 1fr)` }}
+>
+  {data.dropZones.map((zoneId) => {
+  // 1. Get all panels inside this zone
+  const panelsInZone = data.panels.filter(
+    (panel) => panel.dropZoneId === zoneId
+  );
+
+  return (
+    <Droppable UID={zoneId} key={zoneId}>
+      {/* 2. SortableContext MUST get the IDs of items in this zone */}
+      <SortableContext items={panelsInZone.map((p) => p.i)} >    
+          {/* 3. Render sortable panels */}
+          {panelsInZone.map((panel) => renderPanel(panel))}
+       
+      </SortableContext>
+    </Droppable>
+  );
+})}
+</div>
       </div>
  
         

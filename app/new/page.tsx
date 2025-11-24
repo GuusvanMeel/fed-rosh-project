@@ -11,19 +11,14 @@ import { CountdownPanel } from "../component/panels/CountdownPanel";
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
-import { Flex } from "@chakra-ui/react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
 
-interface PanelItem {
-  id: string;
-  type: string;
-}
 
 export default function MovableColumnList() {
   const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [] },
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
   ]);
 
   const handleDragEnd = (event: DragEndEvent) => {
