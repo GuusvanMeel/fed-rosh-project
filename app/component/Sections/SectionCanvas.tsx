@@ -3,7 +3,6 @@
   import { useState } from "react";
   import Section, { SectionData } from "./Section";
   import { Button } from "@chakra-ui/react";
-  import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
   import { PanelData } from "@/app/types/panel";
 
   type SectionCanvasProps = {
@@ -21,36 +20,10 @@
       } | null>(null);
 
           const addSection = () => {
-                const id = crypto.randomUUID();
+                const id = "section-" + crypto.randomUUID();
               setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [] }]);
           };
 
-
-      const updateSection = (updated: SectionData) => {
-          setSections(prev =>
-              prev.map(s => (s.id === updated.id ? updated : s))
-          );
-      };
-      const sensors = useSensors(
-      useSensor(PointerSensor, {
-        activationConstraint: {
-          distance: 8,
-        },
-      })
-    );
-
-    
-
-      // Handle panel selection
-      const handlePanelEdit = (sectionId: string, panelId: string) => {
-          const section = sections.find(s => s.id === sectionId);
-          const panel = section?.panels.find(p => p.i === panelId);
-          if (panel) {
-              setSelectedPanel({ panel, sectionId });
-          }
-      };
-
-      // Handle panel update from modal
       const handlePanelUpdate = (updatedPanel: PanelData) => {
           if (!selectedPanel) return;
           
