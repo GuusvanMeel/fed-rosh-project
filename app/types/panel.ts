@@ -10,25 +10,26 @@ export type PanelData = {
     y: number;
     w: number;
     h: number;
-  panelProps: PanelProps;
+    panelProps: PanelProps;
     styling: PanelStyling;
- 
 }
-export type PanelStyling={
- backgroundColor: string;
-  borderRadius?: number;
 
-  fontSize?: number;
-  fontFamily?: string;
-  textColor?: string;
-  padding?: number;
-
-  contentAlign?: "left" | "center" | "right";
+export type PanelStyling = {
+    backgroundColor: string;
+    borderRadius?: number;
+    fontSize?: number;
+    fontFamily?: string;
+    textColor?: string;
+    padding?: number;
+    contentAlign?: "left" | "center" | "right";
+    opacity?: number;
+    scrollDirection?: "left" | "right";
 }
+
 export type PanelProps = {
-  id: string;
-  type: PanelType
-  content: string | string[];
-  currentIndex?: number;
-  layout?: Layout;
+    id: string;
+    type: PanelType;
+    content: string | string[];
+    currentIndex?: number;
+    layout?: Layout;
 };
