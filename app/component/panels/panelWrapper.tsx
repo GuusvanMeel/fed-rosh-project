@@ -53,7 +53,7 @@ export function PanelWrapper({
         backgroundColor: panel.styling.backgroundColor ?? "white",
         borderRadius: panel.styling.borderRadius ?? 8,
         padding: panel.styling.padding ?? 8,
-        color: panel.styling.textColor ?? "white",
+        color: panel.styling.textColor ?? "black",
         fontSize: panel.styling.fontSize ?? 14,
         fontFamily: panel.styling.fontFamily ?? "sans-serif",
         textAlign: panel.styling.contentAlign ?? "left",

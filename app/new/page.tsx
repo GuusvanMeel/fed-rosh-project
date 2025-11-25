@@ -89,7 +89,7 @@ export default function MovableColumnList() {
               borderRadius: 8,
               fontSize: 14,
               fontFamily: "sans-serif",
-              textColor: "#ffffff",
+              textColor: "#000000",
               padding: 8,
               contentAlign: "left",
             },
