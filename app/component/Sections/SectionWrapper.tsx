@@ -11,7 +11,7 @@ export function SortableSectionWrapper({ id, children }: {id: UniqueIdentifier; 
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition,    
   };
 
   return (

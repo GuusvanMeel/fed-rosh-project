@@ -208,12 +208,14 @@ export default function Section({
               key={zoneId}
               OnDelete={() => removeDropZone(zoneId)}
             >
-              <SortableContext items={panelsInZone.map(p => p.i)}>
+              <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
               
                   <div className="relative rounded-lg w-full h-full"
+                              key={panel.i}
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}
                                 onMouseLeave={() => setHoveredPanelId(null)}>
+                                  
                                     {renderPanel(panel)}
                                    
                                     {/* Edit button that appears on hover */}

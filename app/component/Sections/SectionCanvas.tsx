@@ -508,7 +508,6 @@ export default function SectionCanvas({
         >
           Add Section
         </Button>
-
           <div className="space-y-4">
             {sections.map(section => (
               <Section
