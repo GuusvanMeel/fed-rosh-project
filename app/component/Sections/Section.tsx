@@ -6,6 +6,7 @@ import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
+import { useColors } from "@/app/design-patterns/DesignContext";
 
 
 export interface SectionData {
@@ -27,6 +28,8 @@ export default function Section({
 }) {
     const Controls = useDragControls();
 
+    const { primaryColor, secondaryColor } = useColors();
+
     const addPanel = (type: PanelType) => {
         const id = crypto.randomUUID();
         if (type == "countdown")
@@ -39,8 +42,8 @@ export default function Section({
           h: 3,
           panelProps: { id, type, content: (new Date(Date.now() + 100000).toString())},
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
         onChange({ ...data, panels: [...data.panels, newPanel] });
@@ -69,8 +72,8 @@ export default function Section({
           h: 3,
           panelProps: { id, type, content: "New Panel" },
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
 

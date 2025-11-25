@@ -6,9 +6,11 @@ import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
 import { motion } from "framer-motion";
 import { panelRegistry } from "@/app/component/panels/panelRegistry";
+import { paletteRegistry } from "../design-patterns/designPaletteTypes";
 
 // Dynamically get all panel types from the registry
 export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
+export const designTypes = Object.keys(paletteRegistry) as (keyof typeof paletteRegistry)[];
 
 export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -18,19 +20,22 @@ export default function Sidebar() {
       label: "Components", 
       icon: LuBox,
       submenu: panelTypes,
-      cursor: "grab"
+      cursor: "grab",
+      type: "components"
     },
     { 
       label: "Design", 
       icon: LuPalette,
-      submenu: ["Colors", "Typography", "Spacing", "Layout"],
-      cursor: "pointer"
+      submenu: designTypes,
+      cursor: "pointer",
+      type: "design"
     },
     { 
       label: "Settings", 
       icon: FiSettings,
       submenu: ["Profile", "Account", "Privacy", "Notifications"],
-      cursor: "pointer"
+      cursor: "pointer",
+      type: "settings"
     },
   ];
 
@@ -48,7 +53,28 @@ export default function Sidebar() {
     const locationY = e.pageY;
 
     console.log("Drag ended at:", locationX, locationY);
-    };
+  };
+
+  // Function to render component or text based on menu type
+  const renderSubmenuItem = (subItem: string, menuType: string) => {
+    if (menuType === "design") {
+      const PaletteComponent = paletteRegistry[subItem]?.component;
+      return (
+        <Box>
+          <Text color="white" fontSize="md" mb={2} fontWeight="semibold">
+            {subItem}
+          </Text>
+          {PaletteComponent && <PaletteComponent />}
+        </Box>
+      );
+    }
+    
+    return (
+      <Text color="white" fontSize="lg">
+        {subItem}
+      </Text>
+    );
+  };
 
   return (
     <>
@@ -100,27 +126,31 @@ export default function Sidebar() {
             <VStack align="stretch" gap={2}>
               {navItems
                 .find((item) => item.label === activeMenu)
-                ?.submenu.map((subItem) => (
-                  <motion.div
-                    key={subItem}
-                    draggable
-                    onDragStart={(e: any) => handleDragStart(e, subItem)}
-                    onDragEnd={(e: any) => handleDragEnd(e)}
-                    whileHover={{ backgroundColor: "rgba(0, 0, 0)" }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                      padding: "12px",
-                      borderRadius: "6px",
-                      backgroundColor: "rgba(17, 17, 17, 0.55)",
-                      userSelect: "none",
-                      cursor: navItems.find((item) => item.label === activeMenu)?.cursor || "pointer",
-                    }}
-                  >
-                    <Text color="white" fontSize="lg">
-                      {subItem}
-                    </Text>
-                  </motion.div>
-                ))}
+                ?.submenu.map((subItem) => {
+                  const currentNav = navItems.find((item) => item.label === activeMenu);
+                  const menuType = currentNav?.type || "default";
+                  const isDraggable = menuType === "components";
+
+                  return (
+                    <motion.div
+                      key={subItem}
+                      draggable={isDraggable}
+                      onDragStart={(e: any) => isDraggable && handleDragStart(e, subItem)}
+                      onDragEnd={(e: any) => isDraggable && handleDragEnd(e)}
+                      whileHover={{ backgroundColor: "rgba(0, 0, 0)" }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        padding: "12px",
+                        borderRadius: "6px",
+                        backgroundColor: "rgba(17, 17, 17, 0.55)",
+                        userSelect: "none",
+                        cursor: currentNav?.cursor || "pointer",
+                      }}
+                    >
+                      {renderSubmenuItem(subItem, menuType)}
+                    </motion.div>
+                  );
+                })}
             </VStack>
           </Box>
         </Flex>

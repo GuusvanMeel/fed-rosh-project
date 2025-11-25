@@ -4,9 +4,14 @@ import { useState } from "react";
 import { Reorder, useDragControls } from "framer-motion";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
+import { useColors } from "@/app/design-patterns/DesignContext";
+// import { useDesign } from "@/app/design-patterns/DesignContext";
 
 export default function SectionCanvas() {
     const controls = useDragControls(); 
+
+    const { primaryColor, secondaryColor } = useColors();
+
 
     const [sections, setSections] = useState<SectionData[]>([
         { id: "section-1", name: "Section 1", panels: [] },
@@ -33,13 +38,13 @@ export default function SectionCanvas() {
     };
 
     return (
-        <div className="flex-1 p-6 space-y-6 bg-gray-200">
+        <div className="flex-1 p-6 space-y-6" style={{ backgroundColor: primaryColor }}>
             <Button
 
                 size="xs"
                 variant="surface"
                 style={{
-                    backgroundColor: "rgba(0,128,0,0.85)", // darker green
+                    backgroundColor: secondaryColor, // darker green
                     color: "white",
                     borderRadius: "0.4rem",
                     padding: "0.25rem 0.6rem",
