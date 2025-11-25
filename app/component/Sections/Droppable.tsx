@@ -10,10 +10,11 @@ interface DroppableProps {
   children: React.ReactNode;
   onEdgeHover?: (info: { dropzoneId: string; edge: Edge }) => void;
   OnDelete:() => void;
+  hasPanels: Boolean
     
 }
 
-export default function Droppable({ UID, children, onEdgeHover, OnDelete }: DroppableProps) {
+export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels }: DroppableProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: UID,
   });  
@@ -79,13 +80,14 @@ const containerRef = useRef<HTMLDivElement | null>(null);
         backgroundColor: isOver ? 'rgba(0, 128, 0, 0.2)' : 'rgba(200, 200, 200, 0.3)',
         border: borderStyle,
         transition: 'all 0.2s',
-        minHeight: '150px',
         pointerEvents: "none",
+        height: hasPanels ? "auto" : "100px",
         borderRadius: '8px',
+        padding: 0
       }}
     >
    <div  style={{ pointerEvents: "auto" }}>
-     
+      
        <CloseButton
     size="sm"
     color="red.500"
@@ -96,7 +98,7 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     onClick={OnDelete}
     _hover={{ bg: "red.100" }}
   />
-    
+
     {children}
   </div>
 </div>

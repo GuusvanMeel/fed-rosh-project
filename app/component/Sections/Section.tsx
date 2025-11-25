@@ -31,6 +31,10 @@ export default function Section({
   const { primaryColor, secondaryColor } = useColors();
 
       const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
+      const columns = data.dropZones.map(zoneId => {
+  const hasChild = data.panels.some(p => p.dropZoneId === zoneId);
+  return hasChild ? "auto" : "1fr";
+}).join(" ");
  
 
   // -----------------------------------------
@@ -194,7 +198,7 @@ export default function Section({
       <div
         className="grid gap-4"
         style={{
-          gridTemplateColumns: `repeat(${data.dropZones.length}, 1fr)`
+          gridTemplateColumns: columns
         }}
       >
         {data.dropZones.map(zoneId => {
@@ -207,11 +211,12 @@ export default function Section({
               UID={zoneId}
               key={zoneId}
               OnDelete={() => removeDropZone(zoneId)}
+              hasPanels={panelsInZone.length > 0}
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
               
-                  <div className="relative rounded-lg w-full h-full"
+                  <div className="relative rounded-lg"
                               key={panel.i}
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}
                                 onMouseLeave={() => setHoveredPanelId(null)}>
@@ -221,7 +226,7 @@ export default function Section({
                                     {hoveredPanelId === panel.i && (
                                         <button
                                             onClick={(e) => handleEditClick(e, panel.i)}
-                                            className="relative top-0 right-0 w-7 h-7 !bg-blue-600 !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
+                                            className="absolute top-0 right-0 w-7 h-7 !bg-blue-600 !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
                                             aria-label="Edit panel"
                                         >
                                             <svg
