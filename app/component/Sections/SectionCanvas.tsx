@@ -16,9 +16,6 @@ export default function SectionCanvas() {
         ]);
 
     const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
-     const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
-
-
 
     const [selectedPanel, setSelectedPanel] = useState<{
         panel: PanelData;
@@ -26,7 +23,7 @@ export default function SectionCanvas() {
     } | null>(null);
 
         const addSection = () => {
-              const id = crypto.randomUUID();
+              const id = "section" + crypto.randomUUID();
             setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [], dropZones: [] }]);
         };
      const sensors = useSensors(
@@ -36,6 +33,7 @@ export default function SectionCanvas() {
       },
     })
   );
+  
   function handleSectionDragEnd(event: DragEndEvent) {
   const { active, over } = event;
   if (!over) return;
@@ -49,6 +47,7 @@ export default function SectionCanvas() {
     });
   }
 }
+
 
  const handlePanelDragEnd = (event: DragEndEvent) => {
   const { active, over } = event;
@@ -275,7 +274,7 @@ function renderPanelById(id: UniqueIdentifier) {
         {sections.map(section => (
             <SortableSectionWrapper id={section.id} key={section.id}>
           <Section
-            key={section.id}
+            
             data={section}
             onChange={(updated) => {
               setSections(prev => 
@@ -290,7 +289,7 @@ function renderPanelById(id: UniqueIdentifier) {
         ))}
       </div>
       </SortableContext>
-        <DragOverlay>
+    <DragOverlay>
     {activePanelId ? renderPanelById(activePanelId) : null}
   </DragOverlay>
     </DndContext>

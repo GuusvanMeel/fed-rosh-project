@@ -5,16 +5,14 @@ import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
-import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import Droppable from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
 
 export interface SectionData {
     id: string;
     name: string;
     panels: PanelData[];
-      dropZones: string[];
+    dropZones: string[];
 }
 
 export default function Section({
@@ -27,10 +25,26 @@ export default function Section({
     onDelete: () => void;
     onPanelEdit?: (panelId: string) => void;
 }) {
+  
     
+function removeDropZone(zoneId: string) {
 
+  // 1. Remove zone from list
+  const newZones = data.dropZones.filter(z => z !== zoneId);
+
+  // 2. Reassign any panels that used this zone
+  const newPanels = data.panels.filter(p => p.dropZoneId !== zoneId);
+
+  // 3. Notify parent
+  onChange({
+    ...data,
+    dropZones: newZones,
+    panels: newPanels
+  });
+}
+ 
     const addPanel = (type: PanelType) => {
-        const id = crypto.randomUUID();
+        const id = "panel" + crypto.randomUUID();
         if (type == "countdown")
         {  console.log("hier")
           const newPanel: PanelData = {
@@ -198,7 +212,7 @@ export default function Section({
   );
 
   return (
-    <Droppable UID={zoneId} key={zoneId}>
+    <Droppable UID={zoneId} key={zoneId} OnDelete={() => removeDropZone(zoneId)}>
       {/* 2. SortableContext MUST get the IDs of items in this zone */}
       <SortableContext items={panelsInZone.map((p) => p.i)} >    
           {/* 3. Render sortable panels */}
