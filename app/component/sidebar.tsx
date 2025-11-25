@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -6,6 +7,7 @@ import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
 import { motion } from "framer-motion";
 import { panelRegistry } from "@/app/component/panels/panelRegistry";
+import { paletteRegistry } from "../design-patterns/designPaletteTypes";
 import Droppable from "./Sections/Droppable";
 import { PanelWrapper } from "./panels/panelWrapper";
 import { PanelData } from "../types/panel";
@@ -15,11 +17,7 @@ import { SectionData } from "./Sections/Section";
 // Dynamically get all panel types from the registry
 export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
 
-interface SidebarProps {
-  setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
-}
-
-export default function Sidebar({ setSections }: SidebarProps) {
+export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const navItems = [
@@ -27,19 +25,22 @@ export default function Sidebar({ setSections }: SidebarProps) {
       label: "Components",
       icon: LuBox,
       submenu: panelTypes,
-      cursor: "grab"
+      cursor: "grab",
+      type: "components"
     },
     {
       label: "Design",
       icon: LuPalette,
-      submenu: ["Colors", "Typography", "Spacing", "Layout"],
-      cursor: "pointer"
+      submenu: designTypes,
+      cursor: "pointer",
+      type: "design"
     },
     {
       label: "Settings",
       icon: FiSettings,
       submenu: ["Profile", "Account", "Privacy", "Notifications"],
-      cursor: "pointer"
+      cursor: "pointer",
+      type: "settings"
     },
   ];
 
@@ -47,9 +48,37 @@ export default function Sidebar({ setSections }: SidebarProps) {
     setActiveMenu(activeMenu === label ? null : label);
   };
 
-  const addSection = () => {
-    const id = crypto.randomUUID();
-    setSections(prev => [...prev, { id, name: `Section ${prev.length + 1}`, panels: [], dropZones: [] }]);
+  const handleDragStart = (e: React.DragEvent, componentName: string) => {
+    e.dataTransfer.setData("component", componentName);
+    e.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    const locationX = e.pageX;
+    const locationY = e.pageY;
+
+    console.log("Drag ended at:", locationX, locationY);
+    };
+
+  // Function to render component or text based on menu type
+  const renderSubmenuItem = (subItem: string, menuType: string) => {
+    if (menuType === "design") {
+      const PaletteComponent = paletteRegistry[subItem]?.component;
+      return (
+        <Box>
+          <Text color="white" fontSize="md" mb={2} fontWeight="semibold">
+            {subItem}
+          </Text>
+          {PaletteComponent && <PaletteComponent />}
+        </Box>
+      );
+    }
+    
+    return (
+      <Text color="white" fontSize="lg">
+        {subItem}
+      </Text>
+    );
   };
 
   return (

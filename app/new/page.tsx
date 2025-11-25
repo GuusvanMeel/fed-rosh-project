@@ -20,6 +20,13 @@ import { PanelWrapper } from "../component/panels/panelWrapper";
 import { handleSectionDragEnd, handlePanelDragEnd, HandleProps } from "../hooks/handleDrags";
 
 
+import { Flex } from "@chakra-ui/react";
+import { ColorProvider } from "../design-patterns/DesignContext";
+
+interface PanelItem {
+  id: string;
+  type: string;
+}
 
 export default function MovableColumnList() {
   const [sections, setSections] = useState<SectionData[]>([

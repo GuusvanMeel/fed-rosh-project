@@ -6,7 +6,8 @@ import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
 import Droppable from "./Droppable";
-import { SortableContext } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";import { useColors } from "@/app/design-patterns/DesignContext";
+
 
 export interface SectionData {
     id: string;
@@ -43,6 +44,8 @@ function removeDropZone(zoneId: string) {
   });
 }
  
+    const { primaryColor, secondaryColor } = useColors();
+
     const addPanel = (type: PanelType) => {
         const id = "panel" + crypto.randomUUID();
         if (type == "countdown")
@@ -56,8 +59,8 @@ function removeDropZone(zoneId: string) {
           dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: (new Date(Date.now() + 100000).toString())},
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
         onChange({ ...data, panels: [...data.panels, newPanel] });
@@ -72,8 +75,8 @@ function removeDropZone(zoneId: string) {
           dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: (["New Panel" , "https://www.youtube.com"])},
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
         onChange({ ...data, panels: [...data.panels, newPanel] });
@@ -88,8 +91,8 @@ function removeDropZone(zoneId: string) {
           dropZoneId: `${data.id}-zone-1`,
           panelProps: { id, type, content: "New Panel" },
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
 

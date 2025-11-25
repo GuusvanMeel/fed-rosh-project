@@ -1,8 +1,13 @@
   "use client";
 
 import { useState } from "react";
+import { Reorder } from "framer-motion";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
+import { useColors } from "@/app/design-patterns/DesignContext";
+
+export default function SectionCanvas() {
+  const { primaryColor, sections, setSections } = useColors();
 import { DndContext, DragEndEvent, DragOverlay, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core";
 import { PanelData } from "@/app/types/panel";
 import { PanelWrapper } from "../panels/panelWrapper";
@@ -170,7 +175,7 @@ import { panelRegistry } from "../panels/panelRegistry";
       return (
           <div className="flex flex-1 overflow-hidden">
               {/* Main canvas area */}
-              <div className="flex-1 p-6 space-y-6 bg-gray-200 overflow-y-auto">
+              <div className="flex-1 p-6 space-y-6 bg-gray-200 overflow-y-auto " style={{ backgroundColor: primaryColor }}>
                   <Button
                       size="xs"
                       variant="surface"
