@@ -196,7 +196,7 @@ import { panelRegistry } from "../panels/panelRegistry";
       <div className="space-y-4">
         {sections.map(section => (
           <Section
-            key={section.id}
+            
             data={section}
             onChange={(updated) => {
               setSections(prev => 
