@@ -29,16 +29,6 @@ export default function SectionCanvas({
     sectionId: string;
   } | null>(null);
 
-  // -----------------------------
-  // Sensors for DnD Kit
-  // -----------------------------
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8
-      }
-    })
-  );
 
   // -----------------------------
   // Add Section
@@ -56,69 +46,7 @@ export default function SectionCanvas({
     ]);
   };
 
-  // -----------------------------
-  // Drag End → Move Panel
-  // -----------------------------
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    if (!active.id.toString().includes("sidebar")) return;
-
-    const panelId = active.id as string;
-    const newZoneId = over.id as string;
-    const newSectionId = newZoneId.split("-zone-")[0];
-
-    setSections(prevSections => {
-      let found: PanelData | null = null;
-      let oldSectionId: string | null = null;
-
-      for (const sec of prevSections) {
-        const p = sec.panels.find(x => x.i === panelId);
-        if (p) {
-          found = p;
-          oldSectionId = sec.id;
-          break;
-        }
-      }
-
-      if (!found || !oldSectionId) return prevSections;
-
-      const updatedPanel = { ...found, dropZoneId: newZoneId };
-
-      // Move inside same section
-      if (oldSectionId === newSectionId) {
-        return prevSections.map(sec =>
-          sec.id === oldSectionId
-            ? {
-                ...sec,
-                panels: sec.panels.map(p =>
-                  p.i === panelId ? updatedPanel : p
-                )
-              }
-            : sec
-        );
-      }
-
-      // Move between sections
-      return prevSections.map(sec => {
-        if (sec.id === oldSectionId) {
-          return {
-            ...sec,
-            panels: sec.panels.filter(p => p.i !== panelId)
-          };
-        }
-        if (sec.id === newSectionId) {
-          return {
-            ...sec,
-            panels: [...sec.panels, updatedPanel]
-          };
-        }
-        return sec;
-      });
-    });
-  };
+  
 
   // -----------------------------
   // PANEL EDITING
