@@ -57,8 +57,8 @@ export default function Section({
           h: 3,
           panelProps: { id, type, content: (["New Panel" , "https://www.youtube.com"])},
           styling:{
-          backgroundColor: "#ffff",
-          textColor: "#030303"
+          backgroundColor: primaryColor,
+          textColor: secondaryColor
           } 
           };
         onChange({ ...data, panels: [...data.panels, newPanel] });

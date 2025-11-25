@@ -9,6 +9,9 @@ type PaletteEntry = {
 export const paletteRegistry: Record<string, PaletteEntry> = {
   Colors: {
     component: ColorPanel,
+  },
+  Font: {
+    component: () => <div>Font Panel</div>,
   }
 } as const;
 
