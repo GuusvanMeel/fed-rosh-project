@@ -7,11 +7,11 @@ import UrlPanel from "./UrlPanel";
 import { BracketWrapper } from "./BracketPanel";
 import { rounds } from "./BracketPanel";
 import { Round } from "./BracketPanel";
-
+import { PanelStyling } from "@/app/types/panel";
 
 type RegistryEntry = {
   component: React.ComponentType<any>;
-  mapProps: (content: any) => Record<string, any>;
+  mapProps: (content: any, styling?: PanelStyling) => Record<string, any>;
 };
 
 export const panelRegistry: Record<string, RegistryEntry> = {
@@ -33,11 +33,14 @@ export const panelRegistry: Record<string, RegistryEntry> = {
   },
   scrollingText: {
     component: ScrollingTextPanel,
-    mapProps: (content: string) => ({ Text: content }),
+    mapProps: (content: string, styling?: PanelStyling) => ({ 
+      Text: content,
+      fontSize: styling?.fontSize || 96,
+      scrollDirection: styling?.scrollDirection || 'right'
+    }),
   },
   url: {
     component: UrlPanel,
     mapProps: ([text, url]: [string, string]) => ({ Text: text, url }),
   },
 } as const;
-

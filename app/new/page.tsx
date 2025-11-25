@@ -1,7 +1,7 @@
 "use client";
 
 import { Reorder } from "framer-motion";
-import { SetStateAction, useState } from "react";
+import { act, SetStateAction, useState } from "react";
 import VideoPanel from "../component/panels/VideoPanel";
 import ImagePanel from "../component/panels/ImagePanel";
 import ScrollingTextPanel from "../component/panels/ScrollingTextPanel";
@@ -108,8 +108,8 @@ export default function MovableColumnList() {
           i: crypto.randomUUID(),
           x: 0,
           y: 0,
-          w: 0,
-          h: 0,
+          w: 300,
+      h: 100,
           dropZoneId: newZoneId,
           panelProps: {
             id: crypto.randomUUID(),

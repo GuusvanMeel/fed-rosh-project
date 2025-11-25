@@ -139,8 +139,8 @@ export default function Sidebar() {
                     i: uniqueId,
                     x: 0,
                     y: 0,
-                    w: 0,
-                    h: 0,
+                    w: 220,
+                    h: 50,
                     panelProps: {
                       id: crypto.randomUUID(),
                       type: subItem,
@@ -156,6 +156,7 @@ export default function Sidebar() {
                       textColor: "#000000",
                       padding: 8,
                       contentAlign: "left"
+                      
                     }
                   };
 
