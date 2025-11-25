@@ -14,8 +14,10 @@ import { PanelData } from "../types/panel";
 import { DndContext } from "@dnd-kit/core";
 import { SectionData } from "./Sections/Section";
 
+
 // Dynamically get all panel types from the registry
 export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
+export const designTypes = Object.keys(panelRegistry) as (keyof typeof paletteRegistry)[];
 
 export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);

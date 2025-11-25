@@ -5,13 +5,9 @@ import { Reorder } from "framer-motion";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
-
-export default function SectionCanvas() {
-  const { primaryColor, sections, setSections } = useColors();
-import { DndContext, DragEndEvent, DragOverlay, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core";
 import { PanelData } from "@/app/types/panel";
-import { PanelWrapper } from "../panels/panelWrapper";
-import { panelRegistry } from "../panels/panelRegistry";
+import { useSensors, useSensor, PointerSensor, DragEndEvent } from "@dnd-kit/core";
+
 
   type SectionCanvasProps = {
     sections: SectionData[];
@@ -28,6 +24,8 @@ import { panelRegistry } from "../panels/panelRegistry";
           panel: PanelData;
           sectionId: string;
       } | null>(null);
+
+    const { primaryColor} = useColors();
 
       
 

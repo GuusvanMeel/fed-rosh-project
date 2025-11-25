@@ -237,7 +237,7 @@ export default function MovableColumnList() {
             setActivePanelId(null);
           }}
             onDragCancel={() => setActivePanelId(null)}>
-          <Sidebar setSections={setSections} />
+          <Sidebar/>
           <SectionCanvas sections={sections} setSections={setSections} />
           <DragOverlay>
             {activePanelId ? renderPanelById(activePanelId) : null}
