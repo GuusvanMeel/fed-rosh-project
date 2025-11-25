@@ -217,12 +217,11 @@ export default function Section({
                                 onMouseLeave={() => setHoveredPanelId(null)}>
                                   
                                     {renderPanel(panel)}
-                                   
-                                    {/* Edit button that appears on hover */}
+                                    
                                     {hoveredPanelId === panel.i && (
                                         <button
                                             onClick={(e) => handleEditClick(e, panel.i)}
-                                            className="absolute -top-0 -right-0 w-7 h-7 !bg-blue-600 !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
+                                            className="relative top-0 right-0 w-7 h-7 !bg-blue-600 !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
                                             aria-label="Edit panel"
                                         >
                                             <svg
