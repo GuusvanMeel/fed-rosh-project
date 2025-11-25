@@ -15,6 +15,7 @@ const CurvedLoop = ({
     return (hasTrailing ? marqueeText.replace(/\s+$/, '') : marqueeText) + '\u00A0';
   }, [marqueeText]);
 
+
   const measureRef = useRef(null);
   const textPathRef = useRef(null);
   const pathRef = useRef(null);

@@ -476,12 +476,16 @@ function PanelSettingsForm({
 
             {/* Delete Button */}
             <div className="pt-4">
-                <button
-                    onClick={() => onDelete(panel.i)}
-                    className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
-                >
-                    Delete Panel
-                </button>
+               <button
+               onClick={() => {
+                 if (window.confirm("Weet je zeker dat je dit item wilt verwijderen?")) {
+                     onDelete(panel.i);
+    }
+  }}
+  className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
+>
+  Delete Panel
+</button>
             </div>
         </div>
     );
