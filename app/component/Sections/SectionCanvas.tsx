@@ -431,7 +431,7 @@ function PanelSettingsForm({
                 </>
             )}
 
-            {/* Scrolling Direction (scrollingText only) */}
+            {/* Scrolling Direction (scrollingText) */}
             {isScrollingText && (
                 <label className="flex flex-col">
                     <span className="text-sm font-medium mb-1 text-white">Scroll Direction</span>
