@@ -11,9 +11,14 @@ import { CountdownPanel } from "../component/panels/CountdownPanel";
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
+import { panelRegistry } from "../component/panels/panelRegistry";
+import { PanelWrapper } from "../component/panels/panelWrapper";
+
+import { handleSectionDragEnd, handlePanelDragEnd, HandleProps } from "../hooks/handleDrags";
+
 
 
 export default function MovableColumnList() {
@@ -21,7 +26,27 @@ export default function MovableColumnList() {
     { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
   ]);
 
+   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
+
+
+  function renderPanelById(id: UniqueIdentifier) {
+    const panel = sections.flatMap(s => s.panels).find(p => p.i === id);
+    if (!panel) return null;
+   
+    const entry = panelRegistry[panel.panelProps.type];
+    const Component = entry.component;
+    const mappedProps = entry.mapProps(panel.panelProps.content);
+   
+    return (
+      <PanelWrapper panel={panel}>
+        <Component {...mappedProps} />
+      </PanelWrapper>
+    );
+  }
+
   const handleDragEnd = (event: DragEndEvent) => {
+
+    console.log("asdyguaosuihdijoadsoiasdijoasdhijoadhjioaiocj")
     const { active, over } = event;
 
     console.log("Drag ended:", {
@@ -35,6 +60,8 @@ export default function MovableColumnList() {
       console.log("No drop target found");
       return;
     }
+
+    if (!active.id.toString().includes("sidebar")) return;
 
     const panelId = active.id as string;
     const newZoneId = over.id as string;
@@ -192,9 +219,22 @@ export default function MovableColumnList() {
   return (
     <Provider>
       <div className="flex w-full h-screen">
-        <DndContext onDragEnd={handleDragEnd}>
+         <DndContext 
+          onDragStart={({ active }) => {
+        setActivePanelId(active.id);
+        }}
+          onDragEnd={(event) => {
+            handleDragEnd(event)
+            handleSectionDragEnd({ event, setSections });  // 🔵 handles section reordering
+            handlePanelDragEnd({ event, setSections });    // 🔴 your existing panel movement logic
+            setActivePanelId(null);
+          }}
+            onDragCancel={() => setActivePanelId(null)}>
           <Sidebar setSections={setSections} />
           <SectionCanvas sections={sections} setSections={setSections} />
+          <DragOverlay>
+            {activePanelId ? renderPanelById(activePanelId) : null}
+          </DragOverlay>
         </DndContext>
       </div>
     </Provider>

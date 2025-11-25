@@ -5,11 +5,15 @@ import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { DndContext, DragEndEvent, DragOverlay, PointerSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core";
 import { PanelData } from "@/app/types/panel";
+import { PanelWrapper } from "../panels/panelWrapper";
+import { panelRegistry } from "../panels/panelRegistry";
 
   type SectionCanvasProps = {
     sections: SectionData[];
     setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
   };
+
+  
 
   export default function SectionCanvas({
     sections,
@@ -20,7 +24,8 @@ import { PanelData } from "@/app/types/panel";
           sectionId: string;
       } | null>(null);
 
-   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
+      
+
      const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
 
@@ -42,6 +47,9 @@ import { PanelData } from "@/app/types/panel";
       },
     })
   );
+
+  
+ 
 
   const handleDragEnd = (event: DragEndEvent) => {
   const { active, over } = event;
