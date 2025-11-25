@@ -58,6 +58,22 @@ export default function Section({
                 },
             };
             onChange({ ...data, panels: [...data.panels, newPanel] });
+        } else if (type == "scrollingText") {
+            const newPanel: PanelData = {
+                i: id,
+                x: 0,
+                y: 0,
+                w: 3,
+                h: 3,
+                panelProps: { id, type, content: "New Scrolling Panel" },
+                styling: {
+                    backgroundColor: "#ffff",
+                    textColor: "#030303",
+                    fontSize: 96,
+                    scrollDirection: "right",
+                },
+            };
+            onChange({ ...data, panels: [...data.panels, newPanel] });
         } else {
             const newPanel: PanelData = {
                 i: id,
@@ -93,7 +109,8 @@ export default function Section({
         const entry = panelRegistry[panel.panelProps.type];
         if (!entry) return <div>Unknown panel type</div>;
         const Component = entry.component;
-        const mappedProps = entry.mapProps(panel.panelProps.content);
+        // Pass styling as second argument to mapProps
+        const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
 
         return (
             <PanelWrapper panel={panel}>
@@ -181,7 +198,11 @@ export default function Section({
                             <Reorder.Item
                                 key={panel.i}
                                 value={panel}
-                                className="min-w-[200px] cursor-grab active:cursor-grabbing relative"
+                                className="cursor-grab active:cursor-grabbing relative flex-shrink-0"
+                                style={{
+                                    width: `${panel.w * 121}px`,
+                                    height: `${panel.h * 121}px`,
+                                }}
                                 onPointerDown={(e) => {
                                     e.stopPropagation();
                                     setIsDragging(true);
@@ -192,7 +213,7 @@ export default function Section({
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}
                                 onMouseLeave={() => setHoveredPanelId(null)}
                             >
-                                <div className="relative rounded-lg">
+                                <div className="relative rounded-lg w-full h-full">
                                     {renderPanel(panel)}
                                     
                                     {/* Edit button that appears on hover */}

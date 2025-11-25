@@ -7,7 +7,8 @@ const CurvedLoop = ({
   className,
   curveAmount = 400,
   direction = 'left',
-  interactive = true
+  interactive = true,
+  style = {}
 }) => {
   const text = useMemo(() => {
     const hasTrailing = /\s|\u00A0$/.test(marqueeText);
@@ -38,7 +39,7 @@ const CurvedLoop = ({
 
   useEffect(() => {
     if (measureRef.current) setSpacing(measureRef.current.getComputedTextLength());
-  }, [text, className]);
+  }, [text, className, style]);
 
   useEffect(() => {
     if (!spacing) return;
@@ -71,6 +72,11 @@ const CurvedLoop = ({
     return () => cancelAnimationFrame(frame);
   }, [spacing, speed, ready]);
 
+  // Update direction when prop changes
+  useEffect(() => {
+    dirRef.current = direction;
+  }, [direction]);
+
   const onPointerDown = e => {
     if (!interactive) return;
     dragRef.current = true;
@@ -102,7 +108,6 @@ const CurvedLoop = ({
     dirRef.current = velRef.current > 0 ? 'right' : 'left';
   };
 
-
   return (
     <div
       className="curved-loop-jacket"
@@ -112,8 +117,8 @@ const CurvedLoop = ({
       onPointerUp={endDrag}
       onPointerLeave={endDrag}
     >
-      <svg className="curved-loop-svg" viewBox="0 0 1440 120">
-        <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
+      <svg className="curved-loop-svg" viewBox="0 0 1440 120" style={style}>
+        <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none', ...style }}>
           {text}
         </text>
         <defs>
