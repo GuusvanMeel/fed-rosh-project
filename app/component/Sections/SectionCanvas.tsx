@@ -5,14 +5,7 @@ import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
-import {
-  DndContext,
-  useSensors,
-  useSensor,
-  PointerSensor,
-  DragEndEvent
-} from "@dnd-kit/core";
-import { PanelSettingsForm } from "@/components/ui/panelsettingsform";
+
 
 type SectionCanvasProps = {
   sections: SectionData[];
@@ -42,7 +35,7 @@ export default function SectionCanvas({
         id,
         name: `Section ${prev.length + 1}`,
         panels: [],
-        dropZones: []
+        dropZones: [],
       }
     ]);
   };
@@ -132,6 +125,7 @@ export default function SectionCanvas({
                   setSections(prev => prev.filter(s => s.id !== section.id))
                 }
                 onPanelEdit={(panelId) => handlePanelEdit(section.id, panelId)}
+                
               />
             ))}
           </div>

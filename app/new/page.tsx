@@ -1,27 +1,18 @@
 "use client";
 
-import { Reorder } from "framer-motion";
-import { act, SetStateAction, useState } from "react";
-import VideoPanel from "../component/panels/VideoPanel";
-import ImagePanel from "../component/panels/ImagePanel";
-import ScrollingTextPanel from "../component/panels/ScrollingTextPanel";
-import TextPanel from "../component/panels/TextPanel";
-import UrlPanel from "../component/panels/UrlPanel";
-import { CountdownPanel } from "../component/panels/CountdownPanel";
+import { useState } from "react";
+
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
-import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, Modifier, UniqueIdentifier } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
 import { panelRegistry } from "../component/panels/panelRegistry";
 import { PanelWrapper } from "../component/panels/panelWrapper";
 
-import { handleSectionDragEnd, handlePanelDragEnd, HandleProps } from "../hooks/handleDrags";
+import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
 
-
-import { Flex } from "@chakra-ui/react";
-import { ColorProvider } from "../design-patterns/DesignContext";
 
 interface PanelItem {
   id: string;
@@ -30,8 +21,24 @@ interface PanelItem {
 
 export default function MovableColumnList() {
   const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
   ]);
+
+ const centerOnCursor: Modifier = ({ transform, active }) => {
+  // If nothing is being dragged, just return the original transform
+  if (!active) return transform;
+
+  // If rect is missing for some reason (rare), also just return transform
+  const rect = active.rect.current.initial;
+  if (!rect) return transform;
+
+  return {
+    ...transform,
+    x: transform.x - rect.width / 2,
+    y: transform.y - rect.height / 2,
+  };
+};
+  
 
    const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
@@ -45,9 +52,11 @@ export default function MovableColumnList() {
     const mappedProps = entry.mapProps(panel.panelProps.content);
    
     return (
-      <PanelWrapper panel={panel}>
-        <Component {...mappedProps} />
-      </PanelWrapper>
+      <div style={{ opacity: 0.5 }}>
+    <PanelWrapper panel={panel}>
+      <Component {...mappedProps} />
+    </PanelWrapper>
+  </div>
     );
   }
 
@@ -239,7 +248,7 @@ export default function MovableColumnList() {
             onDragCancel={() => setActivePanelId(null)}>
           <Sidebar/>
           <SectionCanvas sections={sections} setSections={setSections} />
-          <DragOverlay>
+          <DragOverlay modifiers={[centerOnCursor]}> 
             {activePanelId ? renderPanelById(activePanelId) : null}
           </DragOverlay>
         </DndContext>
