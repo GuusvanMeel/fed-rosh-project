@@ -57,6 +57,7 @@ export function PanelWrapper({
         fontSize: panel.styling.fontSize ?? 14,
         fontFamily: panel.styling.fontFamily ?? "sans-serif",
         textAlign: panel.styling.contentAlign ?? "left",
+        opacity: panel.styling.opacity ?? 100,
         width: panel.w ?? "400px",
         height: panel.h ?? "400px"
       }}

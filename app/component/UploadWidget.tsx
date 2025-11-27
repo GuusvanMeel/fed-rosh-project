@@ -4,7 +4,7 @@ import { CldUploadWidget } from 'next-cloudinary';
 
 
 
-export default function UploadWidget() {
+export default function UploadWidget({changeMedia}: {changeMedia : React.Dispatch<string>}) {
   return (
     <CldUploadWidget uploadPreset="RoshApp"   onSuccess={(result) => {
 
@@ -12,7 +12,7 @@ export default function UploadWidget() {
         if (info != null && typeof info !== "string") {
         const url = info.secure_url; // now TS knows this exists
         console.log("Uploaded image URL:", url);
-        //updatePanelContent(selectedPanel.i, url)
+        changeMedia(url);
 
         }
 
