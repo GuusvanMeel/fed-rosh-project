@@ -10,8 +10,6 @@ interface ColorContextType {
   setSecondaryColor: (c: string) => void;
   accentColor: string;
   setAccentColor: (c: string) => void;
-  sections: SectionData[];
-  setSections: (sections: SectionData[]) => void;
   applyColorsToAllPanels: () => void;
 }
 
@@ -22,47 +20,68 @@ const ColorContext = createContext<ColorContextType>({
   setSecondaryColor: () => {},
   accentColor: "#57b1ff",
   setAccentColor: () => {},
-  sections: [],
-  setSections: () => {},
   applyColorsToAllPanels: () => {},
 });
 
-export const ColorProvider = ({ children }: { children: ReactNode }) => {
+export const ColorProvider = ({
+  children,
+  sections,
+  setSections
+}: {
+  children: ReactNode;
+  sections: SectionData[];
+  setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
+}) => {
   const [primaryColor, setPrimaryColor] = useState("#ffffff");
   const [secondaryColor, setSecondaryColor] = useState("#000000");
   const [accentColor, setAccentColor] = useState("#57b1ff");
-  const [sections, setSections] = useState<SectionData[]>([
-    // { id: "section-1", name: "Section 1", panels: [] },
-  ]);
+
+  const handleSetPrimaryColor = (c: string) => {
+    console.log("Setting primary color to:", c);
+    setPrimaryColor(c);
+  };
+
+  const handleSetSecondaryColor = (c: string) => {
+    console.log("Setting secondary color to:", c);
+    setSecondaryColor(c);
+  };
+
+  const handleSetAccentColor = (c: string) => {
+    console.log("Setting accent color to:", c);
+    setAccentColor(c);
+  };
 
   const applyColorsToAllPanels = () => {
-    // setSections(prevSections =>
-    //   prevSections.map(section => ({
-    //     ...section,
-    //     panels: section.panels.map(panel => ({
-    //       ...panel,
-    //       styling: {
-    //         ...panel.styling,
-    //         backgroundColor: primaryColor,
-    //         textColor: secondaryColor,
-    //         // accentColor: accentColor, // if your panels support this
-    //       },
-    //     })),
-    //   }))
-    // );
+    console.log("Applying colors to all panels");
+    console.log("Primary:", primaryColor, "Secondary:", secondaryColor);
+    console.log("Current sections:", sections);
+    
+    setSections(prevSections => {
+      const updated = prevSections.map(section => ({
+        ...section,
+        panels: section.panels.map(panel => ({
+          ...panel,
+          styling: {
+            ...panel.styling,
+            textColor: primaryColor,
+            backgroundColor: secondaryColor,
+          }
+        }))
+      }));
+      console.log("Updated sections:", updated);
+      return updated;
+    });
   };
 
   return (
     <ColorContext.Provider
       value={{
         primaryColor,
-        setPrimaryColor,
+        setPrimaryColor: handleSetPrimaryColor,
         secondaryColor,
-        setSecondaryColor,
+        setSecondaryColor: handleSetSecondaryColor,
         accentColor,
-        setAccentColor,
-        sections,
-        setSections,
+        setAccentColor: handleSetAccentColor,
         applyColorsToAllPanels,
       }}
     >

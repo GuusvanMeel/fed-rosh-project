@@ -14,13 +14,18 @@ export default function ColorPicker() {
     applyColorsToAllPanels,
   } = useColors();
 
+  console.log("ColorPicker rendered with:", { primaryColor, secondaryColor, accentColor });
+
   return (
     <Box>
       <p className="text-center text-small">Primary Color</p>
       <Input
         type="color"
         value={primaryColor}
-        onChange={(e) => setPrimaryColor(e.target.value)}
+        onChange={(e) => {
+          console.log("Primary color input changed:", e.target.value);
+          setPrimaryColor(e.target.value);
+        }}
         cursor="pointer"
         width="100%"
         height="40px"
@@ -31,7 +36,10 @@ export default function ColorPicker() {
       <Input
         type="color"
         value={secondaryColor}
-        onChange={(e) => setSecondaryColor(e.target.value)}
+        onChange={(e) => {
+          console.log("Secondary color input changed:", e.target.value);
+          setSecondaryColor(e.target.value);
+        }}
         cursor="pointer"
         width="100%"
         height="40px"
@@ -42,14 +50,24 @@ export default function ColorPicker() {
       <Input
         type="color"
         value={accentColor}
-        onChange={(e) => setAccentColor(e.target.value)}
+        onChange={(e) => {
+          console.log("Accent color input changed:", e.target.value);
+          setAccentColor(e.target.value);
+        }}
         cursor="pointer"
         width="100%"
         height="40px"
         padding="0"
       />
 
-      <Button onClick={applyColorsToAllPanels} width="100%" mt={2}>
+      <Button 
+        onClick={() => {
+          console.log("Apply button clicked");
+          applyColorsToAllPanels();
+        }} 
+        width="100%" 
+        mt={2}
+      >
         Apply to all components
       </Button>
     </Box>
