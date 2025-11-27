@@ -5,6 +5,7 @@ import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
+import { PanelSettingsForm } from "@/components/ui/panelsettingsform";
 
 
 type SectionCanvasProps = {
