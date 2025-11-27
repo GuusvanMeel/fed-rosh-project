@@ -201,6 +201,26 @@ export default function MovableColumnList() {
 
     setActivePanelId(null);
   };
+    function getDefaultContent(panelType: string): string | string[] {
+    switch (panelType) {
+      case "text":
+        return "Sample text content";
+      case "video":
+        return "https://example.com/sample-video.mp4";
+      case "image":
+        return "/globe.svg";
+      case "countdown":
+        return new Date(Date.now() + 24 * 60 * 60 * 1000).getTime().toString();
+      case "scrollingText":
+        return "This is scrolling text content";
+      case "url":
+        return ["Click here", "https://example.com"];
+      case "bracket":
+        return "Tournament Bracket";
+      default:
+        return "Default content";
+    }
+  }
 
   return (
     <DndContext 
@@ -219,18 +239,3 @@ export default function MovableColumnList() {
   );
 }
 
-export default function MovableColumnList() {
-  const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
-  ]);
-
-  return (
-    <Provider>
-      <div className="flex w-full h-screen">
-        <ColorProvider sections={sections} setSections={setSections}>
-          <MainContent sections={sections} setSections={setSections} />
-        </ColorProvider>
-      </div>
-    </Provider>
-  );
-}
