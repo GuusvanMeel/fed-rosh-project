@@ -212,11 +212,7 @@ export default function Section({
                 {panelsInZone.map(panel => (
              
                   <div className="relative rounded-lg w-full h-full"
-<<<<<<< Updated upstream
                               key={panel.i}
-=======
-                                key={panel.i}
->>>>>>> Stashed changes
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}
                                 onMouseLeave={() => setHoveredPanelId(null)}>
                                   
