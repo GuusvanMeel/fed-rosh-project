@@ -88,9 +88,6 @@ export function PanelSettingsForm({
                         />
                     </label>
                 </div>
-                <p className="text-xs text-neutral-500 italic">
-                    💡 Tip: Select the panel on canvas and drag the handles to resize visually
-                </p>
             </div>
 
             {/* Background Color */}
