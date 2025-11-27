@@ -215,7 +215,7 @@ export default function Section({
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
-              
+                  
                   <div className="relative rounded-lg"
                               key={panel.i}
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}

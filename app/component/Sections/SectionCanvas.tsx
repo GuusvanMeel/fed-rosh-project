@@ -5,13 +5,7 @@ import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
-import {
-  DndContext,
-  useSensors,
-  useSensor,
-  PointerSensor,
-  DragEndEvent
-} from "@dnd-kit/core";
+
 
 type SectionCanvasProps = {
   sections: SectionData[];
