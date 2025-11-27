@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { PanelData, PanelType } from "@/app/types/panel";
 import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
@@ -9,14 +9,14 @@ import Droppable from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { useState } from "react";
-
+ 
 export interface SectionData {
   id: string;
   name: string;
   panels: PanelData[];
   dropZones: string[];
 }
-
+ 
 export default function Section({
   data,
   onChange,
@@ -29,16 +29,16 @@ export default function Section({
   onPanelEdit: (panelId: string) => void;
 }) {
   const { primaryColor, secondaryColor } = useColors();
-
+ 
       const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
  
-
+ 
   // -----------------------------------------
   // Drop Zones
   // -----------------------------------------
   function addDropZone() {
     const newZoneId = `${data.id}-zone-${data.dropZones.length + 1}`;
-
+ 
     onChange({
       ...data,
       dropZones: [...data.dropZones, newZoneId]
@@ -50,24 +50,24 @@ export default function Section({
             onPanelEdit(panelId);
         }
     };
-
+ 
   function removeDropZone(zoneId: string) {
     const newZones = data.dropZones.filter(z => z !== zoneId);
     const newPanels = data.panels.filter(p => p.dropZoneId !== zoneId);
-
+ 
     onChange({
       ...data,
       dropZones: newZones,
       panels: newPanels
     });
   }
-
+ 
   // -----------------------------------------
   // Create Panel
   // -----------------------------------------
   function addPanel(type: PanelType) {
     const id = "panel-" + crypto.randomUUID();
-
+ 
     const newPanel: PanelData = {
       i: id,
       x: 0,
@@ -98,23 +98,23 @@ export default function Section({
         textColor: secondaryColor
       }
     };
-
+ 
     onChange({
       ...data,
       panels: [...data.panels, newPanel]
     });
   }
-
+ 
   // -----------------------------------------
   // Render Panel
   // -----------------------------------------
   function renderPanel(panel: PanelData) {
     const entry = panelRegistry[panel.panelProps.type];
     if (!entry) return <div>Unknown panel type</div>;
-
+ 
     const Component = entry.component;
     const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
-
+ 
     return (
       <PanelWrapper
         key={panel.i}
@@ -124,9 +124,9 @@ export default function Section({
       </PanelWrapper>
     );
   }
-
-
-    
+ 
+ 
+   
   // -----------------------------------------
   // Render
   // -----------------------------------------
@@ -138,7 +138,7 @@ export default function Section({
           <div className="text-gray-400">⋮⋮</div>
           <h2 className="text-xl font-bold text-gray-800">{data.name}</h2>
         </div>
-
+ 
         <div className="flex gap-2">
           {panelTypes.map(type => (
             <Button
@@ -157,7 +157,7 @@ export default function Section({
               {type === "scrollingText" ? "Scrolling Text" : type}
             </Button>
           ))}
-
+ 
           <Button
             size="xs"
             variant="surface"
@@ -172,7 +172,7 @@ export default function Section({
           >
             Delete
           </Button>
-
+ 
           <Button
             size="xs"
             variant="surface"
@@ -189,7 +189,7 @@ export default function Section({
           </Button>
         </div>
       </div>
-
+ 
       {/* Grid Layout */}
       <div
         className="grid gap-4"
@@ -201,7 +201,7 @@ export default function Section({
           const panelsInZone = data.panels.filter(
             p => p.dropZoneId === zoneId
           );
-
+ 
           return (
             <Droppable
               UID={zoneId}
@@ -210,9 +210,13 @@ export default function Section({
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
-              
+             
                   <div className="relative rounded-lg w-full h-full"
+<<<<<<< Updated upstream
                               key={panel.i}
+=======
+                                key={panel.i}
+>>>>>>> Stashed changes
                                 onMouseEnter={() => setHoveredPanelId(panel.i)}
                                 onMouseLeave={() => setHoveredPanelId(null)}>
                                   
@@ -234,11 +238,11 @@ export default function Section({
                                             </svg>
                                         </button>
                                     )}
-                                </div> 
-              
+                                </div>
+             
               ))}
-
-                                
+ 
+                               
               </SortableContext>
             </Droppable>
           );

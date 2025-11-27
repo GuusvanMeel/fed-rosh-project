@@ -32,24 +32,24 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
   const [secondaryColor, setSecondaryColor] = useState("#000000");
   const [accentColor, setAccentColor] = useState("#57b1ff");
   const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [] },
+    // { id: "section-1", name: "Section 1", panels: [] },
   ]);
 
   const applyColorsToAllPanels = () => {
-    setSections(prevSections =>
-      prevSections.map(section => ({
-        ...section,
-        panels: section.panels.map(panel => ({
-          ...panel,
-          styling: {
-            ...panel.styling,
-            backgroundColor: primaryColor,
-            textColor: secondaryColor,
-            // accentColor: accentColor, // if your panels support this
-          },
-        })),
-      }))
-    );
+    // setSections(prevSections =>
+    //   prevSections.map(section => ({
+    //     ...section,
+    //     panels: section.panels.map(panel => ({
+    //       ...panel,
+    //       styling: {
+    //         ...panel.styling,
+    //         backgroundColor: primaryColor,
+    //         textColor: secondaryColor,
+    //         // accentColor: accentColor, // if your panels support this
+    //       },
+    //     })),
+    //   }))
+    // );
   };
 
   return (

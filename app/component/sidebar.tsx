@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
-import { Box, Flex, VStack, Text } from "@chakra-ui/react";
+import React, { act, useState } from "react";
+import { Box, Flex, VStack, Text, Color } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
 import { motion } from "framer-motion";
@@ -13,11 +13,12 @@ import { PanelWrapper } from "./panels/panelWrapper";
 import { PanelData } from "../types/panel";
 import { DndContext } from "@dnd-kit/core";
 import { SectionData } from "./Sections/Section";
+import ColorPicker from "../design-patterns/ColorPanel";
 
 
 // Dynamically get all panel types from the registry
 export const panelTypes = Object.keys(panelRegistry) as (keyof typeof panelRegistry)[];
-export const designTypes = Object.keys(panelRegistry) as (keyof typeof paletteRegistry)[];
+export const designTypes = Object.keys(paletteRegistry) as (keyof typeof paletteRegistry)[];
 
 export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -134,6 +135,11 @@ export default function Sidebar() {
               {navItems
                 .find((item) => item.label === activeMenu)
                 ?.submenu.map((subItem, index) => {
+                  if (activeMenu === "Design") {
+                  return (
+                    DesignComponent(activeMenu, subItem as string)
+                  );
+                }else{
                   const uniqueId = `sidebar-${subItem}-${Date.now()}-${index}`;
                   const newPanel: PanelData = {
                     i: uniqueId,
@@ -174,6 +180,7 @@ export default function Sidebar() {
                       </PanelWrapper>
                     </div>
                   );
+                  }
                 })}
             </VStack>
           </Box>
@@ -203,4 +210,20 @@ function getDefaultContent(panelType: string): string | string[] {
     default:
       return 'Default content';
   }
+}
+
+function DesignComponent(menuType : string, subItem: string) {
+  if (menuType !== "Design") return null;
+
+  const PaletteComponent = paletteRegistry[subItem]?.component;
+
+  return (
+    <Box key={subItem} mb={4}>
+      <Text color="white" fontSize="md" mb={2} fontWeight="semibold">
+        {subItem}
+      </Text>
+      {<PaletteComponent />}
+      
+    </Box>
+  );
 }
