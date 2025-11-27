@@ -211,7 +211,7 @@ export default function SectionCanvas({
       </div>
 
       {/* RIGHT SIDEBAR */}
-      <div className="w-[400px] bg-neutral-900 border-l border-neutral-700 shadow-2xl overflow-y-auto">
+      <div className="w-[250px] bg-neutral-900 border-l border-neutral-700 shadow-2xl overflow-y-auto">
         {selectedPanel ? (
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">

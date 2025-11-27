@@ -310,7 +310,7 @@ export function PanelSettingsForm({
                             onDelete(panel.i);
                         }
                     }}
-                    className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
+                    className="!w-full !rounded-lg !bg-red-600 !hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
                     Delete Panel
                 </button>
