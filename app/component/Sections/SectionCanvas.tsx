@@ -7,6 +7,7 @@ import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
 import { PanelSettingsForm } from "@/components/ui/panelsettingsform";
 
+
 type SectionCanvasProps = {
   sections: SectionData[];
   setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;

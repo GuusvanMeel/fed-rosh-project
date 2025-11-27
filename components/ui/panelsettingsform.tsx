@@ -1,5 +1,5 @@
 import { PanelData } from "@/app/types/panel";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 export function PanelSettingsForm({
     panel,
@@ -11,11 +11,6 @@ export function PanelSettingsForm({
     onDelete: (id: string) => void;
 }) {
     const panelType = panel.panelProps.type;
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragHandle, setDragHandle] = useState<string | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-    const [startSize, setStartSize] = useState({ w: 0, h: 0 });
     
     const updateStyling = (styleUpdates: Partial<PanelData['styling']>) => {
         onUpdate({
@@ -55,81 +50,6 @@ export function PanelSettingsForm({
         reader.readAsDataURL(file);
     };
 
-    const handleMouseDown = (e: React.MouseEvent, handle: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(true);
-        setDragHandle(handle);
-        setStartPos({ x: e.clientX, y: e.clientY });
-        setStartSize({ w: panel.w, h: panel.h });
-    };
-
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!isDragging || !dragHandle) return;
-
-            const deltaX = e.clientX - startPos.x;
-            const deltaY = e.clientY - startPos.y;
-            
-            // Scale factor (adjust based on container size)
-            const scale = 0.5;
-            
-            let newW = startSize.w;
-            let newH = startSize.h;
-
-            switch (dragHandle) {
-                case 'se':
-                    newW = Math.max(50, startSize.w + deltaX * scale);
-                    newH = Math.max(50, startSize.h + deltaY * scale);
-                    break;
-                case 'sw':
-                    newW = Math.max(50, startSize.w - deltaX * scale);
-                    newH = Math.max(50, startSize.h + deltaY * scale);
-                    break;
-                case 'ne':
-                    newW = Math.max(50, startSize.w + deltaX * scale);
-                    newH = Math.max(50, startSize.h - deltaY * scale);
-                    break;
-                case 'nw':
-                    newW = Math.max(50, startSize.w - deltaX * scale);
-                    newH = Math.max(50, startSize.h - deltaY * scale);
-                    break;
-                case 'n':
-                    newH = Math.max(50, startSize.h - deltaY * scale);
-                    break;
-                case 's':
-                    newH = Math.max(50, startSize.h + deltaY * scale);
-                    break;
-                case 'e':
-                    newW = Math.max(50, startSize.w + deltaX * scale);
-                    break;
-                case 'w':
-                    newW = Math.max(50, startSize.w - deltaX * scale);
-                    break;
-            }
-
-            updatePanelSize({ 
-                w: Math.round(newW), 
-                h: Math.round(newH) 
-            });
-        };
-
-        const handleMouseUp = () => {
-            setIsDragging(false);
-            setDragHandle(null);
-        };
-
-        if (isDragging) {
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-        }
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isDragging, dragHandle, startPos, startSize]);
-
     return (
         <div className="space-y-4">
             {/* Panel Type Display */}
@@ -141,59 +61,36 @@ export function PanelSettingsForm({
 
             {/* GLOBAL FEATURES */}
             
-            {/* Panel Size with Visual Resizer */}
+            {/* Panel Size - Simple Number Inputs */}
             <div className="space-y-3">
-                <label className="flex flex-col">
-                    <span className="text-sm font-medium mb-3 text-white">
-                        Panel Size: {panel.w} × {panel.h}px
-                    </span>
-                    <div className="relative flex items-center justify-center bg-neutral-900 rounded-lg p-8 min-h-[300px]">
-                        <div
-                            ref={containerRef}
-                            className="relative bg-neutral-700 border-2 border-blue-500"
-                            style={{
-                                width: `${Math.min(panel.w * 0.5, 300)}px`,
-                                height: `${Math.min(panel.h * 0.5, 300)}px`,
-                            }}
-                        >
-                            {/* Corner Handles */}
-                            <div
-                                className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-blue-500 border border-white cursor-nw-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'nw')}
-                            />
-                            <div
-                                className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-blue-500 border border-white cursor-ne-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'ne')}
-                            />
-                            <div
-                                className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-blue-500 border border-white cursor-sw-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'sw')}
-                            />
-                            <div
-                                className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-blue-500 border border-white cursor-se-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'se')}
-                            />
-                            
-                            {/* Edge Handles */}
-                            <div
-                                className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-500 border border-white cursor-n-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'n')}
-                            />
-                            <div
-                                className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-500 border border-white cursor-s-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 's')}
-                            />
-                            <div
-                                className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-blue-500 border border-white cursor-w-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'w')}
-                            />
-                            <div
-                                className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-blue-500 border border-white cursor-e-resize"
-                                onMouseDown={(e) => handleMouseDown(e, 'e')}
-                            />
-                        </div>
-                    </div>
-                </label>
+                <span className="text-sm font-medium text-white block mb-2">Panel Size</span>
+                <div className="grid grid-cols-2 gap-3">
+                    <label className="flex flex-col">
+                        <span className="text-xs text-neutral-400 mb-1">Width (px)</span>
+                        <input
+                            type="number"
+                            min="50"
+                            max="2000"
+                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={panel.w}
+                            onChange={(e) => updatePanelSize({ w: Number(e.target.value) })}
+                        />
+                    </label>
+                    <label className="flex flex-col">
+                        <span className="text-xs text-neutral-400 mb-1">Height (px)</span>
+                        <input
+                            type="number"
+                            min="50"
+                            max="2000"
+                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={panel.h}
+                            onChange={(e) => updatePanelSize({ h: Number(e.target.value) })}
+                        />
+                    </label>
+                </div>
+                <p className="text-xs text-neutral-500 italic">
+                    💡 Tip: Select the panel on canvas and drag the handles to resize visually
+                </p>
             </div>
 
             {/* Background Color */}
@@ -416,7 +313,7 @@ export function PanelSettingsForm({
                             onDelete(panel.i);
                         }
                     }}
-                    className="w-full !rounded-lg !bg-red-600 !hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
+                    className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
                     Delete Panel
                 </button>
