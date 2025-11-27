@@ -5,16 +5,17 @@ import { panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
-import Droppable from "./Droppable";
+import Droppable, { Edge } from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useColors } from "@/app/design-patterns/DesignContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface SectionData {
   id: string;
   name: string;
   panels: PanelData[];
   dropZones: string[];
+  
 }
 
 export default function Section({
@@ -36,6 +37,17 @@ export default function Section({
   return hasChild ? "auto" : "1fr";
 }).join(" ");
  
+const [pendingDrop, setPendingDrop] = useState<{
+  dropzoneId: string | null;
+  edge: Edge;
+}>({ dropzoneId: null, edge: null });
+
+function handleEdgeHover({ dropzoneId, edge }: { dropzoneId: string; edge: Edge; }) {
+  setPendingDrop({ dropzoneId, edge });
+  console.log("hier")
+}
+
+
 
   // -----------------------------------------
   // Drop Zones
@@ -212,6 +224,7 @@ export default function Section({
               key={zoneId}
               OnDelete={() => removeDropZone(zoneId)}
               hasPanels={panelsInZone.length > 0}
+              onEdgeHover={handleEdgeHover}
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (

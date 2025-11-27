@@ -3,15 +3,14 @@ import {useDndMonitor, useDroppable} from '@dnd-kit/core';
 import React, { useRef, useState } from 'react';
 
 
-type Edge = 'left' | 'center' | 'right' | null;
+export type Edge = 'left' | 'center' | 'right' | null;
 
 interface DroppableProps {
   UID: string;
   children: React.ReactNode;
   onEdgeHover?: (info: { dropzoneId: string; edge: Edge }) => void;
   OnDelete:() => void;
-  hasPanels: Boolean
-    
+  hasPanels: Boolean    
 }
 
 export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels }: DroppableProps) {
@@ -29,9 +28,9 @@ const containerRef = useRef<HTMLDivElement | null>(null);
   const [edge, setEdge] = useState<Edge>(null);
 
   useDndMonitor({
-    onDragOver(event) {
+    onDragMove(event) {
       if (!containerRef.current) return;
-      if (!event.over || event.over.id !== UID) return;
+      if (!event.over || event.over.id !== UID) {setEdge(null); return;}
 
       const rect = containerRef.current.getBoundingClientRect();
 
@@ -98,6 +97,38 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     onClick={OnDelete}
     _hover={{ bg: "red.100" }}
   />
+  {edge === "left" && (
+  <div
+    style={{
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "6px",
+      height: "100%",
+      backgroundColor: "rgba(0, 150, 255, 0.7)",
+      borderRadius: "4px 0 0 4px",
+      zIndex: 5,
+      pointerEvents: "none",
+    }}
+  />
+)}
+
+{/* Right edge highlight */}
+{edge === "right" && (
+  <div
+    style={{
+      position: "absolute",
+      right: 0,
+      top: 0,
+      width: "6px",
+      height: "100%",
+      backgroundColor: "rgba(0, 150, 255, 0.7)",
+      borderRadius: "0 4px 4px 0",
+      zIndex: 5,
+      pointerEvents: "none",
+    }}
+  />
+)}
 
     {children}
   </div>

@@ -21,7 +21,7 @@ interface PanelItem {
 
 export default function MovableColumnList() {
   const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
   ]);
 
  const centerOnCursor: Modifier = ({ transform, active }) => {
