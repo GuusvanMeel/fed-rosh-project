@@ -4,19 +4,15 @@ import { useState } from "react";
 
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
-import Sidebar from "../component/sidebar";
+import Sidebar, { getDefaultContent } from "../component/sidebar";
 import { DndContext, DragEndEvent, DragOverlay, Modifier, UniqueIdentifier } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
 import { panelRegistry } from "../component/panels/panelRegistry";
 import { PanelWrapper } from "../component/panels/panelWrapper";
 import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
+import { Edge } from "../component/Sections/Droppable";
 import { ColorProvider, useColors } from "../design-patterns/DesignContext";
-
-interface PanelItem {
-  id: string;
-  type: string;
-}
 
 export default function MovableColumnList() {
   const [sections, setSections] = useState<SectionData[]>([
@@ -61,14 +57,66 @@ export default function MovableColumnList() {
     );
   }
 
+  const [pendingDrop, setPendingDrop] = useState<{
+    dropzoneId: string | null;
+    edge: Edge;
+  }>({ dropzoneId: null, edge: null });
+
   const handleDragEnd = (event: DragEndEvent) => {
     console.log("Drag end triggered");
     const { active, over } = event;
-
+    
     console.log("Drag ended:", {
       activeId: active.id,
       overId: over?.id,
+      activeData: active.data,
+      overData: over?.data,
     });
+    if (pendingDrop.edge === "left" || pendingDrop.edge === "right") {
+  console.log("Edge Drop detected:", pendingDrop);
+  
+
+  const panelId = active.id as string;
+  const { dropzoneId, edge } = pendingDrop;
+  if (!dropzoneId) return;
+
+  setSections(prev => {
+    // 1. Find section containing this dropzone
+    const sectionIndex = prev.findIndex(s => s.dropZones.includes(dropzoneId));
+    if (sectionIndex === -1) return prev;
+
+    const section = prev[sectionIndex];
+    const dzIndex = section.dropZones.indexOf(dropzoneId);
+
+    const newDropZones = [...section.dropZones];
+    const newZoneId = crypto.randomUUID();
+
+    // Insert before or after
+    if (edge === "left") {
+      newDropZones.splice(dzIndex, 0, newZoneId);
+    } else {
+      newDropZones.splice(dzIndex + 1, 0, newZoneId);
+    }
+
+    // Move panel into this new zone
+    const newPanels = section.panels.map(p =>
+      p.i === panelId ? { ...p, dropZoneId: newZoneId } : p
+    );
+
+    const updatedSection = {
+      ...section,
+      dropZones: newDropZones,
+      panels: newPanels,
+    };
+
+    return prev.map((s, i) => i === sectionIndex ? updatedSection : s);
+  });
+
+  // Reset pending drop
+  setPendingDrop({ dropzoneId: null, edge: null });
+  return;   // ⬅️ STOP normal logic
+}
+    
 
     if (!over) {
       console.log("No drop target found");
@@ -202,34 +250,26 @@ export default function MovableColumnList() {
     setActivePanelId(null);
   };
 
-  return (
-    <DndContext 
-      onDragStart={({ active }) => {
-        setActivePanelId(active.id);
-      }}
-      onDragEnd={handleDragEnd}
-      onDragCancel={() => setActivePanelId(null)}
-    >
-      <Sidebar />
-      <SectionCanvas sections={sections} setSections={setSections} />
-      <DragOverlay modifiers={[centerOnCursor]}> 
-        {activePanelId ? renderPanelById(activePanelId) : null}
-      </DragOverlay>
-    </DndContext>
-  );
-}
-
-export default function MovableColumnList() {
-  const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
-  ]);
-
-  return (
+   return (
     <Provider>
       <div className="flex w-full h-screen">
-        <ColorProvider sections={sections} setSections={setSections}>
-          <MainContent sections={sections} setSections={setSections} />
-        </ColorProvider>
+         <DndContext 
+          onDragStart={({ active }) => {
+        setActivePanelId(active.id);
+        }}
+          onDragEnd={(event) => {
+            handleDragEnd(event)
+            handleSectionDragEnd({ event, setSections });  // 🔵 handles section reordering
+            handlePanelDragEnd({ event, setSections });    // 🔴 your existing panel movement logic
+            setActivePanelId(null);
+          }}
+            onDragCancel={() => setActivePanelId(null)}>
+          <Sidebar/>
+          <SectionCanvas sections={sections} setSections={setSections} setPendingDrop={setPendingDrop} />
+          <DragOverlay modifiers={[centerOnCursor]}> 
+            {activePanelId ? renderPanelById(activePanelId) : null}
+          </DragOverlay>
+        </DndContext>
       </div>
     </Provider>
   );

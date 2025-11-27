@@ -16,18 +16,21 @@ export interface SectionData {
   panels: PanelData[];
   dropZones: string[];
   
+  
 }
  
 export default function Section({
   data,
   onChange,
   onDelete,
-  onPanelEdit
+  onPanelEdit,
+  setPendingDrop,
 }: {
   data: SectionData;
   onChange: (updated: SectionData) => void;
   onDelete: () => void;
   onPanelEdit: (panelId: string) => void;
+  setPendingDrop: (info: { dropzoneId: string; edge: Edge }) => void;
 }) {
   const { primaryColor, secondaryColor } = useColors();
  
@@ -37,15 +40,6 @@ export default function Section({
   return hasChild ? "auto" : "1fr";
 }).join(" ");
  
-const [pendingDrop, setPendingDrop] = useState<{
-  dropzoneId: string | null;
-  edge: Edge;
-}>({ dropzoneId: null, edge: null });
-
-function handleEdgeHover({ dropzoneId, edge }: { dropzoneId: string; edge: Edge; }) {
-  setPendingDrop({ dropzoneId, edge });
-  console.log("hier")
-}
 
 
 
@@ -224,7 +218,7 @@ function handleEdgeHover({ dropzoneId, edge }: { dropzoneId: string; edge: Edge;
               key={zoneId}
               OnDelete={() => removeDropZone(zoneId)}
               hasPanels={panelsInZone.length > 0}
-              onEdgeHover={handleEdgeHover}
+              onEdgeHover={setPendingDrop}
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
