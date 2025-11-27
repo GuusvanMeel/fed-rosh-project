@@ -22,7 +22,7 @@ export default function SectionCanvas({
   sections,
   setSections
 }: SectionCanvasProps) {
-  const { primaryColor } = useColors();
+  const { backgroundColor } = useColors();
 
   const [selectedPanel, setSelectedPanel] = useState<{
     panel: PanelData;
@@ -422,7 +422,7 @@ export default function SectionCanvas({
       {/* MAIN CANVAS */}
       <div
         className="flex-1 p-6 space-y-6 overflow-y-auto"
-        style={{ backgroundColor: primaryColor }}
+        style={{ backgroundColor: backgroundColor }}
       >
         <Button
           size="xs"

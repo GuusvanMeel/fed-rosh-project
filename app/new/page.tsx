@@ -1,13 +1,6 @@
 "use client";
 
-import { Reorder } from "framer-motion";
-import { act, SetStateAction, useState } from "react";
-import VideoPanel from "../component/panels/VideoPanel";
-import ImagePanel from "../component/panels/ImagePanel";
-import ScrollingTextPanel from "../component/panels/ScrollingTextPanel";
-import TextPanel from "../component/panels/TextPanel";
-import UrlPanel from "../component/panels/UrlPanel";
-import { CountdownPanel } from "../component/panels/CountdownPanel";
+import { useState } from "react";
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
@@ -16,25 +9,43 @@ import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
 import { panelRegistry } from "../component/panels/panelRegistry";
 import { PanelWrapper } from "../component/panels/panelWrapper";
+import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
+import { ColorProvider, useColors } from "../design-patterns/DesignContext";
 
-import { handleSectionDragEnd, handlePanelDragEnd, HandleProps } from "../hooks/handleDrags";
-
-
-import { Flex } from "@chakra-ui/react";
-import { ColorProvider } from "../design-patterns/DesignContext";
-
-interface PanelItem {
-  id: string;
-  type: string;
+// Helper function to get default content for each panel type
+function getDefaultContent(panelType: string): string | string[] {
+  switch (panelType) {
+    case "text":
+      return "Sample text content";
+    case "video":
+      return "https://example.com/sample-video.mp4";
+    case "image":
+      return "/globe.svg";
+    case "countdown":
+      return new Date(Date.now() + 24 * 60 * 60 * 1000).getTime().toString();
+    case "scrollingText":
+      return "This is scrolling text content";
+    case "url":
+      return ["Click here", "https://example.com"];
+    case "bracket":
+      return "Tournament Bracket";
+    default:
+      return "Default content";
+  }
 }
 
-export default function MovableColumnList() {
-  const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
-  ]);
+// Main content component that uses colors from context
+function MainContent({
+  sections,
+  setSections
+}: {
+  sections: SectionData[];
+  setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
+}) {
+  const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
-   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
-
+  // Get colors at the component level
+  const { primaryColor, secondaryColor } = useColors();
 
   function renderPanelById(id: UniqueIdentifier) {
     const panel = sections.flatMap(s => s.panels).find(p => p.i === id);
@@ -52,15 +63,12 @@ export default function MovableColumnList() {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
-
-    console.log("asdyguaosuihdijoadsoiasdijoasdhijoadhjioaiocj")
+    console.log("Drag end triggered");
     const { active, over } = event;
 
     console.log("Drag ended:", {
       activeId: active.id,
       overId: over?.id,
-      activeData: active.data,
-      overData: over?.data,
     });
 
     if (!over) {
@@ -68,21 +76,23 @@ export default function MovableColumnList() {
       return;
     }
 
-    if (!active.id.toString().includes("sidebar")) return;
+    if (!active.id.toString().includes("sidebar")) {
+      // Handle section and panel reordering
+      handleSectionDragEnd({ event, setSections });
+      handlePanelDragEnd({ event, setSections });
+      setActivePanelId(null);
+      return;
+    }
 
     const panelId = active.id as string;
     const newZoneId = over.id as string;
-
-    // Extract section ID from zone ID (e.g., "section-1-zone-2" -> "section-1")
     const newSectionId = newZoneId.split("-zone-")[0];
 
-    console.log(
-      `Panel ${panelId} dropped on zone ${newZoneId} in section ${newSectionId}`
-    );
+    console.log(`Panel ${panelId} dropped on zone ${newZoneId} in section ${newSectionId}`);
 
     setSections((prevSections) => {
-      // Check if this is a new panel from sidebar - look at the active data instead of ID
       const draggedPanelData = active.data?.current?.panel;
+      
       const isDraggedFromSidebar =
         panelId.startsWith("sidebar-") || 
         (draggedPanelData &&
@@ -93,23 +103,20 @@ export default function MovableColumnList() {
       if (isDraggedFromSidebar) {
         console.log("Creating new panel from sidebar");
 
-        // If we have panel data from the drag, use it; otherwise extract from ID
         let panelType: string;
         if (draggedPanelData) {
           panelType = draggedPanelData.panelProps.type;
-          console.log("Using panel data from drag:", draggedPanelData);
         } else {
           panelType = panelId.split("-")[1];
-          console.log("Extracting panel type from ID:", panelType);
         }
 
-        // Create a new panel instance
+        // Use styling from dragged panel or current context colors
         const newPanel: PanelData = {
           i: crypto.randomUUID(),
           x: 0,
           y: 0,
           w: 300,
-      h: 100,
+          h: 100,
           dropZoneId: newZoneId,
           panelProps: {
             id: crypto.randomUUID(),
@@ -118,23 +125,24 @@ export default function MovableColumnList() {
             currentIndex: 1,
             layout: undefined,
           },
-          styling:
-            draggedPanelData?.styling || {
-              borderRadius: 8,
-              fontSize: 14,
-              fontFamily: "sans-serif",
-              textColor: "#000000",
-              padding: 8,
-              contentAlign: "left",
-            },
+          styling: draggedPanelData?.styling || {
+            borderRadius: 8,
+            fontSize: 14,
+            fontFamily: "sans-serif",
+            textColor: primaryColor,
+            backgroundColor: secondaryColor,
+            padding: 8,
+            contentAlign: "left",
+          },
         };
 
-        console.log("New panel created:", newPanel);
+        console.log("New panel created with colors:", {
+          textColor: newPanel.styling.textColor,
+          backgroundColor: newPanel.styling.backgroundColor
+        });
 
-        // Add new panel to target section
-        const updatedSections = prevSections.map((section) => {
+        return prevSections.map((section) => {
           if (section.id === newSectionId) {
-            console.log(`Adding panel to section ${newSectionId}`);
             return {
               ...section,
               panels: [...section.panels, newPanel],
@@ -142,12 +150,9 @@ export default function MovableColumnList() {
           }
           return section;
         });
-
-        console.log("Updated sections:", updatedSections);
-        return updatedSections;
       }
 
-      // Existing logic for moving panels between zones
+      // Handle moving existing panels
       let panelToMove: PanelData | null = null;
       let sourceSectionId: string | null = null;
 
@@ -162,10 +167,8 @@ export default function MovableColumnList() {
 
       if (!panelToMove || !sourceSectionId) return prevSections;
 
-      // Update the panel's dropZoneId
       const updatedPanel = { ...panelToMove, dropZoneId: newZoneId };
 
-      // If moving within the same section, just update the dropZoneId
       if (sourceSectionId === newSectionId) {
         return prevSections.map((section) => {
           if (section.id === sourceSectionId) {
@@ -180,17 +183,14 @@ export default function MovableColumnList() {
         });
       }
 
-      // Moving between sections: remove from source, add to target
       return prevSections.map((section) => {
         if (section.id === sourceSectionId) {
-          // Remove panel from source section
           return {
             ...section,
             panels: section.panels.filter((p) => p.i !== panelId),
           };
         }
         if (section.id === newSectionId) {
-          // Add panel to target section
           return {
             ...section,
             panels: [...section.panels, updatedPanel],
@@ -199,53 +199,38 @@ export default function MovableColumnList() {
         return section;
       });
     });
+
+    setActivePanelId(null);
   };
 
-  // Helper function to get default content for each panel type
-  function getDefaultContent(panelType: string): string | string[] {
-    switch (panelType) {
-      case "text":
-        return "Sample text content";
-      case "video":
-        return "https://example.com/sample-video.mp4";
-      case "image":
-        return "/globe.svg";
-      case "countdown":
-        return new Date(Date.now() + 24 * 60 * 60 * 1000).getTime().toString();
-      case "scrollingText":
-        return "This is scrolling text content";
-      case "url":
-        return ["Click here", "https://example.com"];
-      case "bracket":
-        return "Tournament Bracket";
-      default:
-        return "Default content";
-    }
-  }
+  return (
+    <DndContext 
+      onDragStart={({ active }) => {
+        setActivePanelId(active.id);
+      }}
+      onDragEnd={handleDragEnd}
+      onDragCancel={() => setActivePanelId(null)}
+    >
+      <Sidebar />
+      <SectionCanvas sections={sections} setSections={setSections} />
+      <DragOverlay>
+        {activePanelId ? renderPanelById(activePanelId) : null}
+      </DragOverlay>
+    </DndContext>
+  );
+}
+
+export default function MovableColumnList() {
+  const [sections, setSections] = useState<SectionData[]>([
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [] },
+  ]);
 
   return (
     <Provider>
       <div className="flex w-full h-screen">
-         <DndContext 
-          onDragStart={({ active }) => {
-        setActivePanelId(active.id);
-        }}
-          onDragEnd={(event) => {
-            handleDragEnd(event)
-            handleSectionDragEnd({ event, setSections });  // 🔵 handles section reordering
-            handlePanelDragEnd({ event, setSections });    // 🔴 your existing panel movement logic
-            setActivePanelId(null);
-          }}
-            onDragCancel={() => setActivePanelId(null)}>
-          <ColorProvider sections={sections} setSections={setSections}>
-          <Sidebar/>
-          
-          <SectionCanvas sections={sections} setSections={setSections} />
-          </ColorProvider>
-          <DragOverlay>
-            {activePanelId ? renderPanelById(activePanelId) : null}
-          </DragOverlay>
-        </DndContext>
+        <ColorProvider sections={sections} setSections={setSections}>
+          <MainContent sections={sections} setSections={setSections} />
+        </ColorProvider>
       </div>
     </Provider>
   );

@@ -14,6 +14,7 @@ import { PanelData } from "../types/panel";
 import { DndContext } from "@dnd-kit/core";
 import { SectionData } from "./Sections/Section";
 import ColorPicker from "../design-patterns/ColorPanel";
+import { useColors } from "../design-patterns/DesignContext";
 
 
 // Dynamically get all panel types from the registry
@@ -22,6 +23,8 @@ export const designTypes = Object.keys(paletteRegistry) as (keyof typeof palette
 
 export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const {primaryColor, secondaryColor} = useColors();
 
   const navItems = [
     {
@@ -155,11 +158,11 @@ export default function Sidebar() {
                       layout: undefined
                     },
                     styling: {
-                      backgroundColor: "#ffffff",
+                      backgroundColor: secondaryColor,
                       borderRadius: 8,
                       fontSize: 14,
                       fontFamily: "sans-serif",
-                      textColor: "#000000",
+                      textColor: primaryColor,
                       padding: 8,
                       contentAlign: "left"
                       
@@ -174,7 +177,7 @@ export default function Sidebar() {
                       className="p-2 rounded bg-gray-600 hover:bg-gray-500 cursor-grab active:cursor-grabbing"
                     >
                       <PanelWrapper panel={newPanel}>
-                        <Text color="black" fontSize="lg">
+                        <Text color={primaryColor} fontSize="lg">
                           {subItem}
                         </Text>
                       </PanelWrapper>

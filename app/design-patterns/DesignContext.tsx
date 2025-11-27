@@ -1,9 +1,11 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, use } from "react";
 import { SectionData } from "../component/Sections/Section";
 
 interface ColorContextType {
+  backgroundColor: string;
+  setBackgroundColor: (c: string) => void;
   primaryColor: string;
   setPrimaryColor: (c: string) => void;
   secondaryColor: string;
@@ -14,6 +16,8 @@ interface ColorContextType {
 }
 
 const ColorContext = createContext<ColorContextType>({
+  backgroundColor: "#a3a3a3ff",
+  setBackgroundColor: () => {},
   primaryColor: "#ffffff",
   setPrimaryColor: () => {},
   secondaryColor: "#000000",
@@ -32,9 +36,15 @@ export const ColorProvider = ({
   sections: SectionData[];
   setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
 }) => {
+  const [backgroundColor, setBackgroundColor] = useState("#a3a3a3ff");
   const [primaryColor, setPrimaryColor] = useState("#ffffff");
   const [secondaryColor, setSecondaryColor] = useState("#000000");
   const [accentColor, setAccentColor] = useState("#57b1ff");
+
+  const handleSetBackgroundColor = (c: string) => {
+    console.log("Setting background color to:", c);
+    setBackgroundColor(c);
+  };
 
   const handleSetPrimaryColor = (c: string) => {
     console.log("Setting primary color to:", c);
@@ -76,6 +86,8 @@ export const ColorProvider = ({
   return (
     <ColorContext.Provider
       value={{
+        backgroundColor,
+        setBackgroundColor: handleSetBackgroundColor,
         primaryColor,
         setPrimaryColor: handleSetPrimaryColor,
         secondaryColor,

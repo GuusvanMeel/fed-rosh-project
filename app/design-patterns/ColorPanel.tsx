@@ -5,6 +5,8 @@ import { useColors } from "../design-patterns/DesignContext";
 
 export default function ColorPicker() {
   const {
+    backgroundColor,
+    setBackgroundColor,
     primaryColor,
     setPrimaryColor,
     secondaryColor,
@@ -18,6 +20,19 @@ export default function ColorPicker() {
 
   return (
     <Box>
+      <p className="text-center text-small">Background Color</p>
+      <Input
+        type="color"
+        value={backgroundColor}
+        onChange={(e) => {
+          console.log("background color input changed:", e.target.value);
+          setBackgroundColor(e.target.value);
+        }}
+        cursor="pointer"
+        width="100%"
+        height="40px"
+        padding="0"
+      />
       <p className="text-center text-small">Primary Color</p>
       <Input
         type="color"
