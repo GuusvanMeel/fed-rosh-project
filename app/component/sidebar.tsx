@@ -194,7 +194,7 @@ export default function Sidebar() {
 }
 
 // Helper function to get default content for each panel type
-function getDefaultContent(panelType: string): string | string[] {
+export function getDefaultContent(panelType: string): string | string[] {
   switch (panelType) {
     case 'text':
       return 'Sample text content';
