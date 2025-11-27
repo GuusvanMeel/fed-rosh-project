@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar from "../component/sidebar";
-import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, Modifier, UniqueIdentifier } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
 import { PanelData } from "../types/panel";
 import { panelRegistry } from "../component/panels/panelRegistry";
@@ -12,37 +13,33 @@ import { PanelWrapper } from "../component/panels/panelWrapper";
 import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
 import { ColorProvider, useColors } from "../design-patterns/DesignContext";
 
-// Helper function to get default content for each panel type
-function getDefaultContent(panelType: string): string | string[] {
-  switch (panelType) {
-    case "text":
-      return "Sample text content";
-    case "video":
-      return "https://example.com/sample-video.mp4";
-    case "image":
-      return "/globe.svg";
-    case "countdown":
-      return new Date(Date.now() + 24 * 60 * 60 * 1000).getTime().toString();
-    case "scrollingText":
-      return "This is scrolling text content";
-    case "url":
-      return ["Click here", "https://example.com"];
-    case "bracket":
-      return "Tournament Bracket";
-    default:
-      return "Default content";
-  }
+interface PanelItem {
+  id: string;
+  type: string;
 }
 
-// Main content component that uses colors from context
-function MainContent({
-  sections,
-  setSections
-}: {
-  sections: SectionData[];
-  setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
-}) {
-  const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
+export default function MovableColumnList() {
+  const [sections, setSections] = useState<SectionData[]>([
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
+  ]);
+
+ const centerOnCursor: Modifier = ({ transform, active }) => {
+  // If nothing is being dragged, just return the original transform
+  if (!active) return transform;
+
+  // If rect is missing for some reason (rare), also just return transform
+  const rect = active.rect.current.initial;
+  if (!rect) return transform;
+
+  return {
+    ...transform,
+    x: transform.x - rect.width / 2,
+    y: transform.y - rect.height / 2,
+  };
+};
+  
+
+   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
   // Get colors at the component level
   const { primaryColor, secondaryColor } = useColors();
@@ -56,9 +53,11 @@ function MainContent({
     const mappedProps = entry.mapProps(panel.panelProps.content);
    
     return (
-      <PanelWrapper panel={panel}>
-        <Component {...mappedProps} />
-      </PanelWrapper>
+      <div style={{ opacity: 0.5 }}>
+    <PanelWrapper panel={panel}>
+      <Component {...mappedProps} />
+    </PanelWrapper>
+  </div>
     );
   }
 
@@ -213,7 +212,7 @@ function MainContent({
     >
       <Sidebar />
       <SectionCanvas sections={sections} setSections={setSections} />
-      <DragOverlay>
+      <DragOverlay modifiers={[centerOnCursor]}> 
         {activePanelId ? renderPanelById(activePanelId) : null}
       </DragOverlay>
     </DndContext>

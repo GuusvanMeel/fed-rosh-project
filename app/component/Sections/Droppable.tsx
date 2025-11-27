@@ -3,17 +3,17 @@ import {useDndMonitor, useDroppable} from '@dnd-kit/core';
 import React, { useRef, useState } from 'react';
 
 
-type Edge = 'left' | 'center' | 'right' | null;
+export type Edge = 'left' | 'center' | 'right' | null;
 
 interface DroppableProps {
   UID: string;
   children: React.ReactNode;
   onEdgeHover?: (info: { dropzoneId: string; edge: Edge }) => void;
   OnDelete:() => void;
-    
+  hasPanels: Boolean    
 }
 
-export default function Droppable({ UID, children, onEdgeHover, OnDelete }: DroppableProps) {
+export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels }: DroppableProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: UID,
   });  
@@ -28,9 +28,9 @@ const containerRef = useRef<HTMLDivElement | null>(null);
   const [edge, setEdge] = useState<Edge>(null);
 
   useDndMonitor({
-    onDragOver(event) {
+    onDragMove(event) {
       if (!containerRef.current) return;
-      if (!event.over || event.over.id !== UID) return;
+      if (!event.over || event.over.id !== UID) {setEdge(null); return;}
 
       const rect = containerRef.current.getBoundingClientRect();
 
@@ -79,13 +79,14 @@ const containerRef = useRef<HTMLDivElement | null>(null);
         backgroundColor: isOver ? 'rgba(0, 128, 0, 0.2)' : 'rgba(200, 200, 200, 0.3)',
         border: borderStyle,
         transition: 'all 0.2s',
-        minHeight: '150px',
         pointerEvents: "none",
+        height: hasPanels ? "auto" : "100px",
         borderRadius: '8px',
+        padding: 0
       }}
     >
    <div  style={{ pointerEvents: "auto" }}>
-     
+      
        <CloseButton
     size="sm"
     color="red.500"
@@ -96,7 +97,39 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     onClick={OnDelete}
     _hover={{ bg: "red.100" }}
   />
-    
+  {edge === "left" && (
+  <div
+    style={{
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "6px",
+      height: "100%",
+      backgroundColor: "rgba(0, 150, 255, 0.7)",
+      borderRadius: "4px 0 0 4px",
+      zIndex: 5,
+      pointerEvents: "none",
+    }}
+  />
+)}
+
+{/* Right edge highlight */}
+{edge === "right" && (
+  <div
+    style={{
+      position: "absolute",
+      right: 0,
+      top: 0,
+      width: "6px",
+      height: "100%",
+      backgroundColor: "rgba(0, 150, 255, 0.7)",
+      borderRadius: "0 4px 4px 0",
+      zIndex: 5,
+      pointerEvents: "none",
+    }}
+  />
+)}
+
     {children}
   </div>
 </div>
