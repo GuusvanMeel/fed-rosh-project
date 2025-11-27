@@ -6,16 +6,20 @@ import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
 import { PanelSettingsForm } from "@/components/ui/panelsettingsform";
+import { Edge } from "./Droppable";
 
 
 type SectionCanvasProps = {
   sections: SectionData[];
   setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
+  setPendingDrop: (info: { dropzoneId: string | null; edge: Edge }) => void;
+
 };
 
 export default function SectionCanvas({
   sections,
-  setSections
+  setSections,
+  setPendingDrop
 }: SectionCanvasProps) {
   const { primaryColor } = useColors();
 
@@ -126,6 +130,7 @@ export default function SectionCanvas({
                   setSections(prev => prev.filter(s => s.id !== section.id))
                 }
                 onPanelEdit={(panelId) => handlePanelEdit(section.id, panelId)}
+                setPendingDrop={setPendingDrop}
                 
               />
             ))}

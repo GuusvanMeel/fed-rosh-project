@@ -60,7 +60,7 @@ export default function Sidebar() {
     const locationX = e.pageX;
     const locationY = e.pageY;
 
-    console.log("Drag ended at:", locationX, locationY);
+    
     };
 
   // Function to render component or text based on menu type
@@ -166,7 +166,7 @@ export default function Sidebar() {
                     }
                   };
 
-                  console.log("Creating sidebar panel with ID:", uniqueId);
+                  
 
                   return (
                     <div 
