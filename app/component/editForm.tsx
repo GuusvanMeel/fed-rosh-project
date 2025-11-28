@@ -1,8 +1,7 @@
 import React from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
-import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor } from '@chakra-ui/react';
-import { Color } from 'framer-motion';
+import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, Button, Menu, Portal } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
 
 export default function EditForm({
@@ -16,8 +15,8 @@ export default function EditForm({
 }) {
     const panelType = panel.panelProps.type;
 
-    
-const swatches = ["red", "blue", "green"]
+
+    const swatches = ["red", "blue", "green"]
 
     const updateStyling = (styleUpdates: Partial<PanelData['styling']>) => {
         onUpdate({
@@ -112,16 +111,16 @@ const swatches = ["red", "blue", "green"]
             <label className="flex flex-col">
                 <span className="text-sm font-medium mb-1 text-white">Background Color</span>
                 <ColorPicker.Root
-                defaultValue={parseColor(panel.styling.backgroundColor)}
-                key={"Background-color-picker-" + panel.i}
-                onValueChange={(e) => {
-                    // Update background color
-                    updateStyling({ backgroundColor: e.value.toString("hex") });
-                    
-                    // Get the alpha channel value (0-1)
-                    const alpha = e.value.getChannelValue("alpha");
-                    updateStyling({ opacity: alpha });
-                }}>
+                    defaultValue={parseColor(panel.styling.backgroundColor)}
+                    key={"Background-color-picker-" + panel.i}
+                    onValueChange={(e) => {
+                        // Update background color
+                        updateStyling({ backgroundColor: e.value.toString("hex") });
+
+                        // Get the alpha channel value (0-1)
+                        const alpha = e.value.getChannelValue("alpha");
+                        updateStyling({ opacity: alpha });
+                    }}>
                     <ColorPicker.HiddenInput />
                     <ColorPicker.Label />
                     <ColorPicker.Control>
@@ -132,22 +131,22 @@ const swatches = ["red", "blue", "green"]
                         <ColorPicker.Content>
                             <ColorPicker.Area />
                             <ColorPicker.EyeDropper />
-                             <Stack>
+                            <Stack>
                                 <ColorPickerChannelSlider channel="hue" />
-                                <ColorPickerChannelSlider channel="alpha"/>
-                                </Stack>
+                                <ColorPickerChannelSlider channel="alpha" />
+                            </Stack>
 
                             <ColorPicker.SwatchGroup>
                                 {swatches.map((item) => (
                                     <ColorPicker.SwatchTrigger key={item} value={item}>
-                                    <ColorPicker.Swatch value={item}>
-                                        <ColorPicker.SwatchIndicator>
-                                        <LuCheck />
-                                        </ColorPicker.SwatchIndicator>
-                                    </ColorPicker.Swatch>
+                                        <ColorPicker.Swatch value={item}>
+                                            <ColorPicker.SwatchIndicator>
+                                                <LuCheck />
+                                            </ColorPicker.SwatchIndicator>
+                                        </ColorPicker.Swatch>
                                     </ColorPicker.SwatchTrigger>
                                 ))}
-                                </ColorPicker.SwatchGroup>
+                            </ColorPicker.SwatchGroup>
                         </ColorPicker.Content>
                     </ColorPicker.Positioner>
                 </ColorPicker.Root>
@@ -159,14 +158,14 @@ const swatches = ["red", "blue", "green"]
                     Corner Radius: {panel.styling.borderRadius || 8}px
                 </span>
                 <Slider.Root defaultValue={[panel.w]} size={"md"} min={0} max={50} key={"corner-radius-slider-" + panel.i}
-                        onValueChange={(e) => updateStyling({ borderRadius: Number(e.value) })}>
-                        <Slider.Control>
-                            <Slider.Track>
-                                <Slider.Range />
-                            </Slider.Track>
-                            <Slider.Thumbs />
-                        </Slider.Control>
-                    </Slider.Root>
+                    onValueChange={(e) => updateStyling({ borderRadius: Number(e.value) })}>
+                    <Slider.Control>
+                        <Slider.Track>
+                            <Slider.Range />
+                        </Slider.Track>
+                        <Slider.Thumbs />
+                    </Slider.Control>
+                </Slider.Root>
             </label>
 
             {/* Padding */}
@@ -175,14 +174,14 @@ const swatches = ["red", "blue", "green"]
                     Padding: {panel.styling.padding || 8}px
                 </span>
                 <Slider.Root defaultValue={[panel.w]} size={"md"} min={0} max={50} key={"padding-slider-" + panel.i}
-                        onValueChange={(e) => updateStyling({ padding: Number(e.value) })}>
-                        <Slider.Control>
-                            <Slider.Track>
-                                <Slider.Range />
-                            </Slider.Track>
-                            <Slider.Thumbs />
-                        </Slider.Control>
-                    </Slider.Root>
+                    onValueChange={(e) => updateStyling({ padding: Number(e.value) })}>
+                    <Slider.Control>
+                        <Slider.Track>
+                            <Slider.Range />
+                        </Slider.Track>
+                        <Slider.Thumbs />
+                    </Slider.Control>
+                </Slider.Root>
             </label>
 
             {/* Text Content (text, scrollingText, url) */}
@@ -192,58 +191,83 @@ const swatches = ["red", "blue", "green"]
                         <span className="text-sm font-medium mb-1 text-white">
                             {isUrlPanel ? 'Display Text' : 'Content'}
                         </span>
-                        <input
-                            type="text"
-                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        <Input 
                             placeholder="Enter panel content"
-                            value={
-                                isUrlPanel && Array.isArray(panel.panelProps.content)
-                                    ? panel.panelProps.content[0]
-                                    : typeof panel.panelProps.content === 'string'
-                                        ? panel.panelProps.content
-                                        : ''
-                            }
+                            defaultValue={isUrlPanel && Array.isArray(panel.panelProps.content)
+                                ? panel.panelProps.content[0]
+                                : typeof panel.panelProps.content === 'string'
+                                    ? panel.panelProps.content
+                                    : ''}
                             onChange={(e) => {
                                 if (isUrlPanel && Array.isArray(panel.panelProps.content)) {
                                     updateContent([e.target.value, panel.panelProps.content[1]]);
                                 } else {
                                     updateContent(e.target.value);
                                 }
-                            }}
-                        />
+                            
+                            }}>
+                        </Input>
                     </label>
 
                     {/* URL input for url panel */}
                     {isUrlPanel && (
                         <label className="flex flex-col">
                             <span className="text-sm font-medium mb-1 text-white">URL</span>
-                            <input
-                                type="url"
-                                className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm placeholder-neutral-500 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="https://example.com"
-                                value={
-                                    Array.isArray(panel.panelProps.content)
+                            <InputGroup startAddon="https://">
+                            <Input 
+                            placeholder="example.com"
+                            defaultValue={Array.isArray(panel.panelProps.content)
                                         ? panel.panelProps.content[1]
-                                        : ''
-                                }
-                                onChange={(e) => {
-                                    if (Array.isArray(panel.panelProps.content)) {
+                                        : ''}
+                            onChange={(e) => {
+                                if (Array.isArray(panel.panelProps.content)) {
                                         updateContent([panel.panelProps.content[0], e.target.value]);
                                     }
-                                }}
-                            />
+                            
+                            }}>
+                        </Input>
+                        </InputGroup>
                         </label>
                     )}
 
                     {/* Text Color */}
                     <label className="flex flex-col">
                         <span className="text-sm font-medium mb-1 text-white">Text Color</span>
-                        <input
-                            type="color"
-                            className="h-10 w-full rounded-lg border border-neutral-700 bg-neutral-800 cursor-pointer"
-                            value={panel.styling.textColor || "#ffffff"}
-                            onChange={(e) => updateStyling({ textColor: e.target.value })}
-                        />
+                        <ColorPicker.Root
+                    defaultValue={parseColor(panel.styling.textColor ?? "#000000")}
+                    key={"Background-color-picker-" + panel.i}
+                    onValueChange={(e) => {
+                        // Update background color
+                        updateStyling({ textColor: e.value.toString("hex") });
+                    }}>
+                    <ColorPicker.HiddenInput />
+                    <ColorPicker.Label />
+                    <ColorPicker.Control>
+                        <ColorPicker.Input />
+                        <ColorPicker.Trigger />
+                    </ColorPicker.Control>
+                    <ColorPicker.Positioner>
+                        <ColorPicker.Content>
+                            <ColorPicker.Area />
+                            <ColorPicker.EyeDropper />
+                            <Stack>
+                                <ColorPickerChannelSlider channel="hue" />
+                            </Stack>
+
+                            <ColorPicker.SwatchGroup>
+                                {swatches.map((item) => (
+                                    <ColorPicker.SwatchTrigger key={item} value={item}>
+                                        <ColorPicker.Swatch value={item}>
+                                            <ColorPicker.SwatchIndicator>
+                                                <LuCheck />
+                                            </ColorPicker.SwatchIndicator>
+                                        </ColorPicker.Swatch>
+                                    </ColorPicker.SwatchTrigger>
+                                ))}
+                            </ColorPicker.SwatchGroup>
+                        </ColorPicker.Content>
+                    </ColorPicker.Positioner>
+                </ColorPicker.Root>
                     </label>
 
                     {/* Font Size */}
@@ -251,34 +275,69 @@ const swatches = ["red", "blue", "green"]
                         <span className="text-sm font-medium mb-1 text-white">
                             Font Size: {panel.styling.fontSize || 16}px
                         </span>
-                        <input
-                            type="range"
-                            min="8"
-                            max="64"
-                            className="w-full accent-blue-500"
-                            value={panel.styling.fontSize || 16}
-                            onChange={(e) => updateStyling({ fontSize: Number(e.target.value) })}
-                        />
+
+                        <NumberInput.Root
+                        defaultValue={panel.styling.fontSize?.toString() ?? "16"}
+                        min={8} max={64}
+                        onValueChange={(e) => updateStyling({ fontSize: Number(e.value) })}>
+                        
+                            <NumberInput.Label />
+                            <NumberInput.Control>
+                                <NumberInput.IncrementTrigger />
+                                <NumberInput.DecrementTrigger />
+                            </NumberInput.Control>
+                            <NumberInput.Scrubber />
+                            <NumberInput.Input />
+                            </NumberInput.Root>
                     </label>
 
                     {/* Font Family */}
                     <label className="flex flex-col">
-                        <span className="text-sm font-medium mb-1 text-white">Font</span>
-                        <select
-                            value={panel.styling.fontFamily || "sans-serif"}
-                            onChange={(e) => updateStyling({ fontFamily: e.target.value })}
-                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="sans-serif">Sans Serif</option>
-                            <option value="serif">Serif</option>
-                            <option value="monospace">Monospace</option>
-                            <option value="cursive">Cursive</option>
-                            <option value="Arial">Arial</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Verdana">Verdana</option>
-                        </select>
+                        <span className="text-sm font-medium mb-1 text-white">Text font</span>
+                        <Menu.Root
+                        onSelect={(e) => updateStyling({ fontFamily: e.value })}>
+                        <Menu.Trigger asChild>
+                            <Button variant="outline" size="sm">
+                            Select Font
+                            </Button>
+                        </Menu.Trigger>
+                        <Portal>
+                            <Menu.Positioner>
+                            <Menu.Content
+                            defaultValue={panel.styling.fontFamily || "sans-serif"}
+                            >
+                                <Menu.Item fontFamily={"sans-serif"} value="sans-serif">
+                                Sans Serif
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"serif"} value="serif">
+                                Serif
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"monospace"} value="monospace">
+                                Monospace
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"cursive"} value="cursive">
+                                Cursive
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"Arial"} value="Arial">
+                                Arial
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"Times New Roman"} value="Times New Roman">
+                                Times New Roman
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"Courier New"} value="Courier New">
+                                Courier New
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"Georgia"} value="Georgia">
+                                Georgia
+                                </Menu.Item>
+                                <Menu.Item fontFamily={"Verdana"} value="Verdana">
+                                Verdana
+                                </Menu.Item>
+
+                            </Menu.Content>
+                            </Menu.Positioner>
+                        </Portal>
+                        </Menu.Root>
                     </label>
 
                     {/* Text Align */}
