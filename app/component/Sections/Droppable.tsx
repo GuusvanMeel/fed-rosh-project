@@ -44,8 +44,8 @@ const containerRef = useRef<HTMLDivElement | null>(null);
       const percentageX = relativeX / rect.width;
 
       let nextEdge: Edge;
-      if (percentageX < 0.2) nextEdge = 'left';
-      else if (percentageX > 0.8) nextEdge = 'right';
+      if (percentageX < 0.1) nextEdge = 'left';
+      else if (percentageX > 0.9) nextEdge = 'right';
       else nextEdge = 'center';
 
       setEdge(nextEdge);
