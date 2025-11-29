@@ -296,7 +296,9 @@ export default function EditForm({
 
                     {/* Font Family */}
                     <label className="flex flex-col">
-
+                        <span className="text-sm font-medium mb-1 text-white">
+                            Font Family: {panel.styling.fontFamily || "sans-serif"}
+                        </span>
 
                         <NativeSelect.Root size="md" width="240px">
                             <NativeSelect.Field
