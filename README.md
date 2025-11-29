@@ -24,7 +24,8 @@ This is a webpage to make your own websites, using a panel system to drag and dr
  ### Sjoerd
 
  ### Guus
-    Sections, panel movability, database, helped with panel customization, helped with panels, things not mentioned probably made by me.
+    Sections, panel movability, database, helped with panel customization, 
+    helped with panels, things not mentioned probably made by me.
 
 
 
