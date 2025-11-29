@@ -5,6 +5,7 @@ import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
 import { PanelData } from "@/app/types/panel";
+import EditForm from "../editForm";
 import { PanelSettingsForm } from "@/components/ui/panelsettingsform";
 import { Edge } from "./Droppable";
 
@@ -150,8 +151,7 @@ export default function SectionCanvas({
                 ✕
               </button>
             </div>
-
-            <PanelSettingsForm
+            <EditForm
               panel={selectedPanel.panel}
               onUpdate={handlePanelUpdate}
               onDelete={handlePanelDelete}
