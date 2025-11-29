@@ -1,7 +1,7 @@
 import React from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
-import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, Button, Menu, Portal } from '@chakra-ui/react';
+import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, Button, Menu, Portal, NativeSelect, For, Select, createListCollection } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
 
 export default function EditForm({
@@ -45,6 +45,9 @@ export default function EditForm({
             ...sizeUpdates,
         });
     };
+
+
+
 
     const hasTextContent = panelType === 'text' || panelType === 'scrollingText';
     const isScrollingText = panelType === 'scrollingText';
@@ -191,7 +194,7 @@ export default function EditForm({
                         <span className="text-sm font-medium mb-1 text-white">
                             {isUrlPanel ? 'Display Text' : 'Content'}
                         </span>
-                        <Input 
+                        <Input
                             placeholder="Enter panel content"
                             defaultValue={isUrlPanel && Array.isArray(panel.panelProps.content)
                                 ? panel.panelProps.content[0]
@@ -204,7 +207,7 @@ export default function EditForm({
                                 } else {
                                     updateContent(e.target.value);
                                 }
-                            
+
                             }}>
                         </Input>
                     </label>
@@ -214,19 +217,19 @@ export default function EditForm({
                         <label className="flex flex-col">
                             <span className="text-sm font-medium mb-1 text-white">URL</span>
                             <InputGroup startAddon="https://">
-                            <Input 
-                            placeholder="example.com"
-                            defaultValue={Array.isArray(panel.panelProps.content)
+                                <Input
+                                    placeholder="example.com"
+                                    defaultValue={Array.isArray(panel.panelProps.content)
                                         ? panel.panelProps.content[1]
                                         : ''}
-                            onChange={(e) => {
-                                if (Array.isArray(panel.panelProps.content)) {
-                                        updateContent([panel.panelProps.content[0], e.target.value]);
-                                    }
-                            
-                            }}>
-                        </Input>
-                        </InputGroup>
+                                    onChange={(e) => {
+                                        if (Array.isArray(panel.panelProps.content)) {
+                                            updateContent([panel.panelProps.content[0], e.target.value]);
+                                        }
+
+                                    }}>
+                                </Input>
+                            </InputGroup>
                         </label>
                     )}
 
@@ -234,40 +237,40 @@ export default function EditForm({
                     <label className="flex flex-col">
                         <span className="text-sm font-medium mb-1 text-white">Text Color</span>
                         <ColorPicker.Root
-                    defaultValue={parseColor(panel.styling.textColor ?? "#000000")}
-                    key={"Background-color-picker-" + panel.i}
-                    onValueChange={(e) => {
-                        // Update background color
-                        updateStyling({ textColor: e.value.toString("hex") });
-                    }}>
-                    <ColorPicker.HiddenInput />
-                    <ColorPicker.Label />
-                    <ColorPicker.Control>
-                        <ColorPicker.Input />
-                        <ColorPicker.Trigger />
-                    </ColorPicker.Control>
-                    <ColorPicker.Positioner>
-                        <ColorPicker.Content>
-                            <ColorPicker.Area />
-                            <ColorPicker.EyeDropper />
-                            <Stack>
-                                <ColorPickerChannelSlider channel="hue" />
-                            </Stack>
+                            value={parseColor(panel.styling.textColor ?? "#000000")}
+                            key={"Background-color-picker-" + panel.i}
+                            onValueChange={(e) => {
+                                // Update background color
+                                updateStyling({ textColor: e.value.toString("hex") });
+                            }}>
+                            <ColorPicker.HiddenInput />
+                            <ColorPicker.Label />
+                            <ColorPicker.Control>
+                                <ColorPicker.Input />
+                                <ColorPicker.Trigger />
+                            </ColorPicker.Control>
+                            <ColorPicker.Positioner>
+                                <ColorPicker.Content>
+                                    <ColorPicker.Area />
+                                    <ColorPicker.EyeDropper />
+                                    <Stack>
+                                        <ColorPickerChannelSlider channel="hue" />
+                                    </Stack>
 
-                            <ColorPicker.SwatchGroup>
-                                {swatches.map((item) => (
-                                    <ColorPicker.SwatchTrigger key={item} value={item}>
-                                        <ColorPicker.Swatch value={item}>
-                                            <ColorPicker.SwatchIndicator>
-                                                <LuCheck />
-                                            </ColorPicker.SwatchIndicator>
-                                        </ColorPicker.Swatch>
-                                    </ColorPicker.SwatchTrigger>
-                                ))}
-                            </ColorPicker.SwatchGroup>
-                        </ColorPicker.Content>
-                    </ColorPicker.Positioner>
-                </ColorPicker.Root>
+                                    <ColorPicker.SwatchGroup>
+                                        {swatches.map((item) => (
+                                            <ColorPicker.SwatchTrigger key={item} value={item}>
+                                                <ColorPicker.Swatch value={item}>
+                                                    <ColorPicker.SwatchIndicator>
+                                                        <LuCheck />
+                                                    </ColorPicker.SwatchIndicator>
+                                                </ColorPicker.Swatch>
+                                            </ColorPicker.SwatchTrigger>
+                                        ))}
+                                    </ColorPicker.SwatchGroup>
+                                </ColorPicker.Content>
+                            </ColorPicker.Positioner>
+                        </ColorPicker.Root>
                     </label>
 
                     {/* Font Size */}
@@ -277,10 +280,10 @@ export default function EditForm({
                         </span>
 
                         <NumberInput.Root
-                        defaultValue={panel.styling.fontSize?.toString() ?? "16"}
-                        min={8} max={64}
-                        onValueChange={(e) => updateStyling({ fontSize: Number(e.value) })}>
-                        
+                            value={panel.styling.fontSize?.toString() ?? "16"}
+                            min={8} max={64}
+                            onValueChange={(e) => updateStyling({ fontSize: Number(e.value) })}>
+
                             <NumberInput.Label />
                             <NumberInput.Control>
                                 <NumberInput.IncrementTrigger />
@@ -288,74 +291,49 @@ export default function EditForm({
                             </NumberInput.Control>
                             <NumberInput.Scrubber />
                             <NumberInput.Input />
-                            </NumberInput.Root>
+                        </NumberInput.Root>
                     </label>
 
                     {/* Font Family */}
                     <label className="flex flex-col">
-                        <span className="text-sm font-medium mb-1 text-white">Text font</span>
-                        <Menu.Root
-                        onSelect={(e) => updateStyling({ fontFamily: e.value })}>
-                        <Menu.Trigger asChild>
-                            <Button variant="outline" size="sm">
-                            Select Font
-                            </Button>
-                        </Menu.Trigger>
-                        <Portal>
-                            <Menu.Positioner>
-                            <Menu.Content
-                            defaultValue={panel.styling.fontFamily || "sans-serif"}
-                            >
-                                <Menu.Item fontFamily={"sans-serif"} value="sans-serif">
-                                Sans Serif
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"serif"} value="serif">
-                                Serif
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"monospace"} value="monospace">
-                                Monospace
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"cursive"} value="cursive">
-                                Cursive
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"Arial"} value="Arial">
-                                Arial
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"Times New Roman"} value="Times New Roman">
-                                Times New Roman
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"Courier New"} value="Courier New">
-                                Courier New
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"Georgia"} value="Georgia">
-                                Georgia
-                                </Menu.Item>
-                                <Menu.Item fontFamily={"Verdana"} value="Verdana">
-                                Verdana
-                                </Menu.Item>
 
-                            </Menu.Content>
-                            </Menu.Positioner>
-                        </Portal>
-                        </Menu.Root>
+
+                        <NativeSelect.Root size="md" width="240px">
+                            <NativeSelect.Field
+                                value={panel.styling.fontFamily}
+                                onChange={(e) => updateStyling({ fontFamily: e.currentTarget.value })}
+                            >
+                                <option style={{ fontFamily: "sans-serif" }} value="sans-serif">Sans Serif</option>
+                                <option style={{ fontFamily: "serif" }} value="serif">Serif</option>
+                                <option style={{ fontFamily: "monospace" }} value="monospace">Monospace</option>
+                                <option style={{ fontFamily: "cursive" }} value="cursive">Cursive</option>
+                                <option style={{ fontFamily: "Arial" }} value="Arial">Arial</option>
+                                <option style={{ fontFamily: "Times New Roman" }} value="Times New Roman">Times New Roman</option>
+                                <option style={{ fontFamily: "Courier New" }} value="Courier New">Courier New</option>
+                                <option style={{ fontFamily: "Georgia" }} value="Georgia">Georgia</option>
+                                <option style={{ fontFamily: "Verdana" }} value="Verdana">Verdana</option>
+                            </NativeSelect.Field>
+                            <NativeSelect.Indicator />
+
+                        </NativeSelect.Root>
+                        
                     </label>
 
                     {/* Text Align */}
                     <label className="flex flex-col">
                         <span className="text-sm font-medium mb-1 text-white">Text Align</span>
-                        <select
-                            value={panel.styling.contentAlign || "left"}
-                            onChange={(e) =>
-                                updateStyling({
-                                    contentAlign: e.target.value as "left" | "center" | "right",
-                                })
-                            }
-                            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="left">Left</option>
-                            <option value="center">Center</option>
-                            <option value="right">Right</option>
-                        </select>
+                        <NativeSelect.Root size="md" width="240px">
+                            <NativeSelect.Field
+                                value={panel.styling.contentAlign}
+                                onChange={(e) => updateStyling({ contentAlign: e.target.value as "left" | "center" | "right" })}
+                            >
+                                <option  value="left">Left</option>
+                                <option value="center">Center</option>
+                                <option value="right">Right</option>
+                            </NativeSelect.Field>
+                            <NativeSelect.Indicator />
+
+                        </NativeSelect.Root>
                     </label>
                 </>
             )}
@@ -364,14 +342,18 @@ export default function EditForm({
             {isScrollingText && (
                 <label className="flex flex-col">
                     <span className="text-sm font-medium mb-1 text-white">Scroll Direction</span>
-                    <select
-                        value={panel.styling.scrollDirection || "left"}
-                        onChange={(e) => updateStyling({ scrollDirection: e.target.value as "left" | "right" })}
-                        className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="left">Left to Right</option>
-                        <option value="right">Right to Left</option>
-                    </select>
+
+                    <NativeSelect.Root size="md" width="240px">
+                            <NativeSelect.Field
+                                onChange={(e) => updateStyling({ scrollDirection: e.target.value as "left" | "right" })}
+                                value={panel.styling.scrollDirection}
+                            >
+                                <option  value="left">Left</option>
+                                <option value="right">Right</option>
+                            </NativeSelect.Field>
+                            <NativeSelect.Indicator />
+
+                        </NativeSelect.Root>
                 </label>
             )}
 

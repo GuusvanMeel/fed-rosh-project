@@ -156,13 +156,6 @@ export default function SectionCanvas({
               onUpdate={handlePanelUpdate}
               onDelete={handlePanelDelete}
             />
-
-
-            <EditForm
-              panel={selectedPanel.panel}
-              onUpdate={handlePanelUpdate}
-              onDelete={handlePanelDelete}
-            />
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-neutral-500">
