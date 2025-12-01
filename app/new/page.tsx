@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
@@ -14,17 +14,24 @@ import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
 import { Edge } from "../component/Sections/Droppable";
 import { ColorProvider, useColors } from "../design-patterns/DesignContext";
 
-export default function MovableColumnList() {
+function MovableColumnListInner() {
   const [sections, setSections] = useState<SectionData[]>([
     { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
   ]);
 
- 
-
-   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
+  const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
   // Get colors at the component level
   const { primaryColor, secondaryColor } = useColors();
+  
+  // Store current colors in refs so they're always up-to-date
+  const primaryColorRef = useRef(primaryColor);
+  const secondaryColorRef = useRef(secondaryColor);
+  
+  useEffect(() => {
+    primaryColorRef.current = primaryColor;
+    secondaryColorRef.current = secondaryColor;
+  }, [primaryColor, secondaryColor]);
 
   function renderPanelById(id: UniqueIdentifier) {
     const panel = sections.flatMap(s => s.panels).find(p => p.i === id);
@@ -100,7 +107,7 @@ export default function MovableColumnList() {
 
   // Reset pending drop
   setPendingDrop({ dropzoneId: null, edge: null });
-  return;   // ⬅️ STOP normal logic
+  return;
 }
     
 
@@ -143,7 +150,7 @@ export default function MovableColumnList() {
           panelType = panelId.split("-")[1];
         }
 
-        // Use styling from dragged panel or current context colors
+        // Use refs to get the CURRENT color values at drop time
         const newPanel: PanelData = {
           i: crypto.randomUUID(),
           x: 0,
@@ -162,8 +169,8 @@ export default function MovableColumnList() {
             borderRadius: 8,
             fontSize: 14,
             fontFamily: "sans-serif",
-            textColor: primaryColor,
-            backgroundColor: secondaryColor,
+            textColor: primaryColorRef.current,  // ✅ Use ref value
+            backgroundColor: secondaryColorRef.current,  // ✅ Use ref value
             padding: 8,
             contentAlign: "left",
           },
@@ -236,29 +243,40 @@ export default function MovableColumnList() {
     setActivePanelId(null);
   };
 
-   return (
-    <Provider>
-      <div className="flex w-full h-screen">
-         <DndContext 
-          onDragStart={({ active }) => {
-        setActivePanelId(active.id);
+  return (
+    <div className="flex w-full h-screen">
+      <DndContext 
+        onDragStart={({ active }) => {
+          setActivePanelId(active.id);
         }}
-          onDragEnd={(event) => {
-            handleDragEnd(event)
-            handleSectionDragEnd({ event, setSections });  // 🔵 handles section reordering
-            handlePanelDragEnd({ event, setSections });    // 🔴 your existing panel movement logic
-            setActivePanelId(null);
-          }}
-            onDragCancel={() => setActivePanelId(null)}>
-          <ColorProvider sections={sections} setSections={setSections}>
-          <Sidebar/>
-          <SectionCanvas sections={sections} setSections={setSections} setPendingDrop={setPendingDrop} />
-          <DragOverlay > 
-            {activePanelId ? renderPanelById(activePanelId) : null}
-          </DragOverlay>
-          </ColorProvider>
-        </DndContext>
-      </div>
+        onDragEnd={(event) => {
+          handleDragEnd(event)
+          handleSectionDragEnd({ event, setSections });
+          handlePanelDragEnd({ event, setSections });
+          setActivePanelId(null);
+        }}
+        onDragCancel={() => setActivePanelId(null)}
+      >
+        <Sidebar/>
+        <SectionCanvas sections={sections} setSections={setSections} setPendingDrop={setPendingDrop} />
+        <DragOverlay> 
+          {activePanelId ? renderPanelById(activePanelId) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
+  );
+}
+
+export default function MovableColumnList() {
+  const [sections, setSections] = useState<SectionData[]>([
+    { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
+  ]);
+
+  return (
+    <Provider>
+      <ColorProvider sections={sections} setSections={setSections}>
+        <MovableColumnListInner />
+      </ColorProvider>
     </Provider>
   );
 }
