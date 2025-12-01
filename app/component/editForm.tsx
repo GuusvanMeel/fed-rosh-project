@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
 import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, Button, Menu, Portal, NativeSelect, For, Select, createListCollection } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
+import DialogBox from './DialogBox';
 
 export default function EditForm({
     panel,
@@ -14,6 +15,13 @@ export default function EditForm({
     onDelete: (id: string) => void;
 }) {
     const panelType = panel.panelProps.type;
+
+    const [dialog, setDialog] = useState({
+        open: false,
+        title: "",
+        message: "",
+        type: "info" as "success" | "error" | "info" | "warning",
+      });
 
 
     const swatches = ["red", "blue", "green"]
@@ -376,11 +384,25 @@ export default function EditForm({
 
             {/* Delete Button */}
             <div className="pt-4">
+                <DialogBox
+                        open={dialog.open}
+                        cancelText='Cancel'
+                        confirmText="Yes, delete this panel"
+                        onOpenChange={(open) => setDialog((d) => ({ ...d, open }))}
+                        title={dialog.title}
+                        message={dialog.message}
+                        type={dialog.type}
+                        onCancel={() => setDialog((d) => ({ ...d, open: false }))}
+                        onConfirm={() => {onDelete(panel.i), setDialog((d) => ({ ...d, open: false }))}}
+                      />
                 <button
                     onClick={() => {
-                        if (window.confirm("Weet je zeker dat je dit item wilt verwijderen?")) {
-                            onDelete(panel.i);
-                        }
+                        setDialog({
+                            open: true,
+                            title: "⚠️ Delete Confirm",
+                            message: "Are you sure you want to delete this panel",
+                            type: "warning",
+                        });
                     }}
                     className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
                 >

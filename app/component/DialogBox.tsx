@@ -44,7 +44,6 @@ export default function DialogBox({
       <Dialog.Backdrop />
       <Dialog.Positioner>
         <Dialog.Content>
-          {showClose && <Dialog.CloseTrigger />}
           <Dialog.Header>
             <Dialog.Title color={colorMap[type]}>{title}</Dialog.Title>
           </Dialog.Header>
@@ -60,7 +59,8 @@ export default function DialogBox({
               )}
               {onConfirm && (
                 <Button
-                  colorScheme={type === "error" ? "red" : "blue"}
+                  bgColor={type === "error" ? "red" : "blue"}
+                  color={"white"}
                   onClick={onConfirm}
                 >
                   {confirmText}
