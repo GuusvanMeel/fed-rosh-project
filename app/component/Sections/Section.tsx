@@ -15,8 +15,6 @@ export interface SectionData {
   name: string;
   panels: PanelData[];
   dropZones: string[];
-  
-  
 }
  
 export default function Section({
