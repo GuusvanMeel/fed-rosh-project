@@ -8,7 +8,7 @@ This is a webpage to make your own websites, using a panel system to drag and dr
 - change panel values easily with UI
 - automatic scaling between mobile and desktop pages
 
-test
+
 
 ## Tech used
 
