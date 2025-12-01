@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { act, useState } from "react";
-import { Box, Flex, VStack, Text, Color } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Flex, VStack, Text } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
-import { motion } from "framer-motion";
 import { panelRegistry } from "@/app/component/panels/panelRegistry";
 import { paletteRegistry } from "../design-patterns/designPaletteTypes";
-import Droppable from "./Sections/Droppable";
 import { PanelWrapper } from "./panels/panelWrapper";
 import { PanelData } from "../types/panel";
-import { DndContext } from "@dnd-kit/core";
-import { SectionData } from "./Sections/Section";
-import ColorPicker from "../design-patterns/ColorPanel";
 import { useColors } from "../design-patterns/DesignContext";
 
 
@@ -40,14 +35,7 @@ export default function Sidebar() {
       submenu: designTypes,
       cursor: "pointer",
       type: "design"
-    },
-    {
-      label: "Settings",
-      icon: FiSettings,
-      submenu: ["Profile", "Account", "Privacy", "Notifications"],
-      cursor: "pointer",
-      type: "settings"
-    },
+    }
   ];
 
   const handleItemClick = (label: string) => {
