@@ -255,6 +255,6 @@ function MovableColumnListInner() {
           </DragOverlay>
         </DndContext>
       </div>
-    </Provider>
+   
   );
 }
