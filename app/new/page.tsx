@@ -20,21 +20,7 @@ export default function MovableColumnList() {
     { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
   ]);
 
- const centerOnCursor: Modifier = ({ transform, active }) => {
-  // If nothing is being dragged, just return the original transform
-  if (!active) return transform;
-
-  // If rect is missing for some reason (rare), also just return transform
-  const rect = active.rect.current.initial;
-  if (!rect) return transform;
-
-  return {
-    ...transform,
-    x: transform.x - rect.width / 2,
-    y: transform.y - rect.height / 2,
-  };
-};
-  
+ 
 
    const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
@@ -293,7 +279,7 @@ export default function MovableColumnList() {
             onDragCancel={() => setActivePanelId(null)}>
           <Sidebar/>
           <SectionCanvas sections={sections} setSections={setSections} setPendingDrop={setPendingDrop} />
-          <DragOverlay modifiers={[centerOnCursor]}> 
+          <DragOverlay > 
             {activePanelId ? renderPanelById(activePanelId) : null}
           </DragOverlay>
         </DndContext>
