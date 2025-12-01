@@ -20,7 +20,7 @@ export default function EditForm({
         open: false,
         title: "⚠️ Delete Confirm",
         message: "Are you sure you want to delete this panel",
-        type: "warning" as "success" | "error" | "info" | "warning",
+        type: "error" as "success" | "error" | "info" | "warning",
       });
 
 
