@@ -23,7 +23,13 @@ test
 ### Maarten
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### Jeffrey
+=======
+ ### [Jeffrey](https://github.com/WorldwideErrors)
+    Sidebar with customizability for the default styles (Background, primary-, 
+    secondary- and accentcolor). Loading in the components in the sidebar.
+>>>>>>> Stashed changes
 =======
  ### [Jeffrey](https://github.com/WorldwideErrors)
     Sidebar with customizability for the default styles (Background, primary-, 
