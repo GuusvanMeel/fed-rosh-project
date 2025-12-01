@@ -30,7 +30,6 @@ export type PanelStyling = {
 }
 
 export type PanelProps = {
-    id: string;
     type: PanelType;
     content: string | string[];
     currentIndex?: number;

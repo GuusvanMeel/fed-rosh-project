@@ -4,9 +4,23 @@ import ImagePanel from "./ImagePanel";
 import { CountdownPanel } from "./CountdownPanel";
 import ScrollingTextPanel from "./ScrollingTextPanel";
 import UrlPanel from "./UrlPanel";
-import { PanelStyling } from "@/app/types/panel";
+import { PanelStyling, PanelType } from "@/app/types/panel";
 
-type RegistryEntry<Props> = {
+type TextPanelProps = { Text: string };
+type VideoPanelProps = { source: string };
+type ImagePanelProps = { source: string };
+type CountdownPanelProps = { targetTime: Date };
+type ScrollingTextProps = {
+  Text: string;
+  fontSize: number;
+  scrollDirection: 'left' | 'right';
+};
+type UrlPanelProps = { Text: string; url: string };
+
+// Union of all possible props
+export type AllPanelProps = TextPanelProps | VideoPanelProps | ImagePanelProps | CountdownPanelProps | ScrollingTextProps | UrlPanelProps;
+
+type RegistryEntry<Props extends AllPanelProps> = {
   component: React.ComponentType<Props>;
   mapProps: (
     content: string | string[],
@@ -22,19 +36,6 @@ type PanelRegistry = {
   scrollingText: RegistryEntry<ScrollingTextProps>;
   url: RegistryEntry<UrlPanelProps>;
 };
-
-
-type TextPanelProps = { Text: string };
-type VideoPanelProps = { source: string };
-type ImagePanelProps = { source: string };
-type CountdownPanelProps = { targetTime: Date };
-type ScrollingTextProps = {
-  Text: string;
-  fontSize: number;
-  scrollDirection: 'left' | 'right';
-};
-type UrlPanelProps = { Text: string; url: string };
-
 
 export const panelRegistry: PanelRegistry = {
   text: {
@@ -72,9 +73,11 @@ export const panelRegistry: PanelRegistry = {
   url: {
     component: UrlPanel,
     mapProps: (content) => ({
-      Text: content[0],
-      url: content[1]
+      Text: Array.isArray(content) ? content[0] : '',
+      url: Array.isArray(content) ? content[1] : ''
     }),
   },
 };
-
+export function isPanelType(type: string): type is PanelType {
+  return type in panelRegistry;
+}

@@ -1,7 +1,7 @@
 "use client";
  
 import { PanelData, PanelType } from "@/app/types/panel";
-import { panelRegistry } from "../panels/panelRegistry";
+import { AllPanelProps, panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
@@ -86,7 +86,6 @@ export default function Section({
       dropZoneId: `${data.id}-zone-1`,
       panelProps:
         {
-          id,
           type,
           content: getDefaultContent(type)
         },
@@ -108,7 +107,7 @@ export default function Section({
   function renderPanel(panel: PanelData) {
   const entry = panelRegistry[panel.panelProps.type];
 
-  const Component = entry.component;
+  const Component = entry.component as React.ComponentType<AllPanelProps>;
   const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
 
   return (

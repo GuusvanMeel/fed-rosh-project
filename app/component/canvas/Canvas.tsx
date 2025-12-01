@@ -7,12 +7,13 @@ import "react-resizable/css/styles.css";
 import { PanelData } from '@/app/types/panel';
 import { CanvasData } from '@/app/types/canvas';
 import { PanelWrapper } from '../panels/panelWrapper';
-import { panelRegistry } from '../panels/panelRegistry';
+import { panelRegistry, AllPanelProps } from '../panels/panelRegistry';
 
 
 
 function renderPanel(panel: PanelData) {
   const entry = panelRegistry[panel.panelProps.type];
+  
 
   if (!entry) {
     return (
@@ -22,7 +23,7 @@ function renderPanel(panel: PanelData) {
     );
   }
 
-  const Component = entry.component;
+  const Component = entry.component as React.ComponentType<AllPanelProps>;
   const mappedProps = entry.mapProps(panel.panelProps.content);
 
   return (

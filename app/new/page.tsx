@@ -7,14 +7,14 @@ import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar, { getDefaultContent } from "../component/sidebar";
 import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
 import { SectionData } from "../component/Sections/Section";
-import { PanelData } from "../types/panel";
-import { panelRegistry } from "../component/panels/panelRegistry";
+import { PanelData, PanelType } from "../types/panel";
+import { AllPanelProps, isPanelType, panelRegistry } from "../component/panels/panelRegistry";
 import { PanelWrapper } from "../component/panels/panelWrapper";
 import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
 import { Edge } from "../component/Sections/Droppable";
 import { useColors } from "../design-patterns/DesignContext";
 
-function MovableColumnListInner() {
+export default function MovableColumnListInner() {
   const [sections, setSections] = useState<SectionData[]>([
     { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
   ]);
@@ -38,8 +38,8 @@ function MovableColumnListInner() {
     if (!panel) return null;
    
     const entry = panelRegistry[panel.panelProps.type];
-    const Component = entry.component;
-    const mappedProps = entry.mapProps(panel.panelProps.content);
+    const Component = entry.component as React.ComponentType<AllPanelProps>;
+    const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
    
     return (
       <div style={{ opacity: 0.5 }}>
@@ -131,16 +131,19 @@ function MovableColumnListInner() {
           !prevSections.some((section) =>
             section.panels.some((p) => p.i === panelId)
           ));
-
+      
       if (isDraggedFromSidebar) {
         console.log("Creating new panel from sidebar");
+        
+              const panelTypeString = panelId.split("-")[1];
 
-        let panelType: string;
-        if (draggedPanelData) {
-          panelType = draggedPanelData.panelProps.type;
-        } else {
-          panelType = panelId.split("-")[1];
+        if (!isPanelType(panelTypeString)) {
+          console.error(`Invalid panel type: ${panelTypeString}`);
+          return prevSections;
         }
+
+        const panelType: PanelType = panelTypeString;
+        
 
         // Use refs to get the CURRENT color values at drop time
         const newPanel: PanelData = {
@@ -151,9 +154,8 @@ function MovableColumnListInner() {
           h: 100,
           dropZoneId: newZoneId,
           panelProps: {
-            id: crypto.randomUUID(),
             type: panelType,
-            content: getDefaultContent(panelType),
+            content: getDefaultContent(panelTypeString),
             currentIndex: 1,
             layout: undefined,
           },

@@ -105,7 +105,6 @@ export default function Sidebar() {
                     w: 220,
                     h: 50,
                     panelProps: {
-                      id: crypto.randomUUID(),
                       type: "text",
                       content: getDefaultContent(subItem),
                       currentIndex: 1,
