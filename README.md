@@ -23,7 +23,7 @@ This is a webpage to make your own websites, using a panel system to drag and dr
 
  ### Sjoerd
 
- ### Guus
+ ### (Guus)[https://github.com/GuusvanMeel]
     Sections, panel movability, database, helped with panel customization, 
     helped with panels, things not mentioned probably made by me.
 
