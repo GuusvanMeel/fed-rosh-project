@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function Counter({label, value, OnChange}:{label:string, value:number, OnChange: (val: number) => void }) {
  
 

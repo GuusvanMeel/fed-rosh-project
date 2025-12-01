@@ -1,17 +1,8 @@
-import { useState } from "react";
-
 import ImagePanel from "./panels/ImagePanel";
 import VideoPanel from "./panels/VideoPanel";
 import TextPanel from "./panels/TextPanel";
-import { Layout } from "react-grid-layout";
+import { PanelProps } from "../types/panel";
 
-export type PanelProps = {
-  id: string;
-  type: "text" | "video" | "image" | "carousel";
-  content: string | string[];
-  currentIndex?: number;
-  layout?: Layout;
-};
 
 
 
@@ -47,7 +38,7 @@ export function Panel({ panel, readonly }: { panel: PanelProps; onUpdate?: (b: P
     </>
   ):
   <>
-      {panel.type === "carousel" && (
+      {panel.type === "countdown" && (
           <TextPanel Text="Not Yet Implemented"></TextPanel>
           // <img
           //   src={panel.content[(panel.currentIndex ?? 0) % Math.max(panel.content.length, 1)]}

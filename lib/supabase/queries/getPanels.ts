@@ -1,12 +1,12 @@
 // lib/supabase/queries/getPanels.ts
+import { PanelData } from "@/app/types/panel";
 import { createClient } from "../client";
-import { PanelData } from "@/app/page";
 
 export async function getPanels(): Promise<PanelData[]> {
   const supabase = createClient(); // no need to await; it's sync
 
   const { data, error } = await supabase
-    .from("panels")
+    .from("panels_v2")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -25,6 +25,7 @@ const mapped: PanelData[] = data.map((row) => ({
     h: row.h,
     backgroundColor: row.backgroundColor,
     panelProps: row.panelProps,
+    styling: row.styling,
   }));
 
   return mapped;

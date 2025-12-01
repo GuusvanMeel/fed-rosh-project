@@ -1,18 +1,17 @@
 "use client";
 
-import { UniqueIdentifier, DragEndEvent, DndContext, DragOverlay } from "@dnd-kit/core";
 import { useState, useRef, useEffect } from "react";
-import { panelRegistry, AllPanelProps, isPanelType } from "./component/panels/panelRegistry";
-import { PanelWrapper } from "./component/panels/panelWrapper";
-import { Edge } from "./component/Sections/Droppable";
-import { SectionData } from "./component/Sections/Section";
-import SectionCanvas from "./component/Sections/SectionCanvas";
-import Sidebar, { getDefaultContent } from "./component/sidebar";
-import { useColors } from "./design-patterns/DesignContext";
-import { handleSectionDragEnd, handlePanelDragEnd } from "./hooks/handleDrags";
-import { PanelType, PanelData } from "./types/panel";
 
-
+import SectionCanvas from "../component/Sections/SectionCanvas";
+import Sidebar, { getDefaultContent } from "../component/sidebar";
+import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
+import { SectionData } from "../component/Sections/Section";
+import { PanelData, PanelType } from "../types/panel";
+import { AllPanelProps, isPanelType, panelRegistry } from "../component/panels/panelRegistry";
+import { PanelWrapper } from "../component/panels/panelWrapper";
+import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
+import { Edge } from "../component/Sections/Droppable";
+import { useColors } from "../design-patterns/DesignContext";
 
 export default function MovableColumnListInner() {
   const [sections, setSections] = useState<SectionData[]>([
