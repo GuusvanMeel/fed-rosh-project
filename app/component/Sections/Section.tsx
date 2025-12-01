@@ -8,7 +8,8 @@ import { Button } from "@chakra-ui/react";
 import Droppable, { Edge } from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
 import { useColors } from "@/app/design-patterns/DesignContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { getDefaultContent } from "../sidebar";
  
 export interface SectionData {
   id: string;
@@ -75,7 +76,7 @@ export default function Section({
   // -----------------------------------------
   function addPanel(type: PanelType) {
     const id = "panel-" + crypto.randomUUID();
- 
+    
     const newPanel: PanelData = {
       i: id,
       x: 0,
@@ -84,23 +85,11 @@ export default function Section({
       h: 100,
       dropZoneId: `${data.id}-zone-1`,
       panelProps:
-        type === "countdown"
-          ? {
-              id,
-              type,
-              content: new Date(Date.now() + 100000).toString()
-            }
-          : type === "url"
-          ? {
-              id,
-              type,
-              content: ["New Panel", "https://www.youtube.com"]
-            }
-          : {
-              id,
-              type,
-              content: "New Panel"
-            },
+        {
+          id,
+          type,
+          content: getDefaultContent(type)
+        },
       styling: {
         backgroundColor: primaryColor,
         textColor: secondaryColor
@@ -117,21 +106,17 @@ export default function Section({
   // Render Panel
   // -----------------------------------------
   function renderPanel(panel: PanelData) {
-    const entry = panelRegistry[panel.panelProps.type];
-    if (!entry) return <div>Unknown panel type</div>;
- 
-    const Component = entry.component;
-    const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
- 
-    return (
-      <PanelWrapper
-        key={panel.i}
-        panel={panel}
-      >
-        <Component {...mappedProps} />
-      </PanelWrapper>
-    );
-  }
+  const entry = panelRegistry[panel.panelProps.type];
+
+  const Component = entry.component;
+  const mappedProps = entry.mapProps(panel.panelProps.content, panel.styling);
+
+  return (
+    <PanelWrapper key={panel.i} panel={panel}>
+      <Component {...mappedProps} />
+    </PanelWrapper>
+  );
+}
  
  
    

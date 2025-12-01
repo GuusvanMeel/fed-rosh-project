@@ -1,4 +1,5 @@
-    import React from 'react';
+    import Image from 'next/image';
+import React from 'react';
 
     interface Team {
     name: string;
@@ -26,14 +27,17 @@
     }`}>
         <div className="flex items-center gap-2">
         {team.logoUrl && (
-            <img 
-            src={team.logoUrl} 
-            alt={team.name} 
-            className="w-5 h-5 rounded-full object-cover border border-gray-500"
-            onError={(e) => {
+          <Image
+          src={team.logoUrl}
+          alt={team.name}
+          width={300}
+          height={100}
+          className="w-5 h-5 rounded-full object-cover border border-gray-500"
+          onError={(e) => {
                 e.currentTarget.src = "/globe.svg";
             }}
-            />
+          />
+           
         )}
         <span className={`text-sm font-medium ${isWinner ? 'text-green-300' : 'text-white'}`}>
             {team.name}

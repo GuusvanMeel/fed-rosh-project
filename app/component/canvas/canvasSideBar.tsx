@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import MyColorPicker from '../MyColorPicker';
 import PanelList from '../panels/PanelList';
 import { PanelData, PanelType } from '@/app/types/panel';
 import { CanvasData } from '@/app/types/canvas';

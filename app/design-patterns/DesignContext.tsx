@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, use } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { SectionData } from "../component/Sections/Section";
 
 interface ColorContextType {

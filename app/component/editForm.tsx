@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
-import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, Button, Menu, Portal, NativeSelect, For, Select, createListCollection } from '@chakra-ui/react';
+import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, NativeSelect } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
 import DialogBox from './DialogBox';
 
@@ -18,13 +18,27 @@ export default function EditForm({
 
     const [dialog, setDialog] = useState({
         open: false,
-        title: "",
-        message: "",
-        type: "info" as "success" | "error" | "info" | "warning",
+        title: "⚠️ Delete Confirm",
+        message: "Are you sure you want to delete this panel",
+        type: "warning" as "success" | "error" | "info" | "warning",
       });
 
 
     const swatches = ["red", "blue", "green"]
+
+    function toggleDialog(){
+        setDialog({
+            open: !dialog.open,
+            title: dialog.title,
+            message: dialog.message,
+            type: dialog.type,
+        });
+    }
+
+    function deletePanel(){
+        onDelete(panel.i);
+        setDialog((d) => ({ ...d, open: false }));
+    }
 
     const updateStyling = (styleUpdates: Partial<PanelData['styling']>) => {
         onUpdate({
@@ -61,18 +75,6 @@ export default function EditForm({
     const isScrollingText = panelType === 'scrollingText';
     const hasMediaContent = panelType === 'image' || panelType === 'video';
     const isUrlPanel = panelType === 'url';
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const result = event.target?.result as string;
-            updateContent(result);
-        };
-        reader.readAsDataURL(file);
-    };
 
     return (
         <div className="space-y-4">
@@ -395,17 +397,10 @@ export default function EditForm({
                         message={dialog.message}
                         type={dialog.type}
                         onCancel={() => setDialog((d) => ({ ...d, open: false }))}
-                        onConfirm={() => {onDelete(panel.i), setDialog((d) => ({ ...d, open: false }))}}
+                        onConfirm={deletePanel}
                       />
                 <button
-                    onClick={() => {
-                        setDialog({
-                            open: true,
-                            title: "⚠️ Delete Confirm",
-                            message: "Are you sure you want to delete this panel",
-                            type: "warning",
-                        });
-                    }}
+                    onClick={toggleDialog}
                     className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
                 >
                     Delete Panel

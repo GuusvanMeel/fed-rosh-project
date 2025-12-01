@@ -29,7 +29,6 @@ export default function DialogBox({
   cancelText,
   onConfirm,
   onCancel,
-  showClose = true,
   children,
 }: DialogBoxProps) {
   const colorMap = {

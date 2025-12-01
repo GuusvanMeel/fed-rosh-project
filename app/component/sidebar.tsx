@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -40,39 +39,6 @@ export default function Sidebar() {
 
   const handleItemClick = (label: string) => {
     setActiveMenu(activeMenu === label ? null : label);
-  };
-
-  const handleDragStart = (e: React.DragEvent, componentName: string) => {
-    e.dataTransfer.setData("component", componentName);
-    e.dataTransfer.effectAllowed = "copy";
-  };
-
-  const handleDragEnd = (e: React.DragEvent) => {
-    const locationX = e.pageX;
-    const locationY = e.pageY;
-
-    
-    };
-
-  // Function to render component or text based on menu type
-  const renderSubmenuItem = (subItem: string, menuType: string) => {
-    if (menuType === "design") {
-      const PaletteComponent = paletteRegistry[subItem]?.component;
-      return (
-        <Box>
-          <Text color="white" fontSize="md" mb={2} fontWeight="semibold">
-            {subItem}
-          </Text>
-          {PaletteComponent && <PaletteComponent />}
-        </Box>
-      );
-    }
-    
-    return (
-      <Text color="white" fontSize="lg">
-        {subItem}
-      </Text>
-    );
   };
 
   return (
@@ -140,7 +106,7 @@ export default function Sidebar() {
                     h: 50,
                     panelProps: {
                       id: crypto.randomUUID(),
-                      type: subItem,
+                      type: "text",
                       content: getDefaultContent(subItem),
                       currentIndex: 1,
                       layout: undefined
@@ -189,7 +155,7 @@ export function getDefaultContent(panelType: string): string | string[] {
     case 'video':
       return 'https://example.com/sample-video.mp4';
     case 'image':
-      return '/globe.svg';
+      return 'https://example.com/sample-image.png';
     case 'countdown':
       return new Date(Date.now() + 24 * 60 * 60 * 1000).getTime().toString(); // 24 hours from now
     case 'scrollingText':

@@ -1,5 +1,4 @@
 import { PanelData } from "@/app/types/panel";
-import { useState } from "react";
 
 export function PanelSettingsForm({
     panel,

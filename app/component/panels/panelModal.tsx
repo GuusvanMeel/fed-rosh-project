@@ -1,5 +1,5 @@
 'use client';
-import { PanelData } from '@/app/types/panel';
+import { contentAlign, PanelData } from '@/app/types/panel';
 import { Button, ButtonGroup, Heading, ColorPicker, HStack, Portal, parseColor, Slider } from "@chakra-ui/react";
 import React, { useState, useEffect } from 'react';
 
@@ -10,7 +10,7 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete }: Props) {
+export default function PanelSettingsModal({ panel, onUpdate, onClose }: Props) {
   const [draft, setDraft] = useState<PanelData | null>(panel);
 
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function PanelSettingsModal({ panel, onUpdate, onClose, onDelete 
             <span className="text-sm font-medium mb-1">Text Align</span>
             <select
               value={draft.styling.contentAlign ?? "left"}
-              onChange={(e) => setDraft({ ...draft, styling: {...draft.styling, contentAlign: e.target.value as any }})}
+              onChange={(e) => setDraft({ ...draft, styling: {...draft.styling, contentAlign: e.target.value as contentAlign }})}
               className="rounded border border-neutral-700 bg-neutral-800 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               <option value="left">Left</option>

@@ -15,6 +15,8 @@ export type PanelData = {
     styling: PanelStyling;
 }
 
+export type contentAlign= "left" | "center" | "right";
+
 export type PanelStyling = {
     backgroundColor: string;
     borderRadius?: number;
@@ -22,7 +24,7 @@ export type PanelStyling = {
     fontFamily?: string;
     textColor?: string;
     padding?: number;
-    contentAlign?: "left" | "center" | "right";
+    contentAlign?: contentAlign;
     opacity?: number;
     scrollDirection?: "left" | "right";
 }

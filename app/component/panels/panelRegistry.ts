@@ -4,43 +4,77 @@ import ImagePanel from "./ImagePanel";
 import { CountdownPanel } from "./CountdownPanel";
 import ScrollingTextPanel from "./ScrollingTextPanel";
 import UrlPanel from "./UrlPanel";
-import { BracketWrapper } from "./BracketPanel";
-import { rounds } from "./BracketPanel";
-import { Round } from "./BracketPanel";
 import { PanelStyling } from "@/app/types/panel";
 
-type RegistryEntry = {
-  component: React.ComponentType<any>;
-  mapProps: (content: any, styling?: PanelStyling) => Record<string, any>;
+type RegistryEntry<Props> = {
+  component: React.ComponentType<Props>;
+  mapProps: (
+    content: string | string[],
+    styling?: PanelStyling
+  ) => Props;
 };
 
-export const panelRegistry: Record<string, RegistryEntry> = {
+type PanelRegistry = {
+  text: RegistryEntry<TextPanelProps>;
+  video: RegistryEntry<VideoPanelProps>;
+  image: RegistryEntry<ImagePanelProps>;
+  countdown: RegistryEntry<CountdownPanelProps>;
+  scrollingText: RegistryEntry<ScrollingTextProps>;
+  url: RegistryEntry<UrlPanelProps>;
+};
+
+
+type TextPanelProps = { Text: string };
+type VideoPanelProps = { source: string };
+type ImagePanelProps = { source: string };
+type CountdownPanelProps = { targetTime: Date };
+type ScrollingTextProps = {
+  Text: string;
+  fontSize: number;
+  scrollDirection: 'left' | 'right';
+};
+type UrlPanelProps = { Text: string; url: string };
+
+
+export const panelRegistry: PanelRegistry = {
   text: {
     component: TextPanel,
-    mapProps: (content: string) => ({ Text: content }),
+    mapProps: (content) => ({
+      Text: Array.isArray(content) ? content[0] : content
+    }),
   },
   video: {
     component: VideoPanel,
-    mapProps: (content: string) => ({ source: content }),
+    mapProps: (content) => ({
+      source: Array.isArray(content) ? content[0] : content
+    }),
   },
   image: {
     component: ImagePanel,
-    mapProps: (content: string) => ({ source: content }),
+    mapProps: (content) => ({
+      source: Array.isArray(content) ? content[0] : content
+    }),
   },
   countdown: {
     component: CountdownPanel,
-    mapProps: (content: string) => ({ targetTime: new Date(content) }),
+    mapProps: (content) => ({
+      targetTime: new Date(Array.isArray(content) ? content[0] : content)
+    }),
   },
   scrollingText: {
     component: ScrollingTextPanel,
-    mapProps: (content: string, styling?: PanelStyling) => ({ 
-      Text: content,
-      fontSize: styling?.fontSize || 96,
-      scrollDirection: styling?.scrollDirection || 'right'
+    mapProps: (content, styling) => ({
+      Text: content as string,
+      fontSize: styling?.fontSize ?? 96,
+      scrollDirection: styling?.scrollDirection ?? "right",
     }),
   },
   url: {
     component: UrlPanel,
-    mapProps: ([text, url]: [string, string]) => ({ Text: text, url }),
+    mapProps: (content) => ({
+      Text: content[0],
+      url: content[1]
+    }),
   },
-} as const;
+};
+

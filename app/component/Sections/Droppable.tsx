@@ -10,7 +10,7 @@ interface DroppableProps {
   children: React.ReactNode;
   onEdgeHover?: (info: { dropzoneId: string; edge: Edge }) => void;
   OnDelete:() => void;
-  hasPanels: Boolean    
+  hasPanels: boolean    
 }
 
 export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels }: DroppableProps) {

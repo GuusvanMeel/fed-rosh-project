@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import ImagePanel from "./panels/ImagePanel";
 import VideoPanel from "./panels/VideoPanel";
 import TextPanel from "./panels/TextPanel";
