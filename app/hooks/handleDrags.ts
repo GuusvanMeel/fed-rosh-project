@@ -95,11 +95,9 @@ export const handlePanelDragEnd = ({ event, setSections }: HandleProps) => {
     }
 
     const newSectionId = overId.split("-zone-")[0];
-    console.log(newSectionId)
-    console.log(sourceSectionId)
+    
     if (overId.includes("-zone-") && newSectionId === sourceSectionId) {
       console.log("🟣 SAME SECTION - SWITCH ZONE");
-      console.log("hier")
       const updatedPanel = { ...panelToMove, dropZoneId: overId };
 
       return prevSections.map(section => {

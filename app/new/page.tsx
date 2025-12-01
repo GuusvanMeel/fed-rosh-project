@@ -52,48 +52,102 @@ export default function MovableColumnList() {
   
     const { active, over } = event;    
     
-    if (pendingDrop.edge === "left" || pendingDrop.edge === "right") {
-      
+   if (pendingDrop.edge === "left" || pendingDrop.edge === "right") {
+  console.log("🟦 EDGE DROP TRIGGERED");
+  
   const panelId = active.id as string;
   const { dropzoneId, edge } = pendingDrop;
-  if (!dropzoneId) return;
+
+  console.log("➡️ Panel ID:", panelId);
+  console.log("➡️ Hovered Dropzone ID:", dropzoneId);
+  console.log("➡️ Edge:", edge);
+
+  if (!dropzoneId) {
+    console.warn("❌ No dropzoneId found in pendingDrop.");
+    return;
+  }
 
   setSections(prev => {
-    // 1. Find section containing this dropzone
+    console.log("📂 PREV SECTIONS:", prev);
+
+    // 1. Locate correct section
     const sectionIndex = prev.findIndex(s => s.dropZones.includes(dropzoneId));
-    
+    console.log("🔍 sectionIndex:", sectionIndex);
+
+    if (sectionIndex === -1) {
+      console.error("❌ Could not find section containing dropzone:", dropzoneId);
+      return prev;
+    }
 
     const section = prev[sectionIndex];
+    console.log("📁 SECTION FOUND:", section);
+
+    // 2. Locate dropzone index
     const dzIndex = section.dropZones.indexOf(dropzoneId);
+    console.log("🔢 Dropzone index inside section:", dzIndex);
+    
+    if (dzIndex === -1) {
+      console.error("❌ dropzoneId not found inside section.dropZones");
+      return prev;
+    }
+
+    // 3. Create new dropzone ID
+    const newZoneId = `${section.id}-zone-${crypto.randomUUID()}`;
+    console.log("🆕 New Dropzone ID:", newZoneId);
 
     const newDropZones = [...section.dropZones];
-    const newZoneId = `${section.id}-zone-${crypto.randomUUID()}`;
+    console.log("📜 Old DropZones:", section.dropZones);
 
-    // Insert before or after
+    // Insert new dropzone left or right of hovered one
     if (edge === "left") {
+      console.log("📥 Inserting new zone LEFT of", dropzoneId);
       newDropZones.splice(dzIndex, 0, newZoneId);
     } else {
+      console.log("📥 Inserting new zone RIGHT of", dropzoneId);
       newDropZones.splice(dzIndex + 1, 0, newZoneId);
     }
 
-    // Move panel into this new zone
-    const newPanels = section.panels.map(p =>
-      p.i === panelId ? { ...p, dropZoneId: newZoneId } : p
-    );
+    console.log("📜 New DropZones:", newDropZones);
 
+    // 4. Move panel into new zone
+    console.log("📦 OLD PANELS:", section.panels);
+
+    const newPanels = section.panels.map(p => {
+      if (p.i === panelId) {
+        console.log("✅ MATCH: Moving panel", p.i, "into", newZoneId);
+        return { ...p, dropZoneId: newZoneId };
+      }
+      return p;
+    });
+
+    const movedPanel = newPanels.find(p => p.i === panelId);
+    if (movedPanel?.dropZoneId !== newZoneId) {
+      console.error("❌ PANEL WAS NOT MOVED. Panel found:", movedPanel);
+    } else {
+      console.log("🎉 Panel successfully moved:", movedPanel);
+    }
+
+    // 5. Build updated section
     const updatedSection = {
       ...section,
       dropZones: newDropZones,
       panels: newPanels,
     };
 
-    return prev.map((s, i) => i === sectionIndex ? updatedSection : s);
+    console.log("📦 UPDATED SECTION RESULT:", updatedSection);
+
+    return prev.map((s, i) =>
+      i === sectionIndex ? updatedSection : s
+    );
   });
 
-  // Reset pending drop
+  console.log("🔄 Resetting pendingDrop");
   setPendingDrop({ dropzoneId: null, edge: null });
-  return;   // ⬅️ STOP normal logic
+
+  console.log("⛔ STOPPING normal drag logic after edge drop.");
+  return;
 }
+
     
  
     if (!over) {
@@ -239,8 +293,6 @@ export default function MovableColumnList() {
         }}
           onDragEnd={(event) => {
             handleDragEnd(event)
-            handleSectionDragEnd({ event, setSections });  // 🔵 handles section reordering
-            handlePanelDragEnd({ event, setSections });    // 🔴 your existing panel movement logic
             setActivePanelId(null);
           }}
             onDragCancel={() => setActivePanelId(null)}>
