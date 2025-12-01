@@ -40,7 +40,7 @@ export default function PanelSettings({
           y: 0,
           w: 3,
           h: 3,
-          panelProps: { id, type, content: "New Panel" },
+          panelProps: { type, content: "New Panel" },
           styling:{
           backgroundColor: "#ffff",
           textColor: "#030303"

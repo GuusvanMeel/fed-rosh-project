@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 
-import { Provider } from "@/components/ui/provider";
 import SectionCanvas from "../component/Sections/SectionCanvas";
 import Sidebar, { getDefaultContent } from "../component/sidebar";
 import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";

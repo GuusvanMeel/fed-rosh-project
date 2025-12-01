@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Box, Flex, VStack, Text } from "@chakra-ui/react";
-import { FiSettings } from "react-icons/fi";
 import { LuBox, LuPalette } from "react-icons/lu";
 import { panelRegistry } from "@/app/component/panels/panelRegistry";
 import { paletteRegistry } from "../design-patterns/designPaletteTypes";
