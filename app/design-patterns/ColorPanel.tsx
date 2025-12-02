@@ -32,6 +32,7 @@ export default function ColorPicker() {
         width="100%"
         height="40px"
         padding="0"
+        border={0}
       />
       <p className="text-center text-small">Primary Color</p>
       <Input
@@ -45,6 +46,7 @@ export default function ColorPicker() {
         width="100%"
         height="40px"
         padding="0"
+        border={0}
       />
 
       <p className="text-center">Secondary Color</p>
@@ -59,6 +61,7 @@ export default function ColorPicker() {
         width="100%"
         height="40px"
         padding="0"
+        border={0}
       />
 
       <p className="text-center">Accent Color</p>
@@ -73,6 +76,7 @@ export default function ColorPicker() {
         width="100%"
         height="40px"
         padding="0"
+        border={0}
       />
 
       <Button 
