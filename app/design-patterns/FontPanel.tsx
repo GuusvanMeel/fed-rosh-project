@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { NativeSelectField, NativeSelectRoot } from "@chakra-ui/react";
 import { useColors } from "../design-patterns/DesignContext";
 
