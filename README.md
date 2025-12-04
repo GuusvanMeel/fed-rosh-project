@@ -37,7 +37,8 @@
 
 ### [Jeffrey](https://github.com/WorldwideErrors)
 
-- Sidebar met aanpasbare standaardstijlen (achtergrond, primaire, secundaire en accentkleuren)  
+- Sidebar met aanpasbare standaardstijlen (achtergrond, primaire, secundaire en accentkleuren)
+- Implementatie van verschillende base-fonts 
 - Laden van componenten in de sidebar  
 
 ### Sjoerd
