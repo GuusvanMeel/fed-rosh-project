@@ -30,7 +30,10 @@
 
 ### [Maarten](https://github.com/Maarten0162)
 
-*Bijdragen nog niet gespecificeerd*
+- Alle type panels ontwikkeld  
+- Cloudinary image- en video-upload geïmplementeerd  
+- Complete UI-overhaul met Chakra UI  
+- Drag-and-drop functionaliteit in de sidebar toegevoegd
 
 ### [Jeffrey](https://github.com/WorldwideErrors)
 
