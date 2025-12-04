@@ -1,36 +1,60 @@
-# Rosh
+# Rosh Website Builder
 
-This is a webpage to make your own websites, using a panel system to drag and drop inside sections with columns, to create a easy to use page maker similarly to other divibuilders. The goal is to offer users an easy to use and beginner friendly way to make webpages without any programming knowledge
+**Rosh Website Builder** is een visuele website builder ontwikkeld voor **Rosh**. Het project biedt een eenvoudige en intuïtieve manier om websites te bouwen zonder programmeerkennis. Gebruikers kunnen elementen zoals tekst, afbeeldingen, video’s en scrollende panels slepen en neerzetten in secties en kolommen, waardoor het maken van een webpagina net zo eenvoudig wordt als werken met een design tool.
+
+## Live Demo
+
+# Bekijk de app hier: [FED Rosh App](https://fed-roshan-project.vercel.app/)
+
+## Source Code
+
+# De code is beschikbaar op GitHub: [FED Rosh Project](https://github.com/GuusvanMeel/fed-rosh-project)
+
 
 ## Features
 
-- Drag and drop panels
-- change panel values easily with UI
-- automatic scaling between mobile and desktop pages
+- Drag-and-drop panels voor content  
+- Panelwaarden aanpassen via een gebruiksvriendelijke interface  
+- Automatische schaalbaarheid tussen desktop en mobiele weergave  
+- Flexibele secties en kolommen voor custom designs  
 
-test
+## Technologieën
 
-## Tech used
+- **Framework:** Next.js  
+- **Taal:** React + TypeScript  
+- **Styling & UI:** ChakraUI, Tailwind CSS  
+- **Drag & Drop:** DnD-Kit  
+- **Database & Auth:** Supabase  
 
-- Next.js
-- react + typescript
-- ChakraUI
-- Supabase
-- DnD-Kit
+## Team & Contributions
 
-## Contributions
+### [Maarten](https://github.com/Maarten0162)
 
-### Maarten
-
+*Bijdragen nog niet gespecificeerd*
 
 ### [Jeffrey](https://github.com/WorldwideErrors)
-    Sidebar with customizability for the default styles (Background, primary-, 
-    secondary- and accentcolor). Loading in the components in the sidebar.
+
+- Sidebar met aanpasbare standaardstijlen (achtergrond, primaire, secundaire en accentkleuren)  
+- Laden van componenten in de sidebar  
 
 ### Sjoerd
 
+*Bijdragen nog niet gespecificeerd*
 
 ### [Guus](https://github.com/GuusvanMeel)
 
-    Sections, panel movability, database, helped with panel customization,
-    helped with panels, things not mentioned probably made by me.
+- Secties en panel verplaatsbaarheid  
+- Database-integratie  
+- Hulp bij panel-aanpassingen en algemene componenten  
+
+## Gebruik
+
+De applicatie is volledig visueel en vereist geen commandoregel. Alles kan via de interface worden gebouwd en bewerkt.  
+
+## Hosting
+
+De app is gehost op Vercel en kan direct worden bekeken via de live demo link hierboven.
+
+## Licentie
+
+Geen specifieke licentie van toepassing. Het project is uitsluitend ontwikkeld voor Rosh.
