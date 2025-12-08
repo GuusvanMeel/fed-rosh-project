@@ -53,6 +53,94 @@
 
 De applicatie is volledig visueel en vereist geen commandoregel. Alles kan via de interface worden gebouwd en bewerkt.  
 
+## File Structure
+```txt
+fed-rosh-project/
+├── .gitignore
+├── app/
+│   ├── component/
+│   │   ├── canvas/
+│   │   │   ├── Canvas.tsx
+│   │   │   └── canvasSideBar.tsx
+│   │   ├── Counter.tsx
+│   │   ├── DialogBox.tsx
+│   │   ├── editForm.tsx
+│   │   ├── MyColorPicker.tsx
+│   │   ├── panel.tsx
+│   │   ├── panels/
+│   │   │   ├── BracketPanel.tsx
+│   │   │   ├── CountdownPanel.tsx
+│   │   │   ├── ImagePanel.tsx
+│   │   │   ├── PanelList.tsx
+│   │   │   ├── panelModal.tsx
+│   │   │   ├── panelRegistry.ts
+│   │   │   ├── panelWrapper.tsx
+│   │   │   ├── ScrollingTextPanel.tsx
+│   │   │   ├── TextPanel.tsx
+│   │   │   ├── UrlPanel.tsx
+│   │   │   └── VideoPanel.tsx
+│   │   ├── panelsettings/
+│   │   │   └── PanelSettings.tsx
+│   │   ├── reactbits/
+│   │   │   ├── CurvedLoop.css
+│   │   │   └── CurvedLoop.jsx
+│   │   ├── Sections/
+│   │   │   ├── Droppable.tsx
+│   │   │   ├── Section.tsx
+│   │   │   ├── SectionCanvas.tsx
+│   │   │   └── SectionWrapper.tsx
+│   │   ├── sidebar.tsx
+│   │   ├── SortableList.tsx
+│   │   └── UploadWidget.tsx
+│   ├── design-patterns/
+│   │   ├── ColorPanel.tsx
+│   │   ├── DesignContext.tsx
+│   │   ├── designPaletteTypes.tsx
+│   │   └── FontPanel.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── hooks/
+│   │   └── handleDrags.ts
+│   ├── layout.tsx
+│   ├── new/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── page.tsx
+│   └── types/
+│       ├── canvas.ts
+│       └── panel.ts
+├── components/
+│   └── ui/
+│       ├── color-mode.tsx
+│       ├── panelsettingsform.tsx
+│       ├── provider.tsx
+│       ├── toaster.tsx
+│       └── tooltip.tsx
+├── components.json
+├── eslint.config.mjs
+├── lib/
+│   ├── supabase/
+│   │   ├── client.ts
+│   │   ├── queries/
+│   │   │   ├── deletePanel.ts
+│   │   │   ├── getPanels.ts
+│   │   │   └── savePanels.ts
+│   │   └── server.ts
+│   └── utils.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public/
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+└── tsconfig.json
+```
+
 ## Licentie
 
 Geen specifieke licentie van toepassing. Het project is uitsluitend ontwikkeld voor Rosh.
