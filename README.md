@@ -2,13 +2,9 @@
 
 **Rosh Website Builder** is een visuele website builder ontwikkeld voor **Rosh**. Het project biedt een eenvoudige en intuïtieve manier om websites te bouwen zonder programmeerkennis. Gebruikers kunnen elementen zoals tekst, afbeeldingen, video’s en scrollende panels slepen en neerzetten in secties en kolommen, waardoor het maken van een webpagina net zo eenvoudig wordt als werken met een design tool.
 
-# Live Demo
+## Bekijk de website hier: [FED Rosh App](https://fed-roshan-project.vercel.app/)
 
-## Bekijk de app hier: [FED Rosh App](https://fed-roshan-project.vercel.app/)
 
-# Source Code
-
-## De code is beschikbaar op GitHub: [FED Rosh Project](https://github.com/GuusvanMeel/fed-rosh-project)
 
 
 ## Features
@@ -26,6 +22,7 @@
 - **Styling & UI:** ChakraUI, Tailwind CSS  
 - **Drag & Drop:** DnD-Kit  
 - **Database & Auth:** Supabase  
+- **hosting** vercel
 
 ## Team & Contributions
 
@@ -55,10 +52,6 @@
 ## Gebruik
 
 De applicatie is volledig visueel en vereist geen commandoregel. Alles kan via de interface worden gebouwd en bewerkt.  
-
-## Hosting
-
-De app is gehost op Vercel en kan direct worden bekeken via de live demo link hierboven.
 
 ## Licentie
 
