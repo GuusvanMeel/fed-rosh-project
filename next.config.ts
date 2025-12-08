@@ -2,14 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-};
-
-module.exports = {
   images: {
     domains: ["example.com"], // Add your image host here
   },
   experimental: {
-    optimizeCss: true, // Next.js 13+ only
+    optimizeCss: false, // Disabled due to missing critters dependency
   },
 };
+
 export default nextConfig;
