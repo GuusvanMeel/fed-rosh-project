@@ -43,7 +43,7 @@
 
 *Bijdragen nog niet gespecificeerd*
 
-### [Guus](https://github.com/GuusvanMeel)
+### [Guus](https://github.com/GuusvanMeel) | [Portfolio](https://portfolio-fed-guus-projects-37e43d70.vercel.app/)
 
 - Secties en panel verplaatsbaarheid  
 - Database-integratie  
