@@ -134,6 +134,7 @@ export default function SectionCanvas({
                 
               />
             ))}
+          
           </div>
       </div>
 
