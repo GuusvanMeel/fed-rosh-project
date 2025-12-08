@@ -45,7 +45,8 @@
 
 ### [Guus](https://github.com/GuusvanMeel) | [Portfolio](https://portfolio-fed-guus-projects-37e43d70.vercel.app/)
 
-- Secties en panel verplaatsbaarheid  
+- Secties en dropzones
+- het kunnen slepen van de panelen
 - Database-integratie  
 - Hulp bij panel-aanpassingen en algemene componenten  
 
