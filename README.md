@@ -47,8 +47,7 @@
 
 - Secties en dropzones
 - het kunnen slepen van de panelen
-- Database-integratie  
-- Hulp bij panel-aanpassingen en algemene componenten  
+- Hulp bij panel-customization en algemene componenten  
 
 ## Gebruik
 
