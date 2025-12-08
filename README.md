@@ -26,7 +26,7 @@
 
 ## Team & Contributions
 
-### [Maarten](https://github.com/Maarten0162) | [Portfolio](https://portfolio-website-ecru-omega-46.vercel.app/)
+### [Maarten](https://github.com/Maarten0162) | [Portfolio](https://github.com/Maarten0162)
 
 - Alle type panels ontwikkeld  
 - Cloudinary image- en video-upload geïmplementeerd  
