@@ -13,6 +13,10 @@ interface ColorContextType {
   accentColor: string;
   setAccentColor: (c: string) => void;
   applyColorsToAllPanels: () => void;
+
+  font: string;
+  setFont: (f: string) => void;
+  applyFontToAllPanels?: () => void;
 }
 
 const ColorContext = createContext<ColorContextType>({
@@ -25,6 +29,10 @@ const ColorContext = createContext<ColorContextType>({
   accentColor: "#57b1ff",
   setAccentColor: () => {},
   applyColorsToAllPanels: () => {},
+
+  font: "Arial",
+  setFont: () => {},
+  applyFontToAllPanels: () => {},
 });
 
 export const ColorProvider = ({
@@ -40,6 +48,7 @@ export const ColorProvider = ({
   const [primaryColor, setPrimaryColor] = useState("#ffffff");
   const [secondaryColor, setSecondaryColor] = useState("#000000");
   const [accentColor, setAccentColor] = useState("#57b1ff");
+  const [font, setFont] = useState("Arial");
 
   const handleSetBackgroundColor = (c: string) => {
     console.log("Setting background color to:", c);
@@ -59,6 +68,11 @@ export const ColorProvider = ({
   const handleSetAccentColor = (c: string) => {
     console.log("Setting accent color to:", c);
     setAccentColor(c);
+  };
+
+  const handleSetFontFamily = (f: string) => {
+    console.log("Setting font family to:", f);
+    setFont(f);
   };
 
   const applyColorsToAllPanels = () => {
@@ -83,6 +97,27 @@ export const ColorProvider = ({
     });
   };
 
+  const applyFontToAllPanels = () => {
+    console.log("Applying font to all panels");
+    console.log("Font:", font);
+    console.log("Current sections:", sections);
+    
+    setSections(prevSections => {
+      const updated = prevSections.map(section => ({
+        ...section,
+        panels: section.panels.map(panel => ({
+          ...panel,
+          styling: {
+            ...panel.styling,
+            fontFamily: font,
+          }
+        }))
+      }));
+      console.log("Updated sections:", updated);
+      return updated;
+    });
+  };
+
   return (
     <ColorContext.Provider
       value={{
@@ -95,6 +130,9 @@ export const ColorProvider = ({
         accentColor,
         setAccentColor: handleSetAccentColor,
         applyColorsToAllPanels,
+        font,
+        setFont: handleSetFontFamily,
+        applyFontToAllPanels,
       }}
     >
       {children}

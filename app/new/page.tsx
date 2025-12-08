@@ -11,7 +11,7 @@ import { AllPanelProps, isPanelType, panelRegistry } from "../component/panels/p
 import { PanelWrapper } from "../component/panels/panelWrapper";
 import { handleSectionDragEnd, handlePanelDragEnd } from "../hooks/handleDrags";
 import { Edge } from "../component/Sections/Droppable";
-import { useColors } from "../design-patterns/DesignContext";
+import { ColorProvider, useColors } from "../design-patterns/DesignContext";
 
 export default function MovableColumnListInner() {
   const [sections, setSections] = useState<SectionData[]>([
@@ -21,16 +21,18 @@ export default function MovableColumnListInner() {
   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
 
   // Get colors at the component level
-  const { primaryColor, secondaryColor } = useColors();
+  const { primaryColor, secondaryColor, font} = useColors();
   
   // Store current colors in refs so they're always up-to-date
   const primaryColorRef = useRef(primaryColor);
   const secondaryColorRef = useRef(secondaryColor);
+  const fontRef = useRef(font);
   
   useEffect(() => {
     primaryColorRef.current = primaryColor;
     secondaryColorRef.current = secondaryColor;
-  }, [primaryColor, secondaryColor]);
+    fontRef.current = font;
+  }, [primaryColor, secondaryColor, font]);
 
   function renderPanelById(id: UniqueIdentifier) {
     const panel = sections.flatMap(s => s.panels).find(p => p.i === id);
@@ -161,7 +163,7 @@ export default function MovableColumnListInner() {
           styling: draggedPanelData?.styling || {
             borderRadius: 8,
             fontSize: 14,
-            fontFamily: "sans-serif",
+            fontFamily: fontRef.current,
             textColor: primaryColorRef.current,  // ✅ Use ref value
             backgroundColor: secondaryColorRef.current,  // ✅ Use ref value
             padding: 8,
@@ -249,11 +251,13 @@ export default function MovableColumnListInner() {
             setActivePanelId(null);
           }}
             onDragCancel={() => setActivePanelId(null)}>
+          <ColorProvider sections={sections} setSections={setSections}>
           <Sidebar/>
           <SectionCanvas sections={sections} setSections={setSections} setPendingDrop={setPendingDrop} />
           <DragOverlay > 
             {activePanelId ? renderPanelById(activePanelId) : null}
           </DragOverlay>
+          </ColorProvider>
         </DndContext>
       </div>
    

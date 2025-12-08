@@ -8,5 +8,8 @@ module.exports = {
   images: {
     domains: ["example.com"], // Add your image host here
   },
+  experimental: {
+    optimizeCss: true, // Next.js 13+ only
+  },
 };
 export default nextConfig;

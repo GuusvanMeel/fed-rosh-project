@@ -1,5 +1,6 @@
 import React from "react";
 import ColorPanel from "./ColorPanel";
+import FontPanel from "./FontPanel";
 
 type PaletteEntry = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +12,7 @@ export const paletteRegistry: Record<string, PaletteEntry> = {
     component: ColorPanel,
   },
   Font: {
-    component: () => <div>Font Panel</div>,
+    component: FontPanel,
   }
 } as const;
 
