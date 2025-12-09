@@ -10,10 +10,11 @@ interface DroppableProps {
   children: React.ReactNode;
   onEdgeHover?: (info: { dropzoneId: string; edge: Edge }) => void;
   OnDelete:() => void;
-  hasPanels: boolean    
+  hasPanels: boolean  
+  onOpenPanelModal: (zoneId: string) => void;  
 }
 
-export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels }: DroppableProps) {
+export default function Droppable({ UID, children, onEdgeHover, OnDelete, hasPanels, onOpenPanelModal }: DroppableProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: UID,
   });  
@@ -85,17 +86,17 @@ const containerRef = useRef<HTMLDivElement | null>(null);
         padding: 0
       }}
     >
-   <div  style={{ pointerEvents: "auto" }}>
-      
+   <div  style={{ pointerEvents: "auto" }}>      
        <CloseButton
     size="sm"
     color="red.500"
     position="absolute"      
     top="6px"                
-    right="6px"
+    left="6px"
     pointerEvents="auto"
     onClick={OnDelete}
     _hover={{ bg: "red.100" }}
+   zIndex={10}
   />
   {edge === "left" && (
   <div
@@ -129,8 +130,67 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     }}
   />
 )}
+{children}
+   {!hasPanels && (
+  <div
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "3px",
+      pointerEvents: "none",
+      zIndex: 5,
+    }}
+  >
+    {/* Mini inward arrows */}
+    <img
+      src="/inwardArrows.svg"
+      alt="inward arrows"
+      style={{
+        width: "18px",
+        height: "18px",
+        opacity: 0.7,
+      }}
+    />
 
-    {children}
+    {/* OR text */}
+    <div
+      style={{
+        fontSize: "10px",
+        color: "#444",
+        opacity: 0.8,
+        fontWeight: 500,
+        marginTop: "-2px",
+      }}
+    >
+      OR
+    </div>
+
+    {/* Add panel button */}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onOpenPanelModal(UID);
+      }}
+      style={{
+        backgroundColor: "black",
+        color: "white",
+        padding: "2px 8px",
+        borderRadius: "4px",
+        fontSize: "11px",
+        pointerEvents: "auto",
+        marginTop: "-2px",
+        
+      }}
+    >
+      Add a panel
+    </button>
+  </div>
+)}
   </div>
 </div>
   );

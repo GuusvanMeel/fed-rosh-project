@@ -24,14 +24,15 @@ export default function Section({
   onDelete,
   onPanelEdit,
   setPendingDrop,
+  onRequestAddPanel,
 }: {
   data: SectionData;
   onChange: (updated: SectionData) => void;
   onDelete: () => void;
   onPanelEdit: (panelId: string) => void;
   setPendingDrop: (info: { dropzoneId: string; edge: Edge }) => void;
+  onRequestAddPanel: (zoneId: string) => void;
 }) {
-  const { primaryColor, secondaryColor } = useColors();
  
       const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
       const columns = data.dropZones.map(zoneId => {
@@ -46,7 +47,8 @@ export default function Section({
   // Drop Zones
   // -----------------------------------------
   function addDropZone() {
-    const newZoneId = `${data.id}-zone-${data.dropZones.length + 1}`;
+    if(data.dropZones.length > 6)return;
+    const newZoneId = `${data.id}-zone-${crypto.randomUUID()}`;
  
     onChange({
       ...data,
@@ -71,35 +73,7 @@ export default function Section({
     });
   }
  
-  // -----------------------------------------
-  // Create Panel
-  // -----------------------------------------
-  function addPanel(type: PanelType) {
-    const id = "panel-" + crypto.randomUUID();
-    
-    const newPanel: PanelData = {
-      i: id,
-      x: 0,
-      y: 0,
-      w: 300,
-      h: 100,
-      dropZoneId: `${data.id}-zone-1`,
-      panelProps:
-        {
-          type,
-          content: getDefaultContent(type)
-        },
-      styling: {
-        backgroundColor: primaryColor,
-        textColor: secondaryColor
-      }
-    };
  
-    onChange({
-      ...data,
-      panels: [...data.panels, newPanel]
-    });
-  }
  
   // -----------------------------------------
   // Render Panel
@@ -132,24 +106,6 @@ export default function Section({
         </div>
  
         <div className="flex gap-2">
-          {panelTypes.map(type => (
-            <Button
-              key={type}
-              size="xs"
-              variant="surface"
-              style={{
-                backgroundColor: "rgba(0,128,0,0.85)",
-                color: "white",
-                borderRadius: "0.4rem",
-                padding: "0.25rem 0.6rem",
-                fontSize: "0.75rem"
-              }}
-              onClick={() => addPanel(type)}
-            >
-              {type === "scrollingText" ? "Scrolling Text" : type}
-            </Button>
-          ))}
- 
           <Button
             size="xs"
             variant="surface"
@@ -201,6 +157,7 @@ export default function Section({
               OnDelete={() => removeDropZone(zoneId)}
               hasPanels={panelsInZone.length > 0}
               onEdgeHover={setPendingDrop}
+              onOpenPanelModal={onRequestAddPanel}
             >
               <SortableContext items={panelsInZone.map(p => p.i)} >
                 {panelsInZone.map(panel => (
@@ -215,7 +172,7 @@ export default function Section({
                                     {hoveredPanelId === panel.i && (
                                         <button
                                             onClick={(e) => handleEditClick(e, panel.i)}
-                                            className="relative top-0 right-0 w-7 h-7 !bg-blue-600 !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
+                                            className="absolute top-0 right-0 w-7 h-7 bg-blue-600! !hover:!bg-blue-700 rounded shadow-lg flex items-center justify-center transition-all duration-200 z-10 cursor-pointer"
                                             aria-label="Edit panel"
                                         >
                                             <svg
