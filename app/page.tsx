@@ -107,40 +107,88 @@ export default function MovableColumnListInner() {
     const { active, over } = event;    
     
     if (pendingDrop.edge === "left" || pendingDrop.edge === "right") {
-      const panelId = active.id as string;
-      const { dropzoneId, edge } = pendingDrop;
-      if (!dropzoneId) return;
+  const panelId = active.id as string;
+  const { dropzoneId, edge } = pendingDrop;
+  if (!dropzoneId) return;
 
-      setSections(prev => {
-        const sectionIndex = prev.findIndex(s => s.dropZones.includes(dropzoneId));
-        const section = prev[sectionIndex];
-        const dzIndex = section.dropZones.indexOf(dropzoneId);
+  setSections(prev => {
+    // 1) Find target section (where the edge/dropzone lives)
+    const targetSectionIndex = prev.findIndex(s =>
+      s.dropZones.includes(dropzoneId)
+    );
+    if (targetSectionIndex === -1) return prev;
 
-        const newDropZones = [...section.dropZones];
-        const newZoneId = `${section.id}-zone-${crypto.randomUUID()}`;
+    const targetSection = prev[targetSectionIndex];
+    const dzIndex = targetSection.dropZones.indexOf(dropzoneId);
 
-        if (edge === "left") {
-          newDropZones.splice(dzIndex, 0, newZoneId);
-        } else {
-          newDropZones.splice(dzIndex + 1, 0, newZoneId);
-        }
+    // 2) Create new dropzone left/right of the hovered one
+    const newDropZones = [...targetSection.dropZones];
+    const newZoneId = `${targetSection.id}-zone-${crypto.randomUUID()}`;
 
-        const newPanels = section.panels.map(p =>
-          p.i === panelId ? { ...p, dropZoneId: newZoneId } : p
-        );
+    if (edge === "left") {
+      newDropZones.splice(dzIndex, 0, newZoneId);
+    } else {
+      newDropZones.splice(dzIndex + 1, 0, newZoneId);
+    }
 
-        const updatedSection = {
+    // 3) Find the panel & the section it currently lives in
+    let sourceSectionIndex = -1;
+    let panelToMove: PanelData | null = null;
+
+    prev.forEach((section, idx) => {
+      const found = section.panels.find(p => p.i === panelId);
+      if (found) {
+        sourceSectionIndex = idx;
+        panelToMove = found;
+      }
+    });
+
+    if (!panelToMove) return prev;
+
+    // 4) Build new sections array with:
+    //    - panel removed from source section
+    //    - panel added to target section with new dropZoneId
+    return prev.map((section, idx) => {
+      // Source == target: just update dropZoneId in-place
+      if (idx === sourceSectionIndex && idx === targetSectionIndex) {
+        return {
           ...section,
           dropZones: newDropZones,
-          panels: newPanels,
+          panels: section.panels.map(p =>
+            p.i === panelId ? { ...p, dropZoneId: newZoneId } : p
+          ),
         };
+      }
 
-        return prev.map((s, i) => i === sectionIndex ? updatedSection : s);
-      });
+      // Source only: remove panel
+      if (idx === sourceSectionIndex) {
+        return {
+          ...section,
+          panels: section.panels.filter(p => p.i !== panelId),
+        };
+      }
 
-      setPendingDrop({ dropzoneId: null, edge: null });
-      return;
-    }
+      // Target only: add moved panel
+      if (idx === targetSectionIndex) {
+        return {
+          ...section,
+          dropZones: newDropZones,
+          panels: [
+            ...section.panels,
+            { ...panelToMove!, dropZoneId: newZoneId },
+          ],
+        };
+      }
+
+      // Unaffected sections
+      return section;
+    });
+  });
+
+  setPendingDrop({ dropzoneId: null, edge: null });
+  return;
+}
+
     
     if (!over) {
       console.log("No drop target found");
