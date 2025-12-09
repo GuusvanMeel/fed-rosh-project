@@ -66,13 +66,14 @@ export default function SectionCanvas({
 
   const addSection = () => {
     const id = "section-" + crypto.randomUUID();
+    const firstZone = `${id}-zone-${crypto.randomUUID()}`;
     setSections(prev => [
       ...prev,
       {
         id,
         name: `Section ${prev.length + 1}`,
         panels: [],
-        dropZones: [],
+        dropZones: [firstZone],
       }
     ]);
   };
