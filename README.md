@@ -33,7 +33,7 @@
 - Complete UI-overhaul met Chakra UI  
 - Drag-and-drop functionaliteit in de sidebar toegevoegd
 
-### [Jeffrey](https://github.com/WorldwideErrors)
+### [Jeffrey](https://github.com/WorldwideErrors) | [portfolio](https://portfolio-2025-six-orcin.vercel.app/)
 
 - Sidebar met aanpasbare standaardstijlen (achtergrond, primaire, secundaire en accentkleuren)
 - Implementatie van verschillende base-fonts 
