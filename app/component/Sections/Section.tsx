@@ -3,13 +3,10 @@
 import { PanelData, PanelType } from "@/app/types/panel";
 import { AllPanelProps, panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
-import { panelTypes } from "../canvas/canvasSideBar";
 import { Button } from "@chakra-ui/react";
 import Droppable, { Edge } from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
-import { useColors } from "@/app/design-patterns/DesignContext";
 import { useState } from "react";
-import { getDefaultContent } from "../sidebar";
  
 export interface SectionData {
   id: string;
