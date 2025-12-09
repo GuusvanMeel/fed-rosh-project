@@ -4,9 +4,11 @@ import { useState } from "react";
 import Section, { SectionData } from "./Section";
 import { Button } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
-import { PanelData } from "@/app/types/panel";
+import { PanelData, PanelType } from "@/app/types/panel";
 import EditForm from "../editForm";
 import { Edge } from "./Droppable";
+import { getDefaultContent } from "../sidebar";
+import ChoosePanelModal from "../panels/ChoosePanelModal";
 
 
 type SectionCanvasProps = {
@@ -27,6 +29,45 @@ export default function SectionCanvas({
     panel: PanelData;
     sectionId: string;
   } | null>(null);
+
+const [modalOpen, setModalOpen] = useState(false);
+const [targetZone, setTargetZone] = useState<string | null>(null);
+
+function handleRequestAddPanel(zoneId: string) {
+  setTargetZone(zoneId);
+  setModalOpen(true);
+}
+function handleSelectPanelType(type: PanelType) {
+  if (!targetZone) return;
+
+  setSections(prev =>
+    prev.map(section => ({
+      ...section,
+      panels: [
+        ...section.panels,
+        {
+          i: "panel-" + crypto.randomUUID(),
+          x: 0,
+          y: 0,
+          w: 300,
+          h: 100,
+          dropZoneId: targetZone,
+          panelProps: {
+            type,
+            content: getDefaultContent(type) // You can plug in getDefaultContent if needed
+          },
+          styling: {
+            backgroundColor: "#333",
+            textColor: "#fff"
+          }
+        }
+      ]
+    }))
+  );
+
+  setModalOpen(false);
+  setTargetZone(null);
+}
 
 
   // -----------------------------
@@ -76,7 +117,7 @@ export default function SectionCanvas({
 
     setSelectedPanel({ ...selectedPanel, panel: updatedPanel });
   };
-
+  
   const handlePanelDelete = (panelId: string) => {
     if (!selectedPanel) return;
 
@@ -131,6 +172,7 @@ export default function SectionCanvas({
                 }
                 onPanelEdit={(panelId) => handlePanelEdit(section.id, panelId)}
                 setPendingDrop={setPendingDrop}
+                onRequestAddPanel={handleRequestAddPanel}
                 
               />
             ))}
@@ -162,6 +204,11 @@ export default function SectionCanvas({
           </div>
         )}
       </div>
+      <ChoosePanelModal
+  open={modalOpen}
+  onClose={() => setModalOpen(false)}
+  onSelect={handleSelectPanelType}
+/>
     </div>
   );
 }
