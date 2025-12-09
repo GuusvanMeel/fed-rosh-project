@@ -39,9 +39,12 @@
 - Implementatie van verschillende base-fonts 
 - Laden van componenten in de sidebar  
 
-### Sjoerd
+### [Sjoerd](https://github.com/Sev3r) | [portfolio](https://portfolio-next-js-azure-iota.vercel.app/) 
 
-*Bijdragen nog niet gespecificeerd*
+- Panel-edit menu
+- text alignment & font size
+- panel size & corner radius
+- panel delete & confirmation pop-up
 
 ### [Guus](https://github.com/GuusvanMeel) | [Portfolio](https://portfolio-fed-guus-projects-37e43d70.vercel.app/)
 
