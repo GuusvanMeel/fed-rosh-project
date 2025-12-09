@@ -91,8 +91,8 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     size="sm"
     color="red.500"
     position="absolute"      
-    bottom="6px"                
-    right="6px"
+    top="6px"                
+    left="6px"
     pointerEvents="auto"
     onClick={OnDelete}
     _hover={{ bg: "red.100" }}
@@ -130,27 +130,67 @@ const containerRef = useRef<HTMLDivElement | null>(null);
     }}
   />
 )}
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    onOpenPanelModal(UID);
-  }}
-  style={{
-    position: "absolute",
-    bottom: "6px",
-    left: "6px",
-    zIndex: 10,
-    backgroundColor: "rgba(0,128,0,0.85)",
-    color: "white",
-    padding: "2px 6px",
-    borderRadius: "4px",
-    fontSize: "12px",
-    pointerEvents: "auto"
-  }}
->
-  + Add Panel
-</button>
-    {children}
+{children}
+   {!hasPanels && (
+  <div
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "3px",
+      pointerEvents: "none",
+      zIndex: 5,
+    }}
+  >
+    {/* Mini inward arrows */}
+    <img
+      src="/inwardArrows.svg"
+      alt="inward arrows"
+      style={{
+        width: "18px",
+        height: "18px",
+        opacity: 0.7,
+      }}
+    />
+
+    {/* OR text */}
+    <div
+      style={{
+        fontSize: "10px",
+        color: "#444",
+        opacity: 0.8,
+        fontWeight: 500,
+        marginTop: "-2px",
+      }}
+    >
+      OR
+    </div>
+
+    {/* Add panel button */}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onOpenPanelModal(UID);
+      }}
+      style={{
+        backgroundColor: "black",
+        color: "white",
+        padding: "2px 8px",
+        borderRadius: "4px",
+        fontSize: "11px",
+        pointerEvents: "auto",
+        marginTop: "-2px",
+        
+      }}
+    >
+      Add a panel
+    </button>
+  </div>
+)}
   </div>
 </div>
   );
