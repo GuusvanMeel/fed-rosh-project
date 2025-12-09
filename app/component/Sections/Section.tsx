@@ -47,7 +47,7 @@ export default function Section({
   // Drop Zones
   // -----------------------------------------
   function addDropZone() {
-    if(data.dropZones.length > 6)return;
+    if(data.dropZones.length > 5)return;
     const newZoneId = `${data.id}-zone-${crypto.randomUUID()}`;
  
     onChange({
