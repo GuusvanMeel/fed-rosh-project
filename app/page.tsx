@@ -360,10 +360,10 @@ export default function MovableColumnListInner() {
           {selectedPanel ? (
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white">Panel Settings</h2>
+                
                 <button
                   onClick={() => setSelectedPanel(null)}
-                  className="h-8 w-8 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white flex items-center justify-center"
+                  className="h-8 w-8  bg-neutral-800 hover:bg-neutral-700 rounded-lg text-white flex items-center justify-center"
                 >
                   ✕
                 </button>
