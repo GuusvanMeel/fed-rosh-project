@@ -83,6 +83,9 @@ export default function SectionCanvas({
       }
     ]);
   };
+  const clearPage = () => {
+    setSections([]);
+  };
 
 
 
@@ -146,20 +149,28 @@ const array : PanelData[] = []
         <Menu.Root >
           <Menu.Trigger asChild>
             <Button variant="surface" size="sm" className="mb-1!">
-              Page
+              Page 
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
             </Button>
           </Menu.Trigger>
           <Portal>
             <Menu.Positioner>
               <Menu.Content>
-                <Menu.Item value="new-txt-a" onSelect={onSave}>
-                  Save page <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                <Menu.Item value="savebutton" onSelect={onSave}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-save-icon lucide-save"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+                  Save page
                 </Menu.Item>
                 <Menu.Item value="loadbutton" onSelect={onLoad}>
-                  Load Page <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cloud-download-icon lucide-cloud-download"><path d="M12 13v8l-4-4"/><path d="m12 21 4-4"/><path d="M4.393 15.269A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.436 8.284"/></svg>
+                  Load Page
                 </Menu.Item>
-                <Menu.Item value="new-file-a" onSelect={addSection}>
-                  Add Section <Menu.ItemCommand>⌘N</Menu.ItemCommand>
+                <Menu.Item value="addbutton" onSelect={addSection}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  Add Section
+                </Menu.Item>
+                <Menu.Item value="clearbutton" onSelect={clearPage}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Clear Page
                 </Menu.Item>
               </Menu.Content>
             </Menu.Positioner>
