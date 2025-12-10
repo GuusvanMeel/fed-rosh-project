@@ -92,9 +92,6 @@ export default function Section({
         <div className="flex items-center gap-3">
           <div className="text-gray-400">⋮⋮</div>
           <h2 className="text-xl font-bold text-gray-800">{data.name}</h2>
-        </div>
-
-        <div className="flex gap-2">
           <Button
             size="xs"
             variant="surface"
@@ -109,6 +106,10 @@ export default function Section({
           >
             Delete
           </Button>
+        </div>
+
+        <div className="flex gap-2">
+          
 
           <Button
             size="xs"

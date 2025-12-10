@@ -119,6 +119,9 @@ export default function MovableColumnListInner() {
     if (targetSectionIndex === -1) return prev;
 
     const targetSection = prev[targetSectionIndex];
+    if (targetSection.dropZones.length >= 6) {
+    return prev; // Prevent adding more columns
+  }
     const dzIndex = targetSection.dropZones.indexOf(dropzoneId);
 
     // 2) Create new dropzone left/right of the hovered one
