@@ -14,9 +14,7 @@ import { PanelType, PanelData } from "./types/panel";
 import EditForm from "./component/editForm";
 
 export default function MovableColumnListInner() {
-  const [sections, setSections] = useState<SectionData[]>([
-    { id: "section-1", name: "Section 1", panels: [], dropZones: [],  },
-  ]);
+  const [sections, setSections] = useState<SectionData[]>([]);
   const { primaryColor, secondaryColor } = useColors();
   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
   

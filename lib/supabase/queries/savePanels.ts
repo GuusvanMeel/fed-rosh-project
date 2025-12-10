@@ -12,12 +12,16 @@ export async function savePanels(panels: PanelData[]) {
     h: panel.h,
     styling: panel.styling,
     panelProps: panel.panelProps,
+    dropZoneId: panel.dropZoneId
+    
   }));
 
   const { error } = await supabase.from("panels_v2").upsert(formatted);
 
   if (error) {
     console.error("Error saving panels:", error);
+    return error;
+
   } else {
     console.log(`✅ Saved ${panels.length} panels`);
   }

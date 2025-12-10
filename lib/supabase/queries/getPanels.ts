@@ -4,11 +4,9 @@ import { createClient } from "../client";
 
 export async function getPanels(): Promise<PanelData[]> {
   const supabase = createClient(); // no need to await; it's sync
-
   const { data, error } = await supabase
     .from("panels_v2")
     .select("*")
-    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching panels:", error);
@@ -26,6 +24,7 @@ const mapped: PanelData[] = data.map((row) => ({
     backgroundColor: row.backgroundColor,
     panelProps: row.panelProps,
     styling: row.styling,
+    dropZoneId: row.dropZoneId
   }));
 
   return mapped;

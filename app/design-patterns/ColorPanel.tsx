@@ -63,22 +63,7 @@ export default function ColorPicker() {
         padding="0"
         border={0}
       />
-
-      <p className="text-center">Accent Color</p>
-      <Input
-        type="color"
-        value={accentColor}
-        onChange={(e) => {
-          console.log("Accent color input changed:", e.target.value);
-          setAccentColor(e.target.value);
-        }}
-        cursor="pointer"
-        width="100%"
-        height="40px"
-        padding="0"
-        border={0}
-      />
-
+      
       <Button 
         onClick={() => {
           console.log("Apply button clicked");

@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 import Section, { SectionData } from "./Section";
-import { Button } from "@chakra-ui/react";
+import { Button, Menu, Portal } from "@chakra-ui/react";
 import { useColors } from "@/app/design-patterns/DesignContext";
-import { PanelType } from "@/app/types/panel";
+import { PanelData, PanelType } from "@/app/types/panel";
 import { Edge } from "./Droppable";
 import { getDefaultContent } from "../sidebar";
 import ChoosePanelModal from "../panels/ChoosePanelModal";
+import { savePanels } from "@/lib/supabase/queries/savePanels";
+import { getPanels } from "@/lib/supabase/queries/getPanels";
+import DialogBox from "../DialogBox";
+import { saveSections } from "@/lib/supabase/queries/saveSections";
+import { getSections } from "@/lib/supabase/queries/getSections";
 
 
 type SectionCanvasProps = {
@@ -15,6 +20,7 @@ type SectionCanvasProps = {
   setSections: React.Dispatch<React.SetStateAction<SectionData[]>>;
   setPendingDrop: (info: { dropzoneId: string | null; edge: Edge }) => void;
 };
+
 
 export default function SectionCanvas({
   sections,
@@ -78,6 +84,58 @@ export default function SectionCanvas({
     ]);
   };
 
+
+
+  // -----------------------------
+  // PANEL EDITING
+  // -----------------------------
+
+
+
+
+  function onSave() {
+    sections.forEach(section => {
+      console.log(section.panels.length + "fdfdzsfds")
+      saveSections(sections)
+      savePanels(section.panels)
+    });
+  }
+
+  async function onLoad() {
+  const sections: SectionData[] = await getSections();
+  const panels: PanelData[] = await getPanels();
+
+  // Reset
+  setSections([]);
+const array : PanelData[] = []
+
+  // Prepare empty sections
+  const newSections = sections.map(section => ({
+    id: section.id,
+    name: section.name,
+    panels: array, // will be filled later
+    dropZones: section.dropZones
+  }));
+
+  // Fill each section with its matched panels
+  newSections.forEach(section => {
+    const matchedPanels = panels.filter(
+      panel =>
+        panel.dropZoneId &&
+        section.dropZones.includes(panel.dropZoneId)
+    );
+
+    section.panels = matchedPanels;
+  });
+
+  // Send final result into state
+  setSections(newSections);
+}
+
+
+  // -----------------------------
+  // RENDER
+  // -----------------------------
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* MAIN CANVAS */}
@@ -85,18 +143,37 @@ export default function SectionCanvas({
         className="flex-1 p-6 space-y-6 overflow-y-auto"
         style={{ backgroundColor: backgroundColor }}
       >
-        <Button
-          size="xs"
-          style={{
-            backgroundColor: "rgba(0,128,0,0.85)",
-            color: "white",
-            borderRadius: "0.4rem",
-            padding: "0.25rem 0.6rem"
-          }}
-          onClick={addSection}
-        >
-          Add Section
-        </Button>
+        <Menu.Root >
+          <Menu.Trigger asChild>
+            <Button variant="surface" size="sm" className="mb-1!">
+              Open
+            </Button>
+          </Menu.Trigger>
+          <Portal>
+            <Menu.Positioner>
+              <Menu.Content>
+                <Menu.Item value="new-txt-a" onSelect={onSave}>
+                  Save section <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                </Menu.Item>
+                <Menu.Item value="loadbutton" onSelect={onLoad}>
+                  Load Panels <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                </Menu.Item>
+                <Menu.Item value="new-file-a" onSelect={addSection}>
+                  Add Section <Menu.ItemCommand>⌘N</Menu.ItemCommand>
+                </Menu.Item>
+                <Menu.Item value="new-win-a">
+                  L <Menu.ItemCommand>⌘W</Menu.ItemCommand>
+                </Menu.Item>
+                <Menu.Item value="open-file-a">
+                  Open File... <Menu.ItemCommand>⌘O</Menu.ItemCommand>
+                </Menu.Item>
+                <Menu.Item value="export-a">
+                  Export <Menu.ItemCommand>⌘S</Menu.ItemCommand>
+                </Menu.Item>
+              </Menu.Content>
+            </Menu.Positioner>
+          </Portal>
+        </Menu.Root>
         <div className="space-y-4">
           {sections.map(section => (
             <Section
@@ -112,10 +189,13 @@ export default function SectionCanvas({
               }
               setPendingDrop={setPendingDrop}
               onRequestAddPanel={handleRequestAddPanel}
+
             />
           ))}
         </div>
       </div>
+
+
 
       <ChoosePanelModal
         open={modalOpen}
