@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
-    domains: ["example.com"], // Add your image host here
+    domains: ["example.com", "res.cloudinary.com"], // Add your image host here
   },
   experimental: {
     optimizeCss: true, // Next.js 13+ only
