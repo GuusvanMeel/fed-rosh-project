@@ -146,29 +146,20 @@ const array : PanelData[] = []
         <Menu.Root >
           <Menu.Trigger asChild>
             <Button variant="surface" size="sm" className="mb-1!">
-              Open
+              Page
             </Button>
           </Menu.Trigger>
           <Portal>
             <Menu.Positioner>
               <Menu.Content>
                 <Menu.Item value="new-txt-a" onSelect={onSave}>
-                  Save section <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                  Save page <Menu.ItemCommand>⌘E</Menu.ItemCommand>
                 </Menu.Item>
                 <Menu.Item value="loadbutton" onSelect={onLoad}>
-                  Load Panels <Menu.ItemCommand>⌘E</Menu.ItemCommand>
+                  Load Page <Menu.ItemCommand>⌘E</Menu.ItemCommand>
                 </Menu.Item>
                 <Menu.Item value="new-file-a" onSelect={addSection}>
                   Add Section <Menu.ItemCommand>⌘N</Menu.ItemCommand>
-                </Menu.Item>
-                <Menu.Item value="new-win-a">
-                  L <Menu.ItemCommand>⌘W</Menu.ItemCommand>
-                </Menu.Item>
-                <Menu.Item value="open-file-a">
-                  Open File... <Menu.ItemCommand>⌘O</Menu.ItemCommand>
-                </Menu.Item>
-                <Menu.Item value="export-a">
-                  Export <Menu.ItemCommand>⌘S</Menu.ItemCommand>
                 </Menu.Item>
               </Menu.Content>
             </Menu.Positioner>
