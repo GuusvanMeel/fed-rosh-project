@@ -115,7 +115,7 @@ export default function Section({
             size="xs"
             variant="surface"
             style={{
-              backgroundColor: "rgba(0,0,160,0.8)",
+              backgroundColor: "black",
               color: "white",
               borderRadius: "0.4rem",
               padding: "0.25rem 0.6rem",
