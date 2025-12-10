@@ -41,34 +41,41 @@ export default function SectionCanvas({
   function handleSelectPanelType(type: PanelType) {
     if (!targetZone) return;
     console.log("sectioncanvas" + backgroundColor + primaryColor)
-    setSections(prev =>
-      prev.map(section => ({
-        ...section,
-        panels: [
-          ...section.panels,
-          {
-            i: "panel-" + crypto.randomUUID(),
-            x: 0,
-            y: 0,
-            w: 300,
-            h: 100,
-            dropZoneId: targetZone,
-            panelProps: {
-              type,
-              content: getDefaultContent(type)
-            },
-            styling: {
-              backgroundColor: secondaryColor,
-              textColor: primaryColor
-            }
-          }
-        ]
-      }))
+     setSections(prev =>
+      prev.map(section => {
+        // Check if this section contains the targetZone in its dropZones array
+        if (section.dropZones.includes(targetZone)) {
+          return {
+            ...section,
+            panels: [
+              ...section.panels,
+              {
+                i: "panel-" + crypto.randomUUID(),
+                x: 0,
+                y: 0,
+                w: 300,
+                h: 100,
+                dropZoneId: targetZone,
+                panelProps: {
+                  type,
+                  content: getDefaultContent(type)
+                },
+                styling: {
+                  backgroundColor: secondaryColor,
+                  textColor: primaryColor
+                }
+              }
+            ]
+          };
+        }
+        // Return the section unchanged if it doesn't contain the targetZone
+        return section;
+      })
     );
 
     setModalOpen(false);
     setTargetZone(null);
-  }
+}
 
   const addSection = () => {
     const id = "section-" + crypto.randomUUID();
@@ -97,8 +104,11 @@ export default function SectionCanvas({
 
 
   function onSave() {
+    console.log(sections.length + "sections length")
+    
     sections.forEach(section => {
-      console.log(section.panels.length + "fdfdzsfds")
+      console.log(section.panels.length + "panel amount")
+      console.log(section.panels);
       saveSections(sections)
       savePanels(section.panels)
     });

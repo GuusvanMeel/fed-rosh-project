@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
-import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, NativeSelect } from '@chakra-ui/react';
+import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, NativeSelect, Button } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
 import DialogBox from './DialogBox';
 
@@ -399,12 +399,14 @@ export default function EditForm({
                         onCancel={() => setDialog((d) => ({ ...d, open: false }))}
                         onConfirm={deletePanel}
                       />
-                <button
+                <Button
                     onClick={toggleDialog}
+                    color={"white"}
+                    bgColor={"red"}
                     className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
                     Delete Panel
-                </button>
+                </Button>
             </div>
         </div>
     );
