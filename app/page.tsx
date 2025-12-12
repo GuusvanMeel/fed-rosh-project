@@ -1,7 +1,7 @@
 "use client";
 
 import { UniqueIdentifier, DragEndEvent, DndContext, DragOverlay } from "@dnd-kit/core";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { panelRegistry, AllPanelProps, isPanelType } from "./component/panels/panelRegistry";
 import { PanelWrapper } from "./component/panels/panelWrapper";
 import { Edge } from "./component/Sections/Droppable";
@@ -18,7 +18,6 @@ export default function MovableColumnListInner() {
   const { primaryColor, secondaryColor } = useColors();
   const [activePanelId, setActivePanelId] = useState<UniqueIdentifier | null>(null);
   
-  // Lifted state for edit form
   const [selectedPanel, setSelectedPanel] = useState<{
     panel: PanelData;
     sectionId: string;
@@ -81,7 +80,7 @@ export default function MovableColumnListInner() {
         break;
       }
     }
-  }, [sections]);
+  }, [sections, selectedPanel]);
   
   // Handler for deleting panel from edit form
   const handlePanelDelete = (panelId: string) => {

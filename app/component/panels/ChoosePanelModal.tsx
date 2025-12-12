@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, Stack, VStack } from "@chakra-ui/react";
+import { Button, Dialog, Stack } from "@chakra-ui/react";
 import { PanelType } from "@/app/types/panel";
 import { panelTypes } from "../sidebar";
 

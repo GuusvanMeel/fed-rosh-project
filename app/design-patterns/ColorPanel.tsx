@@ -12,7 +12,6 @@ export default function ColorPicker() {
     secondaryColor,
     setSecondaryColor,
     accentColor,
-    setAccentColor,
     applyColorsToAllPanels,
   } = useColors();
 

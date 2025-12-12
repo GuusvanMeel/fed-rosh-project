@@ -1,5 +1,4 @@
 import { SectionData } from "@/app/component/Sections/Section";
-import { PanelData } from "@/app/types/panel";
 import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();

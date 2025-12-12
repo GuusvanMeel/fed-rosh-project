@@ -10,7 +10,6 @@ import { getDefaultContent } from "../sidebar";
 import ChoosePanelModal from "../panels/ChoosePanelModal";
 import { savePanels } from "@/lib/supabase/queries/savePanels";
 import { getPanels } from "@/lib/supabase/queries/getPanels";
-import DialogBox from "../DialogBox";
 import { saveSections } from "@/lib/supabase/queries/saveSections";
 import { getSections } from "@/lib/supabase/queries/getSections";
 

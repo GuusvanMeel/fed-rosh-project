@@ -1,12 +1,11 @@
 "use client";
 
-import { PanelData, PanelType } from "@/app/types/panel";
+import { PanelData } from "@/app/types/panel";
 import { AllPanelProps, panelRegistry } from "../panels/panelRegistry";
 import { PanelWrapper } from "../panels/panelWrapper";
 import { Button } from "@chakra-ui/react";
 import Droppable, { Edge } from "./Droppable";
 import { SortableContext } from "@dnd-kit/sortable";
-import { useState } from "react";
 
 export interface SectionData {
   id: string;
