@@ -62,9 +62,6 @@ fed-rosh-project/
 ├── .gitignore
 ├── app/
 │   ├── component/
-│   │   ├── canvas/
-│   │   │   ├── Canvas.tsx
-│   │   │   └── canvasSideBar.tsx
 │   │   ├── Counter.tsx
 │   │   ├── DialogBox.tsx
 │   │   ├── editForm.tsx
@@ -77,7 +74,7 @@ fed-rosh-project/
 │   │   │   ├── PanelList.tsx
 │   │   │   ├── panelModal.tsx
 │   │   │   ├── panelRegistry.ts
-│   │   │   ├── panelWrapper.tsx
+│   │   │   ├── panelWrapper.tsx 
 │   │   │   ├── ScrollingTextPanel.tsx
 │   │   │   ├── TextPanel.tsx
 │   │   │   ├── UrlPanel.tsx
