@@ -80,7 +80,7 @@ export default function MovableColumnListInner() {
         break;
       }
     }
-  }, [sections, selectedPanel]);
+  }, [sections]);
   
   // Handler for deleting panel from edit form
   const handlePanelDelete = (panelId: string) => {
