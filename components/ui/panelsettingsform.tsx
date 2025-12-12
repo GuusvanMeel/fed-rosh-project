@@ -100,20 +100,6 @@ export function PanelSettingsForm({
                 />
             </label>
 
-            {/* Opacity */}
-            <label className="flex flex-col">
-                <span className="text-sm font-medium mb-1 text-white">
-                    Opacity: {((panel.styling.opacity ?? 1) * 100).toFixed(0)}%
-                </span>
-                <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    className="w-full accent-blue-500"
-                    value={(panel.styling.opacity ?? 1) * 100}
-                    onChange={(e) => updateStyling({ opacity: Number(e.target.value) / 100 })}
-                />
-            </label>
 
             {/* Border Radius */}
             <label className="flex flex-col">

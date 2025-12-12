@@ -121,7 +121,7 @@ export const ColorProvider = ({
   return (
     <ColorContext.Provider
       value={{
-        backgroundColor,
+          backgroundColor,
         setBackgroundColor: handleSetBackgroundColor,
         primaryColor,
         setPrimaryColor: handleSetPrimaryColor,

@@ -17,8 +17,8 @@
 
 ## Technologieën
 
-- **Framework:** Next.js  
-- **Taal:** React + TypeScript  
+- **Framework:** Next.js 15.5.3
+- **Taal:** React + TypeScript   
 - **Styling & UI:** ChakraUI, Tailwind CSS  
 - **Drag & Drop:** DnD-Kit  
 - **Database & Auth:** Supabase  

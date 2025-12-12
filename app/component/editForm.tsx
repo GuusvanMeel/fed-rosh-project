@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { PanelData } from '../types/panel';
 import UploadWidget from './UploadWidget';
-import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, NativeSelect } from '@chakra-ui/react';
+import { ColorPicker, ColorPickerChannelSlider, Slider, Stack, parseColor, Input, InputGroup, NumberInput, NativeSelect, Button } from '@chakra-ui/react';
 import { LuCheck } from "react-icons/lu"
 import DialogBox from './DialogBox';
 
@@ -91,9 +91,9 @@ export default function EditForm({
             <div className="space-y-3">
                 <label className="flex flex-col">
                     <span className="text-sm font-medium mb-1 text-white">
-                        Width: {panel.w} units
+                        Width: {panel.w} pixels
                     </span>
-                    <Slider.Root defaultValue={[panel.w]} size={"md"} min={20} max={400} key={"width-slider-" + panel.i}
+                    <Slider.Root defaultValue={[panel.w]} size={"md"} min={20} max={1212} key={"width-slider-" + panel.i}
                         onValueChange={(e) => updatePanelSize({ w: Number(e.value) })}>
                         <Slider.Control>
                             <Slider.Track>
@@ -106,9 +106,9 @@ export default function EditForm({
 
                 <label className="flex flex-col">
                     <span className="text-sm font-medium mb-1 text-white">
-                        Height: {panel.h} units
+                        Height: {panel.h} pixels
                     </span>
-                    <Slider.Root defaultValue={[panel.w]} size={"md"} min={20} max={1000} key={"height-slider-" + panel.i}
+                    <Slider.Root defaultValue={[panel.h]} size={"md"} min={20} max={500} key={"height-slider-" + panel.i}
                         onValueChange={(e) => updatePanelSize({ h: Number(e.value) })}>
                         <Slider.Control>
                             <Slider.Track>
@@ -170,7 +170,7 @@ export default function EditForm({
                 <span className="text-sm font-medium mb-1 text-white">
                     Corner Radius: {panel.styling.borderRadius || 8}px
                 </span>
-                <Slider.Root defaultValue={[panel.w]} size={"md"} min={0} max={50} key={"corner-radius-slider-" + panel.i}
+                <Slider.Root defaultValue={[panel.styling.borderRadius || 8]} size={"md"} min={0} max={50} key={"corner-radius-slider-" + panel.i}
                     onValueChange={(e) => updateStyling({ borderRadius: Number(e.value) })}>
                     <Slider.Control>
                         <Slider.Track>
@@ -186,7 +186,7 @@ export default function EditForm({
                 <span className="text-sm font-medium mb-1 text-white">
                     Padding: {panel.styling.padding || 8}px
                 </span>
-                <Slider.Root defaultValue={[panel.w]} size={"md"} min={0} max={50} key={"padding-slider-" + panel.i}
+                <Slider.Root defaultValue={[panel.styling.padding || 8]} size={"md"} min={0} max={100} key={"padding-slider-" + panel.i}
                     onValueChange={(e) => updateStyling({ padding: Number(e.value) })}>
                     <Slider.Control>
                         <Slider.Track>
@@ -399,12 +399,14 @@ export default function EditForm({
                         onCancel={() => setDialog((d) => ({ ...d, open: false }))}
                         onConfirm={deletePanel}
                       />
-                <button
+                <Button
                     onClick={toggleDialog}
-                    className="!w-full !rounded-lg !bg-red-600 hover:!bg-red-700 px-4 py-2 text-sm !font-medium text-white transition-colors"
+                    color={"white"}
+                    bgColor={"red"}
+                    className="w-full rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors"
                 >
                     Delete Panel
-                </button>
+                </Button>
             </div>
         </div>
     );
