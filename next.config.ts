@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-};
-
-module.exports = {
   images: {
     domains: ["res.cloudinary.com",
               "example.com"],
@@ -13,7 +10,8 @@ module.exports = {
 
   },
   experimental: {
-    optimizeCss: true, // Next.js 13+ only
+    optimizeCss: false, // Disabled due to missing critters dependency
   },
 };
+
 export default nextConfig;
